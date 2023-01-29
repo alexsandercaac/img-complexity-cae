@@ -2,9 +2,6 @@
 *.jpeg
 *.jpg
 
-# venv
-caeexp
-
 # vscode
 *.code-workspace
 
