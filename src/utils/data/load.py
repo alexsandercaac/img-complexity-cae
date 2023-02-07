@@ -22,8 +22,8 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
             Defaults to ''.
         batch_size (int): Batch size set on the tf.data.Dataset object.
             Defaults to 1.
-        mode (str): Type of dataset to load. Can be 'autoencoder', 'classifier' or
-            'image_only'. If 'autoencoder', returns a batch of tuples of
+        mode (str): Type of dataset to load. Can be 'autoencoder', 'classifier'
+             or 'image_only'. If 'autoencoder', returns a batch of tuples of
             nature (input, input); if 'classifier', returns tuples
              of (input, label); if 'image_only', returns only a batch of
              inputs. Defaults to 'autoencoder'.
@@ -63,7 +63,7 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
 
     if scale:
         rescale = tf.keras.Sequential(
-            [tf.keras.layers.Rescaling(1 . / scale)]
+            [tf.keras.layers.Rescaling(1 / scale)]
         )
         if mode == 'autoencoder':
             dataset = dataset.map(lambda x: (
