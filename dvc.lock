@@ -3,16 +3,19 @@ stages:
   augmentation_visualisation:
     cmd: python3 src/augmentation_visualisation.py
     deps:
-    - path: data/raw
-      md5: 563507493540e6e4d2a729d9c4dd1ba4.dir
-      size: 32402506
-      nfiles: 1303
+    - path: data/processed/train
+      md5: c5defe0226b3dfadcf5b347a47a57c32.dir
+      size: 25929828
+      nfiles: 1039
     - path: src/augmentation_visualisation.py
       md5: 7083cf9f9470af6dda635633d6ef0113
       size: 1318
     - path: src/utils/data/tensorflow_based.py
       md5: 1c2d44bf1ae305b60227db65a23a3676
       size: 6712
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
     params:
       params.yaml:
         augmentation_visualisation.random_brightness: 0.2
@@ -33,5 +36,32 @@ stages:
         - 0.1
     outs:
     - path: data/interim/augmentation_visualisation/augmented_images.png
-      md5: 04d9752d33937e257fce7265ddc2e7c2
-      size: 294408
+      md5: 58cacdcda1affe0cc5814c0529a604bf
+      size: 298953
+  train_test_split:
+    cmd: python3 src/train_test_split.py
+    deps:
+    - path: data/raw
+      md5: 563507493540e6e4d2a729d9c4dd1ba4.dir
+      size: 32402506
+      nfiles: 1303
+    - path: src/train_test_split.py
+      md5: cf18f7d8a4ed47630ad1e033ee739a8e
+      size: 2934
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    params:
+      params.yaml:
+        train_test_split.seed: 14
+        train_test_split.shuffle: true
+        train_test_split.split_ratio: 0.8
+    outs:
+    - path: data/processed/test
+      md5: 6eb73943fd549cbb0bee08129c9f17d1.dir
+      size: 6472555
+      nfiles: 261
+    - path: data/processed/train
+      md5: c5defe0226b3dfadcf5b347a47a57c32.dir
+      size: 25929828
+      nfiles: 1039
