@@ -6,6 +6,10 @@
 from utils.data.tensorflow_based import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
 import matplotlib.pyplot as plt
+import os
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
+logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
 
