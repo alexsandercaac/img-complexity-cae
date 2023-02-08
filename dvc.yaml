@@ -1,0 +1,18 @@
+stages:
+  augmentation_visualisation:
+    cmd: python3 src/augmentation_visualisation.py
+    deps:
+    - src/augmentation_visualisation.py
+    - src/utils/data/tensorflow_based.py
+    - data/raw
+    params:
+    - augmentation_visualisation.random_crop
+    - augmentation_visualisation.random_flip
+    - augmentation_visualisation.random_rotation
+    - augmentation_visualisation.random_zoom
+    - augmentation_visualisation.random_brightness
+    - augmentation_visualisation.random_contrast
+    - augmentation_visualisation.random_translation_height
+    - augmentation_visualisation.random_translation_width
+    outs:
+    - data/interim/augmentation_visualisation/augmented_images.png

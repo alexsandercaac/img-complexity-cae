@@ -1,0 +1,37 @@
+schema: '2.0'
+stages:
+  augmentation_visualisation:
+    cmd: python3 src/augmentation_visualisation.py
+    deps:
+    - path: data/raw
+      md5: 563507493540e6e4d2a729d9c4dd1ba4.dir
+      size: 32402506
+      nfiles: 1303
+    - path: src/augmentation_visualisation.py
+      md5: 7083cf9f9470af6dda635633d6ef0113
+      size: 1318
+    - path: src/utils/data/tensorflow_based.py
+      md5: 1c2d44bf1ae305b60227db65a23a3676
+      size: 6712
+    params:
+      params.yaml:
+        augmentation_visualisation.random_brightness: 0.2
+        augmentation_visualisation.random_contrast: 0.2
+        augmentation_visualisation.random_crop:
+        - 224
+        - 224
+        augmentation_visualisation.random_flip: horizontal_and_vertical
+        augmentation_visualisation.random_rotation: 0.4
+        augmentation_visualisation.random_translation_height:
+        - -0.1
+        - 0.1
+        augmentation_visualisation.random_translation_width:
+        - -0.1
+        - 0.1
+        augmentation_visualisation.random_zoom:
+        - -0.1
+        - 0.1
+    outs:
+    - path: data/interim/augmentation_visualisation/augmented_images.png
+      md5: 04d9752d33937e257fce7265ddc2e7c2
+      size: 294408
