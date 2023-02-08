@@ -142,6 +142,8 @@ def augmentation_model(random_crop: Tuple[int, int] = None,
     if random_translation_height and random_translation_width:
         layers.append(tf.keras.layers.RandomTranslation(
             random_translation_height, random_translation_width))
+    if not layers:
+        raise ValueError('No augmentation operation specified.')
 
     return tf.keras.Sequential(layers)
 
