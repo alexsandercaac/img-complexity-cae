@@ -1,5 +1,5 @@
 """
-    Set of functions used to load image datasets.
+    Set of functions that use tensorflow to load and manipulate image datasets.
 """
 import tensorflow as tf
 import os
@@ -88,3 +88,69 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
                                   num_parallel_calls=AUTOTUNE)
 
     return dataset
+
+
+def augmentation_model(random_crop: Tuple[int, int] = None,
+                       random_flip: str = None, random_rotation: float = None,
+                       random_zoom: Tuple[float, float] = None,
+                       random_brightness: float = None,
+                       random_contrast: float = None,
+                       random_translation_height: Tuple[float, float] = None,
+                       random_translation_width: Tuple[float, float] = None,
+                       ) -> tf.keras.Sequential:
+    '''
+    Creates a tf.keras.Sequential object containing the augmentation
+    operations specified by the user.
+
+    Args:
+        random_crop (Tuple[int, int]): Size of the random crop to apply.
+            Defaults to None.
+        random_flip (str): . Can be "horizontal", "vertical",
+            or "horizontal_and_vertical". Defaults to None.
+        random_rotation (float): Maximum rotation angle to apply.
+            Defaults to None.
+        random_zoom (Tuple[float, float]): Range of the random zoom to apply.
+            Defaults to None.
+        random_brightness (float): Maximum brightness to apply.
+            Defaults to None.
+        random_contrast (float): Maximum contrast to apply.
+            Defaults to None.
+        random_translation_height (Tuple[float, float]): Range of the random
+            translation to apply on the height. Defaults to None.
+        random_translation_width (Tuple[float, float]): Range of the random
+            translation to apply on the width. Defaults to None.
+
+    Returns:
+        tf.keras.Sequential: Sequential object containing the augmentation
+            operations.
+
+    '''
+    layers = []
+    if random_crop:
+        layers.append(tf.keras.layers.RandomCrop(random_crop[0],
+                                                 random_crop[1]))
+    if random_flip:
+        layers.append(tf.keras.layers.RandomFlip(random_flip))
+    if random_rotation:
+        layers.append(tf.keras.layers.RandomRotation(random_rotation))
+    if random_zoom:
+        layers.append(tf.keras.layers.RandomZoom(random_zoom))
+    if random_brightness:
+        layers.append(tf.keras.layers.RandomBrightness(random_brightness))
+    if random_contrast:
+        layers.append(tf.keras.layers.RandomContrast(random_contrast))
+    if random_translation_height and random_translation_width:
+        layers.append(tf.keras.layers.RandomTranslation(
+            random_translation_height, random_translation_width))
+
+    return tf.keras.Sequential(layers)
+
+# data_augmentation = tf.keras.Sequential([
+#     tf.keras.layers.RandomCrop(INPUT_SIZE[0], INPUT_SIZE[1]),
+#     tf.keras.layers.RandomFlip('horizontal'),
+#     tf.keras.layers.RandomRotation(0.2),
+#     tf.keras.layers.RandomZoom((-0.1, 0.1)),
+#     tf.keras.layers.RandomBrightness(0.1),
+#     tf.keras.layers.RandomContrast(0.1),
+#     tf.keras.layers.RandomTranslation((-0.1, 0.1), (-0.1, 0.1)),
+# ])
