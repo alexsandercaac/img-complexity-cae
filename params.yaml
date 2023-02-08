@@ -7,3 +7,7 @@ augmentation_visualisation:
   random_contrast: 0.2
   random_translation_height: [-0.1, 0.1]
   random_translation_width: [-0.1, 0.1]
+train_test_split:
+  split_ratio: 0.8
+  shuffle: true
+  seed: 14
