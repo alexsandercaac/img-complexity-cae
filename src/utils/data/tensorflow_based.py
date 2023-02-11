@@ -90,14 +90,15 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
     return dataset
 
 
-def augmentation_model(random_crop: Tuple[int, int] = None,
-                       random_flip: str = None, random_rotation: float = None,
-                       random_zoom: Tuple[float, float] = None,
-                       random_brightness: float = None,
-                       random_contrast: float = None,
-                       random_translation_height: Tuple[float, float] = None,
-                       random_translation_width: Tuple[float, float] = None,
-                       ) -> tf.keras.Sequential:
+def augmentation_model(
+    random_crop: Tuple[int, int] = (None, None),
+        random_flip: str = None, random_rotation: float = None,
+        random_zoom: Tuple[float, float] = (None, None),
+        random_brightness: float = None,
+        random_contrast: float = None,
+        random_translation_height: Tuple[float, float] = (None, None),
+        random_translation_width: Tuple[float, float] = (None, None),
+) -> tf.keras.Sequential:
     '''
     Creates a tf.keras.Sequential object containing the augmentation
     operations specified by the user.
@@ -126,7 +127,7 @@ def augmentation_model(random_crop: Tuple[int, int] = None,
 
     '''
     layers = []
-    if random_crop:
+    if random_crop[0] and random_crop[1]:
         layers.append(tf.keras.layers.RandomCrop(random_crop[0],
                                                  random_crop[1]))
     if random_flip:
@@ -137,9 +138,10 @@ def augmentation_model(random_crop: Tuple[int, int] = None,
         layers.append(tf.keras.layers.RandomZoom(random_zoom))
     if random_brightness:
         layers.append(tf.keras.layers.RandomBrightness(random_brightness))
-    if random_contrast:
+    if random_contrast[0] and random_contrast[1]:
         layers.append(tf.keras.layers.RandomContrast(random_contrast))
-    if random_translation_height and random_translation_width:
+    if ((random_translation_height[0] and random_translation_height[1]) and
+            random_translation_width[0] and random_translation_width[1]):
         layers.append(tf.keras.layers.RandomTranslation(
             random_translation_height, random_translation_width))
     if not layers:
