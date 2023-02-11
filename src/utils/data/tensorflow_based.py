@@ -134,11 +134,11 @@ def augmentation_model(
         layers.append(tf.keras.layers.RandomFlip(random_flip))
     if random_rotation:
         layers.append(tf.keras.layers.RandomRotation(random_rotation))
-    if random_zoom:
+    if random_zoom[0] and random_zoom[1]:
         layers.append(tf.keras.layers.RandomZoom(random_zoom))
     if random_brightness:
         layers.append(tf.keras.layers.RandomBrightness(random_brightness))
-    if random_contrast[0] and random_contrast[1]:
+    if random_contrast:
         layers.append(tf.keras.layers.RandomContrast(random_contrast))
     if ((random_translation_height[0] and random_translation_height[1]) and
             random_translation_width[0] and random_translation_width[1]):
