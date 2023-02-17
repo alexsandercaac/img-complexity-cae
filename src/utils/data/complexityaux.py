@@ -38,14 +38,20 @@ def image_rgb_to_gray_to_numpy(
     '''
     if isinstance(image, tf.Tensor):
         image = image.numpy()
-    img_np = (image * 255).astype('uint8')
-    return img_np @ RGB2GRAY
+    if np.max(image) > 1:
+        img_gs = image.astype('uint8') @ RGB2GRAY
+    else:
+        img_gs = (image * 255).astype('uint8') @ RGB2GRAY
+        img_gs = img_gs.astype('float32') / 255
+
+    return img_gs
 
 
 def load_imgs_gen(imgs_path: list,
                   target_size: tuple = (224, 224),
                   scale: float = None,
-                  return_pil: bool = False):
+                  return_pil: bool = False,
+                  grayscale: bool = False):
     '''
     This function returns a generator that loads an images from list of paths
     and resize them.
@@ -55,6 +61,10 @@ def load_imgs_gen(imgs_path: list,
         target_size (tuple): Size to which the images will be resized.
         scale (float): Factor used to scale the images. If None, no scaling is
             applied. Defaults to None.
+        return_pil (bool): If True, the images are returned as PIL images.
+            Defaults to False.
+        grayscale (bool): If True, the images are converted to grayscale.
+            Defaults to False.
     '''
     if not isinstance(imgs_path, list):
         imgs_path = [imgs_path]
@@ -64,6 +74,8 @@ def load_imgs_gen(imgs_path: list,
             Image.open(img_path).convert('RGB').resize(target_size))
         if scale:
             img = img / scale
+        if grayscale:
+            img = image_rgb_to_gray_to_numpy(img)
         if return_pil:
             yield Image.fromarray(img)
         else:
