@@ -51,7 +51,8 @@ def load_imgs_gen(imgs_path: list,
                   target_size: tuple = (224, 224),
                   scale: float = None,
                   return_pil: bool = False,
-                  grayscale: bool = False):
+                  grayscale: bool = False,
+                  shuffle: bool = False) -> np.ndarray:
     '''
     This function returns a generator that loads an images from list of paths
     and resize them.
@@ -65,9 +66,12 @@ def load_imgs_gen(imgs_path: list,
             Defaults to False.
         grayscale (bool): If True, the images are converted to grayscale.
             Defaults to False.
+        shuffle (bool): If True, the images are shuffled before being returned.
     '''
     if not isinstance(imgs_path, list):
         imgs_path = [imgs_path]
+    if shuffle:
+        np.random.shuffle(imgs_path)
 
     for img_path in imgs_path:
         img = np.asarray(
