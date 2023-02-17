@@ -1,0 +1,79 @@
+"""
+    The dataset is not split into train and test set. This script will split
+    the dataset into train and test set. The split will be saved in the folder
+    data/processed/train and data/processed/test. Class balance will be kept.
+"""
+from src.utils.dvc.params import get_params
+import os
+import yaml
+from rich import print, pretty
+import shutil
+import random
+pretty.install()
+
+params = yaml.safe_load(open("params.yaml"))['train_test_split']
+
+SPLIT_RATIO = params['split_ratio']
+SHUFFLE = params['shuffle']
+SEED = params['seed']
+
+# * Get file names from raw data for each class
+
+file_names_ok = os.listdir('data/raw/casting_512x512/ok_front')
+file_names_def = os.listdir('data/raw/casting_512x512/def_front')
+
+print(f"Found {len(file_names_ok)} ok_front images (negative class).")
+print(f"Found {len(file_names_def)} def_front images (positive class).")
+
+# * Split the data into train and test set
+
+if SHUFFLE:
+    random.seed(SEED)
+    random.shuffle(file_names_ok)
+    random.shuffle(file_names_def)
+
+split_index_ok = int(len(file_names_ok) * SPLIT_RATIO)
+split_index_def = int(len(file_names_def) * SPLIT_RATIO)
+
+train_ok = file_names_ok[:split_index_ok]
+train_def = file_names_def[:split_index_def]
+
+test_ok = file_names_ok[split_index_ok:]
+test_def = file_names_def[split_index_def:]
+
+print(f"Train set contains {len(train_ok)} ok_front images (negative class).")
+print(
+    f"Train set contains {len(train_def)} def_front images (positive class).")
+print(f"Test set contains {len(test_ok)} ok_front images (negative class).")
+print(f"Test set contains {len(test_def)} def_front images (positive class).")
+
+# * Save the split into the folder data/processed/train_test_split
+
+if not os.path.exists('data/processed/train'):
+    os.makedirs('data/processed/train')
+if not os.path.exists('data/processed/test'):
+    os.makedirs('data/processed/test')
+
+for file_name in train_ok:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/ok_front/{file_name}",
+        f"data/processed/train/ok_front/{file_name}"
+    )
+
+for file_name in train_def:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/def_front/{file_name}",
+        f"data/processed/train/def_front/{file_name}"
+    )
+
+for file_name in test_ok:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/ok_front/{file_name}",
+        f"data/processed/test/ok_front/{file_name}"
+    )
+
+for file_name in test_def:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/def_front/{file_name}",
+        f"data/processed/test/def_front/{file_name}"
+    )

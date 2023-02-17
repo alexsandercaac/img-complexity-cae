@@ -19,7 +19,7 @@ stages:
     cmd: python3 src/augmentation_visualisation.py
     deps:
     - src/augmentation_visualisation.py
-    - src/utils/data/tensorflow_based.py
+    - src/utils/data/tfdatasets.py
     - src/utils/dvc/params.py
     - data/processed/train
     params:

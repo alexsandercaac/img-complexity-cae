@@ -148,13 +148,3 @@ def augmentation_model(
         raise ValueError('No augmentation operation specified.')
 
     return tf.keras.Sequential(layers)
-
-# data_augmentation = tf.keras.Sequential([
-#     tf.keras.layers.RandomCrop(INPUT_SIZE[0], INPUT_SIZE[1]),
-#     tf.keras.layers.RandomFlip('horizontal'),
-#     tf.keras.layers.RandomRotation(0.2),
-#     tf.keras.layers.RandomZoom((-0.1, 0.1)),
-#     tf.keras.layers.RandomBrightness(0.1),
-#     tf.keras.layers.RandomContrast(0.1),
-#     tf.keras.layers.RandomTranslation((-0.1, 0.1), (-0.1, 0.1)),
-# ])
