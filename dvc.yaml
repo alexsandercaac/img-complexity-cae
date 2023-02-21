@@ -48,7 +48,11 @@ stages:
     outs:
     - data/processed/tabular/complexity.csv
     plots:
-    - visualisation/complexity/train_ok_front.png
-    - visualisation/complexity/test_ok_front.png
-    - visualisation/complexity/train_def_front.png
-    - visualisation/complexity/test_def_front.png
+    - visualisation/complexity/train_ok_front.png:
+        cache: false
+    - visualisation/complexity/test_ok_front.png:
+        cache: false
+    - visualisation/complexity/train_def_front.png:
+        cache: false
+    - visualisation/complexity/test_def_front.png:
+        cache: false
