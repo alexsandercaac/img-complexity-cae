@@ -32,5 +32,5 @@ stages:
     - augmentation_visualisation.random_translation_height
     - augmentation_visualisation.random_translation_width
     plots:
-    - data/interim/augmentation_visualisation/augmented_images.png:
+    - visualisation/augmentation/augmented_images.png:
         cache: false

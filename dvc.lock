@@ -8,11 +8,11 @@ stages:
       size: 25929828
       nfiles: 1039
     - path: src/augmentation_visualisation.py
-      md5: 7750c052a2f29fef85f904a84d815fc1
-      size: 1449
-    - path: src/utils/data/tensorflow_based.py
-      md5: 47fe2b5d3cf220b872b5bc33d69e01a3
-      size: 6767
+      md5: d266771527302a2758fa72041a970d18
+      size: 1430
+    - path: src/utils/data/tfdatasets.py
+      md5: c71954099ae14965c7e52476cb6982b2
+      size: 6360
     - path: src/utils/dvc/params.py
       md5: 29fe2901f8c48bca234c1792cb8c23e8
       size: 836
@@ -35,9 +35,9 @@ stages:
         - -0.1
         - 0.1
     outs:
-    - path: data/interim/augmentation_visualisation/augmented_images.png
-      md5: d526c60157977b64e3883eb0ba589b40
-      size: 299240
+    - path: visualisation/augmentation/augmented_images.png
+      md5: d82e3acc6ae098b5fcabb7f666f59953
+      size: 292852
   train_test_split:
     cmd: python3 src/train_test_split.py
     deps:

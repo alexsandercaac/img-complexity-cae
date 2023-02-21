@@ -3,7 +3,7 @@
     specified by the user. The images will be saved in the folder
     data/interim/augmentation_visualisation.
 """
-from src.utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
+from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
 import matplotlib.pyplot as plt
 import os
@@ -49,4 +49,4 @@ for images in dataset:
         plt.axis("off")
     break
 
-plt.savefig('data/interim/augmentation_visualisation/augmented_images.png')
+plt.savefig('visualisation/augmentation/augmented_images.png')
