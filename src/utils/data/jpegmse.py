@@ -3,7 +3,7 @@
 """
 import numpy as np
 import cv2
-import src.utils.data.complexityaux as caux
+import utils.data.complexityaux as caux
 
 
 def calculate_jpeg_mse(

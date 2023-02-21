@@ -34,3 +34,21 @@ stages:
     plots:
     - visualisation/augmentation/augmented_images.png:
         cache: false
+
+# *** ---------------------------------------------
+
+  extract_complexity:
+    cmd: python3 src/extract_complexity.py
+    deps:
+    - src/extract_complexity.py
+    - src/utils/data/jpegmse.py
+    - src/utils/data/complexityaux.py
+    - data/processed/train
+    - data/processed/test
+    outs:
+    - data/processed/tabular/complexity.csv
+    plots:
+    - visualisation/complexity/train_ok_front.png
+    - visualisation/complexity/test_ok_front.png
+    - visualisation/complexity/train_def_front.png
+    - visualisation/complexity/test_def_front.png

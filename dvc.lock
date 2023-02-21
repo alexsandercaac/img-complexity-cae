@@ -65,3 +65,39 @@ stages:
       md5: c5defe0226b3dfadcf5b347a47a57c32.dir
       size: 25929828
       nfiles: 1039
+  extract_complexity:
+    cmd: python3 src/extract_complexity.py
+    deps:
+    - path: data/processed/test
+      md5: 6eb73943fd549cbb0bee08129c9f17d1.dir
+      size: 6472555
+      nfiles: 261
+    - path: data/processed/train
+      md5: c5defe0226b3dfadcf5b347a47a57c32.dir
+      size: 25929828
+      nfiles: 1039
+    - path: src/extract_complexity.py
+      md5: 8196c116070cd2c34ddf6817291d18ac
+      size: 1333
+    - path: src/utils/data/complexityaux.py
+      md5: 0fdd7a277d93e83da136646ac119929c
+      size: 3092
+    - path: src/utils/data/jpegmse.py
+      md5: e342de2355d1636284f6312007774db5
+      size: 1737
+    outs:
+    - path: data/processed/tabular/complexity.csv
+      md5: d668f53fb027e0c492bc8c203dff1d33
+      size: 116863
+    - path: visualisation/complexity/test_def_front.png
+      md5: 34a2ded9921d7bda4b546f5cbb7d7ad0
+      size: 8606
+    - path: visualisation/complexity/test_ok_front.png
+      md5: c5dde7eb8e9b09f2657d2cb565bbeb35
+      size: 7571
+    - path: visualisation/complexity/train_def_front.png
+      md5: e349f8556407ce985c5c087470542ab6
+      size: 10555
+    - path: visualisation/complexity/train_ok_front.png
+      md5: f241b221b1d5e3dad87768e24f755929
+      size: 11509
