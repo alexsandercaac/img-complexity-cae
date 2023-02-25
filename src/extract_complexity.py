@@ -22,11 +22,9 @@ for split, label in DATA_SPLITS_AND_LABELS:
 
     mses = []
     pbar = tqdm(total=len(files))
-    counter = 0
     for image in img_gen:
         mses.append(calculate_jpeg_mse(image))
         pbar.update(1)
-    print(f'Processed {counter} images.')
     pbar.close()
     plt.hist(mses, bins=60)
     plt.savefig(f'visualisation/complexity/{split}_{label}.png')
