@@ -77,8 +77,8 @@ stages:
       size: 25929828
       nfiles: 1039
     - path: src/extract_complexity.py
-      md5: 624b758859bb158a797b50ede7222058
-      size: 1279
+      md5: 66c5e5b9b0e27343918ff27247ceaa4a
+      size: 1274
     - path: src/utils/data/complexityaux.py
       md5: 0fdd7a277d93e83da136646ac119929c
       size: 3092
@@ -87,8 +87,8 @@ stages:
       size: 1737
     outs:
     - path: data/processed/tabular/complexity.csv
-      md5: 4de86cfc6be3d07d92f626f9a14bb82a
-      size: 118164
+      md5: 4f68a4efacf59e18b3535570c8fec47d
+      size: 115561
     - path: visualisation/complexity/test_def_front.png
       md5: 34a2ded9921d7bda4b546f5cbb7d7ad0
       size: 8606

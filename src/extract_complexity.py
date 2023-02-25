@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 
 
 with open('data/processed/tabular/complexity.csv', 'w') as f:
-    f.write('file, jpeg_mse, data_split, label\n')
+    f.write('file,jpeg_mse,data_split,label\n')
 
 DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'test']
                           for label in ['ok_front', 'def_front']]
@@ -34,4 +34,4 @@ for split, label in DATA_SPLITS_AND_LABELS:
     plt.close()
     with open('data/processed/tabular/complexity.csv', 'a') as f:
         for file, mse in zip(files, mses):
-            f.write(f'{file},{mse}, {split}, {label}\n')
+            f.write(f'{file},{mse},{split},{label}\n')
