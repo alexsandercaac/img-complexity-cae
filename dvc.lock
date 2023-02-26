@@ -77,7 +77,7 @@ stages:
       size: 25929828
       nfiles: 1039
     - path: src/extract_complexity.py
-      md5: 66c5e5b9b0e27343918ff27247ceaa4a
+      md5: 40166a8b167653553832da7809346a04
       size: 1274
     - path: src/utils/data/complexityaux.py
       md5: 0fdd7a277d93e83da136646ac119929c
@@ -90,14 +90,14 @@ stages:
       md5: 4f68a4efacf59e18b3535570c8fec47d
       size: 115561
     - path: visualisation/complexity/test_def_front.png
-      md5: 34a2ded9921d7bda4b546f5cbb7d7ad0
-      size: 8606
+      md5: 9bbc0cba3d415120fcd59b9bc940d255
+      size: 15041
     - path: visualisation/complexity/test_ok_front.png
-      md5: c5dde7eb8e9b09f2657d2cb565bbeb35
-      size: 7571
+      md5: b4a5a0140058226a77eba864dac3c051
+      size: 13835
     - path: visualisation/complexity/train_def_front.png
-      md5: e349f8556407ce985c5c087470542ab6
-      size: 10555
+      md5: 5486b00cd82f0dd1d8bee38d077dc4e6
+      size: 16619
     - path: visualisation/complexity/train_ok_front.png
-      md5: f241b221b1d5e3dad87768e24f755929
-      size: 11509
+      md5: 5382142bca1704c2ac34e0c69072708b
+      size: 17467

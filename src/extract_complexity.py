@@ -27,10 +27,10 @@ for split, label in DATA_SPLITS_AND_LABELS:
         pbar.update(1)
     pbar.close()
     plt.hist(mses, bins=60)
-    plt.savefig(f'visualisation/complexity/{split}_{label}.png')
     plt.title(f'JPEG MSE for {split} {label}')
     plt.xlabel('MSE')
     plt.ylabel('Frequency')
+    plt.savefig(f'visualisation/complexity/{split}_{label}.png')
     plt.close()
     with open('data/processed/tabular/complexity.csv', 'a') as f:
         for file, mse in zip(files, mses):
