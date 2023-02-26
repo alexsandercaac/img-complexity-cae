@@ -1,14 +1,14 @@
 stages:
-  train_test_split:
-    cmd: python3 src/train_test_split.py
+  dataset_split:
+    cmd: python3 src/dataset_split.py
     deps:
-    - src/train_test_split.py
+    - src/dataset_split.py
     - src/utils/dvc/params.py
     - data/raw
     params:
-    - train_test_split.split_ratio
-    - train_test_split.shuffle
-    - train_test_split.seed
+    - dataset_split.split_ratio
+    - dataset_split.shuffle
+    - dataset_split.seed
     outs:
     - data/processed/train
     - data/processed/test

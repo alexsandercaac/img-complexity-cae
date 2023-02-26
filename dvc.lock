@@ -4,15 +4,15 @@ stages:
     cmd: python3 src/augmentation_visualisation.py
     deps:
     - path: data/processed/train
-      md5: c5defe0226b3dfadcf5b347a47a57c32.dir
-      size: 25929828
-      nfiles: 1039
+      md5: 2a7f5e541c84422be85000a03ec16195.dir
+      size: 22580022
+      nfiles: 909
     - path: src/augmentation_visualisation.py
       md5: 1409ede16ffb154fd6965182ff553271
       size: 1435
     - path: src/utils/data/tfdatasets.py
-      md5: c71954099ae14965c7e52476cb6982b2
-      size: 6360
+      md5: 597721beb3f0e4c2b26645a4bb116335
+      size: 6584
     - path: src/utils/dvc/params.py
       md5: 29fe2901f8c48bca234c1792cb8c23e8
       size: 836
@@ -36,8 +36,8 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: ba985ce60b8e2876daa5d0e16e2d7b44
-      size: 293558
+      md5: cd2a86342f450ab1fe0637e82081ecdb
+      size: 313838
   train_test_split:
     cmd: python3 src/train_test_split.py
     deps:
@@ -69,13 +69,13 @@ stages:
     cmd: python3 src/extract_complexity.py
     deps:
     - path: data/processed/test
-      md5: 6eb73943fd549cbb0bee08129c9f17d1.dir
-      size: 6472555
+      md5: 2a6674711d8b41c38a328ab45baeec41.dir
+      size: 6570727
       nfiles: 261
     - path: data/processed/train
-      md5: c5defe0226b3dfadcf5b347a47a57c32.dir
-      size: 25929828
-      nfiles: 1039
+      md5: 2a7f5e541c84422be85000a03ec16195.dir
+      size: 22580022
+      nfiles: 909
     - path: src/extract_complexity.py
       md5: 40166a8b167653553832da7809346a04
       size: 1274
@@ -87,17 +87,47 @@ stages:
       size: 1737
     outs:
     - path: data/processed/tabular/complexity.csv
-      md5: 4f68a4efacf59e18b3535570c8fec47d
-      size: 115561
+      md5: e2aa0c0039a4c7e11e078700b0276b8c
+      size: 103956
     - path: visualisation/complexity/test_def_front.png
-      md5: 9bbc0cba3d415120fcd59b9bc940d255
-      size: 15041
+      md5: a1b165b8858b47c721a6d57f676bd90c
+      size: 14392
     - path: visualisation/complexity/test_ok_front.png
-      md5: b4a5a0140058226a77eba864dac3c051
-      size: 13835
+      md5: e6387ce0d9f53439fccec2ec73d584fe
+      size: 14717
     - path: visualisation/complexity/train_def_front.png
-      md5: 5486b00cd82f0dd1d8bee38d077dc4e6
-      size: 16619
+      md5: fadd023c28dfb158b44e8da516783f3b
+      size: 16007
     - path: visualisation/complexity/train_ok_front.png
-      md5: 5382142bca1704c2ac34e0c69072708b
-      size: 17467
+      md5: 3f08bb0800481e2285a985323c855ef5
+      size: 15317
+  dataset_split:
+    cmd: python3 src/dataset_split.py
+    deps:
+    - path: data/raw
+      md5: 563507493540e6e4d2a729d9c4dd1ba4.dir
+      size: 32402506
+      nfiles: 1303
+    - path: src/dataset_split.py
+      md5: 7e80fec1ae24c01863ab19a85eb14eb9
+      size: 4099
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    params:
+      params.yaml:
+        dataset_split.seed: 14
+        dataset_split.shuffle: true
+        dataset_split.split_ratio:
+        - 0.7
+        - 0.1
+        - 0.2
+    outs:
+    - path: data/processed/test
+      md5: 2a6674711d8b41c38a328ab45baeec41.dir
+      size: 6570727
+      nfiles: 261
+    - path: data/processed/train
+      md5: 2a7f5e541c84422be85000a03ec16195.dir
+      size: 22580022
+      nfiles: 909

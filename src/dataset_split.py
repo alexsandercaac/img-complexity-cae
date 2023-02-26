@@ -32,18 +32,33 @@ if SHUFFLE:
     random.shuffle(file_names_ok)
     random.shuffle(file_names_def)
 
-split_index_ok = int(len(file_names_ok) * SPLIT_RATIO)
-split_index_def = int(len(file_names_def) * SPLIT_RATIO)
+train_split_index_ok = int(len(file_names_ok) * SPLIT_RATIO[0])
+train_split_index_def = int(len(file_names_def) * SPLIT_RATIO[0])
 
-train_ok = file_names_ok[:split_index_ok]
-train_def = file_names_def[:split_index_def]
+val_split_index_ok = int(
+    len(file_names_ok) * (SPLIT_RATIO[0] + SPLIT_RATIO[1])
+)
+val_split_index_def = int(
+    len(file_names_def) * (SPLIT_RATIO[0] + SPLIT_RATIO[1])
+)
 
-test_ok = file_names_ok[split_index_ok:]
-test_def = file_names_def[split_index_def:]
+train_ok = file_names_ok[:train_split_index_ok]
+train_def = file_names_def[:train_split_index_def]
+
+val_ok = file_names_ok[train_split_index_ok:val_split_index_ok]
+val_def = file_names_def[train_split_index_def:val_split_index_def]
+
+test_ok = file_names_ok[val_split_index_ok:]
+test_def = file_names_def[val_split_index_def:]
 
 print(f"Train set contains {len(train_ok)} ok_front images (negative class).")
 print(
     f"Train set contains {len(train_def)} def_front images (positive class).")
+print(
+    f"Validation set contains {len(val_ok)} ok_front images (negative class).")
+print(
+    f"Validation set contains {len(val_def)} " +
+    "def_front images (positive class).")
 print(f"Test set contains {len(test_ok)} ok_front images (negative class).")
 print(f"Test set contains {len(test_def)} def_front images (positive class).")
 
@@ -55,6 +70,14 @@ if not os.path.exists('data/processed/train'):
         os.makedirs('data/processed/train/ok_front')
     if not os.path.exists('data/processed/train/def_front'):
         os.makedirs('data/processed/train/def_front')
+
+if not os.path.exists('data/processed/val'):
+    os.makedirs('data/processed/val')
+    if not os.path.exists('data/processed/val/ok_front'):
+        os.makedirs('data/processed/val/ok_front')
+    if not os.path.exists('data/processed/val/def_front'):
+        os.makedirs('data/processed/val/def_front')
+
 if not os.path.exists('data/processed/test'):
     os.makedirs('data/processed/test')
     if not os.path.exists('data/processed/test/ok_front'):
@@ -72,6 +95,18 @@ for file_name in train_def:
     shutil.copyfile(
         f"data/raw/casting_512x512/def_front/{file_name}",
         f"data/processed/train/def_front/{file_name}"
+    )
+
+for file_name in val_ok:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/ok_front/{file_name}",
+        f"data/processed/val/ok_front/{file_name}"
+    )
+
+for file_name in val_def:
+    shutil.copyfile(
+        f"data/raw/casting_512x512/def_front/{file_name}",
+        f"data/processed/val/def_front/{file_name}"
     )
 
 for file_name in test_ok:
