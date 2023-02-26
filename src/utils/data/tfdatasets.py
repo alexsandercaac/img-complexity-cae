@@ -10,7 +10,8 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
                         input_size: Tuple[int, int] = (224, 224),
                         mode: str = 'autoencoder', labels: list = None,
                         augmentation:  tf.keras.Sequential = None,
-                        shuffle: bool = True, scale: float = None
+                        shuffle: bool = True, scale: float = None,
+                        color_mode: str = 'rgb'
                         ) -> tf.data.Dataset:
     '''
 
@@ -37,6 +38,8 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
             Defaults to True.
         scale (float): Factor used to scale the images. If None, no scaling is
             applied. Defaults to None.
+        color_mode (str): Color mode to use. Can be 'rgb' or 'grayscale'.
+            Defaults to 'rgb'.
 
     Returns:
         tf.data.Dataset: Dataset object containing the images.
@@ -48,14 +51,16 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
             labels=None,
             batch_size=batch_size,
             image_size=input_size,
-            shuffle=shuffle)
+            shuffle=shuffle,
+            color_mode=color_mode)
     elif mode == 'classifier':
         dataset = tf.keras.utils.image_dataset_from_directory(
             os.path.join(dir_path, dir),
             labels=labels if labels else 'inferred',
             batch_size=batch_size,
             image_size=input_size,
-            shuffle=shuffle)
+            shuffle=shuffle,
+            color_mode=color_mode)
 
     if augmentation:
         dataset = dataset.map(lambda x: augmentation(x, training=True),
