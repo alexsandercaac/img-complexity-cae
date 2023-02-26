@@ -1,4 +1,4 @@
-augmentation_visualisation:
+all:   # Parameters used in multiple stages
   random_crop: [224, 224]
   random_flip: 'horizontal_and_vertical'
   random_rotation: 0.4

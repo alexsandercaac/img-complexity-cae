@@ -23,14 +23,14 @@ stages:
     - src/utils/dvc/params.py
     - data/processed/train
     params:
-    - augmentation_visualisation.random_crop
-    - augmentation_visualisation.random_flip
-    - augmentation_visualisation.random_rotation
-    - augmentation_visualisation.random_zoom
-    - augmentation_visualisation.random_brightness
-    - augmentation_visualisation.random_contrast
-    - augmentation_visualisation.random_translation_height
-    - augmentation_visualisation.random_translation_width
+    - all.random_crop
+    - all.random_flip
+    - all.random_rotation
+    - all.random_zoom
+    - all.random_brightness
+    - all.random_contrast
+    - all.random_translation_height
+    - all.random_translation_width
     plots:
     - visualisation/augmentation/augmented_images.png:
         cache: false

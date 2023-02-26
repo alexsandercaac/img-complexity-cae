@@ -13,7 +13,7 @@ logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
 
-params = get_params()
+params = get_params('all')
 
 # * Augmentation
 

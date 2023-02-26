@@ -8,8 +8,8 @@ stages:
       size: 25929828
       nfiles: 1039
     - path: src/augmentation_visualisation.py
-      md5: d266771527302a2758fa72041a970d18
-      size: 1430
+      md5: 1409ede16ffb154fd6965182ff553271
+      size: 1435
     - path: src/utils/data/tfdatasets.py
       md5: c71954099ae14965c7e52476cb6982b2
       size: 6360
@@ -18,26 +18,26 @@ stages:
       size: 836
     params:
       params.yaml:
-        augmentation_visualisation.random_brightness: 0.2
-        augmentation_visualisation.random_contrast: 0.2
-        augmentation_visualisation.random_crop:
+        all.random_brightness: 0.2
+        all.random_contrast: 0.2
+        all.random_crop:
         - 224
         - 224
-        augmentation_visualisation.random_flip: horizontal_and_vertical
-        augmentation_visualisation.random_rotation: 0.4
-        augmentation_visualisation.random_translation_height:
+        all.random_flip: horizontal_and_vertical
+        all.random_rotation: 0.4
+        all.random_translation_height:
         - -0.1
         - 0.1
-        augmentation_visualisation.random_translation_width:
+        all.random_translation_width:
         - -0.1
         - 0.1
-        augmentation_visualisation.random_zoom:
+        all.random_zoom:
         - -0.1
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: d82e3acc6ae098b5fcabb7f666f59953
-      size: 292852
+      md5: ba985ce60b8e2876daa5d0e16e2d7b44
+      size: 293558
   train_test_split:
     cmd: python3 src/train_test_split.py
     deps:
