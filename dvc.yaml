@@ -8,9 +8,10 @@ stages:
     params:
     - dataset_split.split_ratio
     - dataset_split.shuffle
-    - dataset_split.seed
+    - all.seed
     outs:
     - data/processed/train
+    - data/processed/val
     - data/processed/test
 
 # *** ---------------------------------------------
@@ -56,3 +57,39 @@ stages:
         cache: false
     - visualisation/complexity/test_def_front.png:
         cache: false
+# *** ---------------------------------------------
+
+  cae_hp_tuning:
+    cmd: python3 src/cae_hp_tuning.py
+    deps:
+    - src/cae_hp_tuning.py
+    - src/utils/dvc/params.py
+    - src/utils/models/kerascallbacks.py
+    - src/utils/models/ktmodels.py
+    - src/utils/data/tfdatasets.py
+    - data/processed/train
+    - data/processed/val
+    params:
+    - all.random_crop
+    - all.random_flip
+    - all.random_rotation
+    - all.random_zoom
+    - all.random_brightness
+    - all.random_contrast
+    - all.random_translation_height
+    - all.random_translation_width
+    - cae_hp_tuning.batch_size
+    - cae_hp_tuning.bottleneck_filters
+    - cae_hp_tuning.alpha
+    - cae_hp_tuning.beta
+    - cae_hp_tuning.patience
+    - cae_hp_tuning.revive_best
+    - cae_hp_tuning.early_stopping
+    - cae_hp_tuning.epochs
+    - cae_hp_tuning.min_lr
+    - cae_hp_tuning.max_trials
+    - cae_hp_tuning.log_path
+
+    outs:
+    - models/logs
+  

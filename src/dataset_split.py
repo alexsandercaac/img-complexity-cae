@@ -12,6 +12,10 @@ pretty.install()
 
 # * Parameters
 params = get_params()
+stage_params = get_params()
+all_params = get_params('all')
+
+params = {**stage_params, **all_params}
 
 SPLIT_RATIO = params['split_ratio']
 SHUFFLE = params['shuffle']

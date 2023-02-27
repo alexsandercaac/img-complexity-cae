@@ -8,12 +8,12 @@ all:   # Parameters used in multiple stages
   random_translation_height: [-0.1, 0.1]
   random_translation_width: [-0.1, 0.1]
   input_size: [224, 224, 1]
+  seed: 13
 dataset_split:
   split_ratio: [0.7, 0.1, 0.2]
   shuffle: true
-  seed: 14
 cae_hp_tuning:
-  batch_size: 32
+  batch_size: 8
   bottleneck_filters: 64
   alpha: 0.98
   beta: 0.9
@@ -22,3 +22,5 @@ cae_hp_tuning:
   early_stopping: false
   epochs: 20
   min_lr: 0.00001
+  max_trials: 50
+  log_path: models/logs

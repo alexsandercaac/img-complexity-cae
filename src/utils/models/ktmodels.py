@@ -12,6 +12,12 @@ class CAE(HyperModel):
     """
     HyperModel class for the Convolutional AutoEncoder (CAE).
 
+    The search ranges are hard coded in the _init_hyperparameters method,
+
+    The encoding half of the network uses strided convolutions to downsample
+    the feature maps, while the decoding half uses nearest neighbor
+    interpolation for upsampling.
+
     Args:
         input_shape (tuple): Shape of the input images.
         bottleneck_filters (int, optional): Number of filters in the bottleneck

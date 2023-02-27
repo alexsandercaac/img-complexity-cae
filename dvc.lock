@@ -4,8 +4,8 @@ stages:
     cmd: python3 src/augmentation_visualisation.py
     deps:
     - path: data/processed/train
-      md5: 2a7f5e541c84422be85000a03ec16195.dir
-      size: 22580022
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
       nfiles: 909
     - path: src/augmentation_visualisation.py
       md5: 1409ede16ffb154fd6965182ff553271
@@ -36,8 +36,8 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: cd2a86342f450ab1fe0637e82081ecdb
-      size: 313838
+      md5: 6f0c9f5aa27f3cc2055c55c8f68fa20e
+      size: 298997
   train_test_split:
     cmd: python3 src/train_test_split.py
     deps:
@@ -69,12 +69,12 @@ stages:
     cmd: python3 src/extract_complexity.py
     deps:
     - path: data/processed/test
-      md5: 2a6674711d8b41c38a328ab45baeec41.dir
-      size: 6570727
+      md5: 19d9cc427bb1e49c1a90516f7c8388b8.dir
+      size: 6549295
       nfiles: 261
     - path: data/processed/train
-      md5: 2a7f5e541c84422be85000a03ec16195.dir
-      size: 22580022
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
       nfiles: 909
     - path: src/extract_complexity.py
       md5: 40166a8b167653553832da7809346a04
@@ -87,20 +87,20 @@ stages:
       size: 1737
     outs:
     - path: data/processed/tabular/complexity.csv
-      md5: e2aa0c0039a4c7e11e078700b0276b8c
-      size: 103956
+      md5: 18a29cacd78744f2d2288c899691ce69
+      size: 103971
     - path: visualisation/complexity/test_def_front.png
-      md5: a1b165b8858b47c721a6d57f676bd90c
-      size: 14392
+      md5: a0dad90afd98ac835b146b1a850cb618
+      size: 15086
     - path: visualisation/complexity/test_ok_front.png
-      md5: e6387ce0d9f53439fccec2ec73d584fe
-      size: 14717
+      md5: 2a72fe3bc556ca2cffd97f692f8ebe7e
+      size: 14695
     - path: visualisation/complexity/train_def_front.png
-      md5: fadd023c28dfb158b44e8da516783f3b
-      size: 16007
+      md5: 90a330d24bc24694d9f96667b1173c8d
+      size: 15961
     - path: visualisation/complexity/train_ok_front.png
-      md5: 3f08bb0800481e2285a985323c855ef5
-      size: 15317
+      md5: caf7700ffc8b8ae42a354892cd94604c
+      size: 17457
   dataset_split:
     cmd: python3 src/dataset_split.py
     deps:
@@ -109,14 +109,14 @@ stages:
       size: 32402506
       nfiles: 1303
     - path: src/dataset_split.py
-      md5: 7e80fec1ae24c01863ab19a85eb14eb9
-      size: 4099
+      md5: 0d119dbc2b686445c60ee6a2a9dff6a3
+      size: 4199
     - path: src/utils/dvc/params.py
       md5: 29fe2901f8c48bca234c1792cb8c23e8
       size: 836
     params:
       params.yaml:
-        dataset_split.seed: 14
+        all.seed: 13
         dataset_split.shuffle: true
         dataset_split.split_ratio:
         - 0.7
@@ -124,10 +124,74 @@ stages:
         - 0.2
     outs:
     - path: data/processed/test
-      md5: 2a6674711d8b41c38a328ab45baeec41.dir
-      size: 6570727
+      md5: 19d9cc427bb1e49c1a90516f7c8388b8.dir
+      size: 6549295
       nfiles: 261
     - path: data/processed/train
-      md5: 2a7f5e541c84422be85000a03ec16195.dir
-      size: 22580022
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
       nfiles: 909
+    - path: data/processed/val
+      md5: 7e729c4bdd49129f6b3d87cd3d6de671.dir
+      size: 3221191
+      nfiles: 130
+  cae_hp_tuning:
+    cmd: python3 src/cae_hp_tuning.py
+    deps:
+    - path: data/processed/train
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
+      nfiles: 909
+    - path: data/processed/val
+      md5: 7e729c4bdd49129f6b3d87cd3d6de671.dir
+      size: 3221191
+      nfiles: 130
+    - path: src/cae_hp_tuning.py
+      md5: 5e54940c16e2cca97265570d55fea026
+      size: 3211
+    - path: src/utils/data/tfdatasets.py
+      md5: 597721beb3f0e4c2b26645a4bb116335
+      size: 6584
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    - path: src/utils/models/kerascallbacks.py
+      md5: aed55c7bed2011e830726de3a42446e5
+      size: 11126
+    - path: src/utils/models/ktmodels.py
+      md5: f07eabd9aa43072f619b247b908dea36
+      size: 10547
+    params:
+      params.yaml:
+        all.random_brightness: 0.2
+        all.random_contrast: 0.2
+        all.random_crop:
+        - 224
+        - 224
+        all.random_flip: horizontal_and_vertical
+        all.random_rotation: 0.4
+        all.random_translation_height:
+        - -0.1
+        - 0.1
+        all.random_translation_width:
+        - -0.1
+        - 0.1
+        all.random_zoom:
+        - -0.1
+        - 0.1
+        cae_hp_tuning.alpha: 0.98
+        cae_hp_tuning.batch_size: 8
+        cae_hp_tuning.beta: 0.9
+        cae_hp_tuning.bottleneck_filters: 64
+        cae_hp_tuning.early_stopping: false
+        cae_hp_tuning.epochs: 20
+        cae_hp_tuning.log_path: models/logs
+        cae_hp_tuning.max_trials: 50
+        cae_hp_tuning.min_lr: 1e-05
+        cae_hp_tuning.patience: 3
+        cae_hp_tuning.revive_best: true
+    outs:
+    - path: models/logs
+      md5: e61d886a6df89d1589c2832ce34d5fbd.dir
+      size: 1947727046
+      nfiles: 326
