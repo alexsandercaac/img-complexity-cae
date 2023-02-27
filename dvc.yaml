@@ -16,28 +16,6 @@ stages:
 
 # *** ---------------------------------------------
 
-  augmentation_visualisation:
-    cmd: python3 src/augmentation_visualisation.py
-    deps:
-    - src/augmentation_visualisation.py
-    - src/utils/data/tfdatasets.py
-    - src/utils/dvc/params.py
-    - data/processed/train
-    params:
-    - all.random_crop
-    - all.random_flip
-    - all.random_rotation
-    - all.random_zoom
-    - all.random_brightness
-    - all.random_contrast
-    - all.random_translation_height
-    - all.random_translation_width
-    plots:
-    - visualisation/augmentation/augmented_images.png:
-        cache: false
-
-# *** ---------------------------------------------
-
   extract_complexity:
     cmd: python3 src/extract_complexity.py
     deps:
@@ -93,3 +71,24 @@ stages:
     outs:
     - models/logs
   
+# *** ---------------------------------------------
+
+  visualisation:
+    cmd: python3 src/visualisation.py
+    deps:
+    - src/visualisation.py
+    - src/utils/data/tfdatasets.py
+    - src/utils/dvc/params.py
+    - data/processed/train
+    params:
+    - all.random_crop
+    - all.random_flip
+    - all.random_rotation
+    - all.random_zoom
+    - all.random_brightness
+    - all.random_contrast
+    - all.random_translation_height
+    - all.random_translation_width
+    plots:
+    - visualisation/augmentation/augmented_images.png:
+        cache: false

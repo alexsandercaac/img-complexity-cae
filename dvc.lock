@@ -195,3 +195,41 @@ stages:
       md5: e61d886a6df89d1589c2832ce34d5fbd.dir
       size: 1947727046
       nfiles: 326
+  visualisation:
+    cmd: python3 src/visualisation.py
+    deps:
+    - path: data/processed/train
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
+      nfiles: 909
+    - path: src/utils/data/tfdatasets.py
+      md5: 597721beb3f0e4c2b26645a4bb116335
+      size: 6584
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    - path: src/visualisation.py
+      md5: 1409ede16ffb154fd6965182ff553271
+      size: 1435
+    params:
+      params.yaml:
+        all.random_brightness: 0.2
+        all.random_contrast: 0.2
+        all.random_crop:
+        - 224
+        - 224
+        all.random_flip: horizontal_and_vertical
+        all.random_rotation: 0.4
+        all.random_translation_height:
+        - -0.1
+        - 0.1
+        all.random_translation_width:
+        - -0.1
+        - 0.1
+        all.random_zoom:
+        - -0.1
+        - 0.1
+    outs:
+    - path: visualisation/augmentation/augmented_images.png
+      md5: f9e21a164faaddf88930c27549592725
+      size: 301037

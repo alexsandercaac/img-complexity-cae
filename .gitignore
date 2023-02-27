@@ -1,8 +1,7 @@
 # images
 *.jpeg
 *.jpg
-# hp tuning logs
-models/logs/*
+
 # vscode
 *.code-workspace
 
