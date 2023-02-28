@@ -233,3 +233,56 @@ stages:
     - path: visualisation/augmentation/augmented_images.png
       md5: f9e21a164faaddf88930c27549592725
       size: 301037
+  cae_training:
+    cmd: python3 src/cae_training.py
+    deps:
+    - path: data/processed/train
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
+      nfiles: 909
+    - path: data/processed/val
+      md5: 7e729c4bdd49129f6b3d87cd3d6de671.dir
+      size: 3221191
+      nfiles: 130
+    - path: models/logs/hp_search_best.hdf5
+      md5: 53c6c80bd22cbe02ee4c5b28fc81a6f8
+      size: 4858352
+    - path: src/cae_training.py
+      md5: 045e254a3058cefdd955110549cfe7df
+      size: 3850
+    - path: src/utils/data/tfdatasets.py
+      md5: 597721beb3f0e4c2b26645a4bb116335
+      size: 6584
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    - path: src/utils/models/kerascallbacks.py
+      md5: aed55c7bed2011e830726de3a42446e5
+      size: 11126
+    params:
+      params.yaml:
+        all.random_brightness: 0.2
+        all.random_contrast: 0.2
+        all.random_crop:
+        - 224
+        - 224
+        all.random_flip: horizontal_and_vertical
+        all.random_rotation: 0.4
+        all.random_translation_height:
+        - -0.1
+        - 0.1
+        all.random_translation_width:
+        - -0.1
+        - 0.1
+        all.random_zoom:
+        - -0.1
+        - 0.1
+        cae_training.alpha: 0.98
+        cae_training.batch_size: 8
+        cae_training.beta: 0.9
+        cae_training.early_stopping: false
+        cae_training.epochs: 50
+        cae_training.learning_rate: 0.0001
+        cae_training.min_lr: 1e-05
+        cae_training.patience: 3
+        cae_training.revive_best: true

@@ -92,3 +92,34 @@ stages:
     plots:
     - visualisation/augmentation/augmented_images.png:
         cache: false
+
+# *** ---------------------------------------------
+
+  cae_training:
+    cmd: python3 src/cae_training.py
+    deps:
+    - src/cae_training.py
+    - src/utils/dvc/params.py
+    - src/utils/models/kerascallbacks.py
+    - src/utils/data/tfdatasets.py
+    - data/processed/train
+    - data/processed/val
+    - models/logs/hp_search_best.hdf5
+    params:
+    - all.random_crop
+    - all.random_flip
+    - all.random_rotation
+    - all.random_zoom
+    - all.random_brightness
+    - all.random_contrast
+    - all.random_translation_height
+    - all.random_translation_width
+    - cae_training.batch_size
+    - cae_training.alpha
+    - cae_training.beta
+    - cae_training.patience
+    - cae_training.revive_best
+    - cae_training.early_stopping
+    - cae_training.epochs
+    - cae_training.min_lr
+    - cae_training.learning_rate
