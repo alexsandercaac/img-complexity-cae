@@ -123,3 +123,6 @@ stages:
     - cae_training.epochs
     - cae_training.min_lr
     - cae_training.learning_rate
+    outs:
+    - models/best_cae.hdf5
+    - models/training_history.csv

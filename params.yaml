@@ -31,6 +31,6 @@ cae_training:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 50
+  epochs: 75
   min_lr: 0.00001
   learning_rate: 0.0001

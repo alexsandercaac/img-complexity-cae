@@ -248,8 +248,8 @@ stages:
       md5: 53c6c80bd22cbe02ee4c5b28fc81a6f8
       size: 4858352
     - path: src/cae_training.py
-      md5: 045e254a3058cefdd955110549cfe7df
-      size: 3850
+      md5: 13f4e2a4f9e83ee438be42d90df4a72f
+      size: 3854
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -281,8 +281,15 @@ stages:
         cae_training.batch_size: 8
         cae_training.beta: 0.9
         cae_training.early_stopping: false
-        cae_training.epochs: 50
+        cae_training.epochs: 75
         cae_training.learning_rate: 0.0001
         cae_training.min_lr: 1e-05
         cae_training.patience: 3
         cae_training.revive_best: true
+    outs:
+    - path: models/best_cae.hdf5
+      md5: ef919bd971a2868a56a13610ad5cd5a6
+      size: 14387944
+    - path: models/training_history.csv
+      md5: 147686a7e3b4af6ab78a6935b04ae3fb
+      size: 10146

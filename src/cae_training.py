@@ -103,7 +103,7 @@ history = model.fit(
                             data_size=train_size,
                             batch_size=params['batch_size'],
                             epochs=params['epochs'])],
-    verbose=2
+    verbose=0
 )
 
 # Evaluate model on validation dataset after training
@@ -123,5 +123,5 @@ else:
     print('Validation loss decreased after training.')
     print('Saving model...')
     model.save(filepath='models/best_cae.hdf5')
-    with io.open('models/logs/history.csv', 'w') as f:
+    with io.open('models/training_history.csv', 'w') as f:
         f.write(str(history.history))
