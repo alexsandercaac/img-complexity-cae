@@ -10,6 +10,7 @@ import logging
 
 import tensorflow as tf
 from tqdm.keras import TqdmCallback
+import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
@@ -123,5 +124,5 @@ else:
     print('Validation loss decreased after training.')
     print('Saving model...')
     model.save(filepath='models/best_cae.hdf5')
-    with io.open('models/training_history.csv', 'w') as f:
-        f.write(str(history.history))
+    history_df = pd.DataFrame(history.history)
+    history_df.to_csv('models/training_history.csv', index=False)
