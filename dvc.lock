@@ -202,6 +202,9 @@ stages:
       md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
       size: 22631897
       nfiles: 909
+    - path: models/best_cae.hdf5
+      md5: 68b9c898e98f7ec59183efe1d72e06a7
+      size: 14387944
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -209,8 +212,8 @@ stages:
       md5: 29fe2901f8c48bca234c1792cb8c23e8
       size: 836
     - path: src/visualisation.py
-      md5: 1409ede16ffb154fd6965182ff553271
-      size: 1435
+      md5: c4db94f163ff54fa0f344f7924104e03
+      size: 2305
     params:
       params.yaml:
         all.random_brightness: 0.2
@@ -231,8 +234,11 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: f9e21a164faaddf88930c27549592725
-      size: 301037
+      md5: 21710b21c592a8b0c99e0f9faf5d3802
+      size: 286403
+    - path: visualisation/reconstruction/reconstructed_images.png
+      md5: f2da854eb8ff2e9d136e335fc2d3dd76
+      size: 323424
   cae_training:
     cmd: python3 src/cae_training.py
     deps:

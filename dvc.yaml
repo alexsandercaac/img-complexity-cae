@@ -80,6 +80,7 @@ stages:
     - src/utils/data/tfdatasets.py
     - src/utils/dvc/params.py
     - data/processed/train
+    - models/best_cae.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -91,6 +92,8 @@ stages:
     - all.random_translation_width
     plots:
     - visualisation/augmentation/augmented_images.png:
+        cache: false
+    - visualisation/reconstruction/reconstructed_images.png:
         cache: false
 
 # *** ---------------------------------------------
