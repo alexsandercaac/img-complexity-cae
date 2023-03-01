@@ -185,19 +185,19 @@ class CAE(HyperModel):
         self.filters_1 = hp.Int(
             "filters1", min_value=32, max_value=96, step=32)
         self.kernel_size_1 = hp.Int(
-            "kernel_size1", min_value=2, max_value=6, step=2)
+            "kernel_size1", min_value=2, max_value=4, step=1)
 
         # Second convolutional block
         self.filters_2 = hp.Int(
-            "filters2", min_value=64, max_value=224, step=32)
+            "filters2", min_value=64, max_value=128, step=32)
         self.kernel_size_2 = hp.Int(
-            "kernel_size2", min_value=2, max_value=10, step=2)
+            "kernel_size2", min_value=2, max_value=5, step=1)
 
         # Third convolutional block
         self.filters_3 = hp.Int(
-            "filters3", min_value=224, max_value=288, step=32)
+            "filters3", min_value=128, max_value=256, step=32)
         self.kernel_size_3 = hp.Int(
-            "kernel_size3", min_value=2, max_value=6, step=2)
+            "kernel_size3", min_value=2, max_value=5, step=1)
         # Fourth convolutional block
         self.filters_4 = self.bottleneck_filters
         self.kernel_size_4 = hp.Int(

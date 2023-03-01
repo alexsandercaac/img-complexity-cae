@@ -147,8 +147,8 @@ stages:
       size: 3221191
       nfiles: 130
     - path: src/cae_hp_tuning.py
-      md5: 5e54940c16e2cca97265570d55fea026
-      size: 3211
+      md5: 1b85c8f0572ee0ceea2621a008d74f20
+      size: 3198
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -159,8 +159,8 @@ stages:
       md5: aed55c7bed2011e830726de3a42446e5
       size: 11126
     - path: src/utils/models/ktmodels.py
-      md5: f07eabd9aa43072f619b247b908dea36
-      size: 10547
+      md5: c7d52fc396d33dacacfd1822ca178640
+      size: 10546
     params:
       params.yaml:
         all.random_brightness: 0.2
@@ -180,7 +180,7 @@ stages:
         - -0.1
         - 0.1
         cae_hp_tuning.alpha: 0.98
-        cae_hp_tuning.batch_size: 8
+        cae_hp_tuning.batch_size: 4
         cae_hp_tuning.beta: 0.9
         cae_hp_tuning.bottleneck_filters: 64
         cae_hp_tuning.early_stopping: false
@@ -192,9 +192,9 @@ stages:
         cae_hp_tuning.revive_best: true
     outs:
     - path: models/logs
-      md5: e61d886a6df89d1589c2832ce34d5fbd.dir
-      size: 1947727046
-      nfiles: 326
+      md5: c322b6e3c6d48834fe1e8bba7012e5b3.dir
+      size: 845325824
+      nfiles: 354
   visualisation:
     cmd: python3 src/visualisation.py
     deps:
@@ -203,8 +203,8 @@ stages:
       size: 22631897
       nfiles: 909
     - path: models/best_cae.hdf5
-      md5: 68b9c898e98f7ec59183efe1d72e06a7
-      size: 14387944
+      md5: 731c6664272be9403773f55ecbdd3c84
+      size: 6029136
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -234,11 +234,11 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: 21710b21c592a8b0c99e0f9faf5d3802
-      size: 286403
+      md5: bc0dd9aa946912af463ee81f02411bee
+      size: 300805
     - path: visualisation/reconstruction/reconstructed_images.png
-      md5: f2da854eb8ff2e9d136e335fc2d3dd76
-      size: 323424
+      md5: 63bde69716165e14fbf56c59f875dad6
+      size: 282463
   cae_training:
     cmd: python3 src/cae_training.py
     deps:
@@ -251,11 +251,11 @@ stages:
       size: 3221191
       nfiles: 130
     - path: models/logs/hp_search_best.hdf5
-      md5: 53c6c80bd22cbe02ee4c5b28fc81a6f8
-      size: 4858352
+      md5: aee7a39682816c19aaf469036b7cec0f
+      size: 2069552
     - path: src/cae_training.py
-      md5: 1485d8f255796df3a5467111ae53ec73
-      size: 3890
+      md5: 84ffcd020f14ab3f975fd831df07561a
+      size: 3867
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -294,8 +294,8 @@ stages:
         cae_training.revive_best: true
     outs:
     - path: models/best_cae.hdf5
-      md5: 68b9c898e98f7ec59183efe1d72e06a7
-      size: 14387944
+      md5: 731c6664272be9403773f55ecbdd3c84
+      size: 6029136
     - path: models/training_history.csv
-      md5: bc60c72135349eedf21e912e25a3efba
-      size: 9673
+      md5: 13ab31c657a1a5a24dda62b2e99fbe8d
+      size: 9555

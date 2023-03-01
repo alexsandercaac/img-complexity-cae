@@ -5,7 +5,6 @@
     saved as a csv file and the model is saved as an hdf5 file.
 """
 import os
-import io
 import logging
 
 import tensorflow as tf
@@ -41,7 +40,7 @@ augmentation = augmentation_model(
 
 # * Load dataset
 train_dataset = load_tf_img_dataset(
-    dir='train',
+    dir='train/ok_front',
     dir_path='data/processed',
     input_size=tuple(params['input_size'])[:2],
     mode='autoencoder',
@@ -53,13 +52,12 @@ train_dataset = load_tf_img_dataset(
 )
 
 val_dataset = load_tf_img_dataset(
-    dir='val',
+    dir='val/ok_front',
     dir_path='data/processed',
     input_size=tuple(params['input_size'])[:2],
     mode='autoencoder',
     scale=255,
     shuffle=True,
-    augmentation=augmentation,
     batch_size=params['batch_size'],
     color_mode='grayscale'
 )
