@@ -8,8 +8,8 @@ stages:
       size: 22631897
       nfiles: 909
     - path: src/augmentation_visualisation.py
-      md5: 1409ede16ffb154fd6965182ff553271
-      size: 1435
+      md5: c15e204ca60ab936f3c8bc283ea53a41
+      size: 1473
     - path: src/utils/data/tfdatasets.py
       md5: 597721beb3f0e4c2b26645a4bb116335
       size: 6584
@@ -18,6 +18,10 @@ stages:
       size: 836
     params:
       params.yaml:
+        all.input_size:
+        - 224
+        - 224
+        - 1
         all.random_brightness: 0.2
         all.random_contrast: 0.2
         all.random_crop:
@@ -36,8 +40,8 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: 6f0c9f5aa27f3cc2055c55c8f68fa20e
-      size: 298997
+      md5: f3742d8359a9e5ed0a462f1b75e10b4d
+      size: 283634
   train_test_split:
     cmd: python3 src/train_test_split.py
     deps:
@@ -339,3 +343,32 @@ stages:
     - path: visualisation/reconstruction/val_ok_front_hist.png
       md5: c30127f531cc75459eb3eee352ee81f8
       size: 15323
+  reconstruction_visualisation:
+    cmd: python3 src/reconstruction_visualisation.py
+    deps:
+    - path: data/processed/train
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
+      nfiles: 909
+    - path: models/best_cae.hdf5
+      md5: 731c6664272be9403773f55ecbdd3c84
+      size: 6029136
+    - path: src/reconstruction_visualisation.py
+      md5: 0e74cad265dddae7836c93d9aa1eddcf
+      size: 1285
+    - path: src/utils/data/tfdatasets.py
+      md5: 597721beb3f0e4c2b26645a4bb116335
+      size: 6584
+    - path: src/utils/dvc/params.py
+      md5: 29fe2901f8c48bca234c1792cb8c23e8
+      size: 836
+    params:
+      params.yaml:
+        all.input_size:
+        - 224
+        - 224
+        - 1
+    outs:
+    - path: visualisation/reconstruction/reconstructed_images.png
+      md5: 4b36be76b6b0a2cb7350c025f80c5bbf
+      size: 318735

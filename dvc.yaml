@@ -73,14 +73,13 @@ stages:
   
 # *** ---------------------------------------------
 
-  visualisation:
-    cmd: python3 src/visualisation.py
+  augmentation_visualisation:
+    cmd: python3 src/augmentation_visualisation.py
     deps:
-    - src/visualisation.py
+    - src/augmentation_visualisation.py
     - src/utils/data/tfdatasets.py
     - src/utils/dvc/params.py
     - data/processed/train
-    - models/best_cae.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -90,9 +89,24 @@ stages:
     - all.random_contrast
     - all.random_translation_height
     - all.random_translation_width
+    - all.input_size
     plots:
     - visualisation/augmentation/augmented_images.png:
         cache: false
+
+# *** ---------------------------------------------
+
+  reconstruction_visualisation:
+    cmd: python3 src/reconstruction_visualisation.py
+    deps:
+    - src/reconstruction_visualisation.py
+    - src/utils/data/tfdatasets.py
+    - src/utils/dvc/params.py
+    - data/processed/train
+    - models/best_cae.hdf5
+    params:
+    - all.input_size
+    plots:
     - visualisation/reconstruction/reconstructed_images.png:
         cache: false
 

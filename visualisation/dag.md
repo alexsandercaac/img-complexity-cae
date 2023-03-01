@@ -1,19 +1,21 @@
 ```mermaid
 flowchart TD
-	node1["cae_hp_tuning"]
-	node2["cae_training"]
-	node3["calculate_reconstruction_mse"]
-	node4["data/raw/casting_512x512.dvc"]
-	node5["dataset_split"]
-	node6["extract_complexity"]
-	node7["visualisation"]
-	node1-->node2
+	node1["augmentation_visualisation"]
+	node2["cae_hp_tuning"]
+	node3["cae_training"]
+	node4["calculate_reconstruction_mse"]
+	node5["data/raw/casting_512x512.dvc"]
+	node6["dataset_split"]
+	node7["extract_complexity"]
+	node8["reconstruction_visualisation"]
 	node2-->node3
-	node2-->node7
-	node4-->node5
-	node5-->node1
-	node5-->node2
-	node5-->node3
+	node3-->node4
+	node3-->node8
 	node5-->node6
-	node5-->node7
+	node6-->node1
+	node6-->node2
+	node6-->node3
+	node6-->node4
+	node6-->node7
+	node6-->node8
 ```
