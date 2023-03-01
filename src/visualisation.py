@@ -35,8 +35,8 @@ augmentation = augmentation_model(
 # * Load dataset
 
 dataset = load_tf_img_dataset(
-    dir='raw',
-    dir_path='data',
+    dir='train',
+    dir_path='data/processed',
     mode='image_only',
     scale=255,
     shuffle=False,

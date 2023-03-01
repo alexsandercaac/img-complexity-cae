@@ -212,8 +212,8 @@ stages:
       md5: 29fe2901f8c48bca234c1792cb8c23e8
       size: 836
     - path: src/visualisation.py
-      md5: c4db94f163ff54fa0f344f7924104e03
-      size: 2305
+      md5: 13314fa8db8dfdd06486cd4005fae2d3
+      size: 2317
     params:
       params.yaml:
         all.random_brightness: 0.2
@@ -234,11 +234,11 @@ stages:
         - 0.1
     outs:
     - path: visualisation/augmentation/augmented_images.png
-      md5: bc0dd9aa946912af463ee81f02411bee
-      size: 300805
+      md5: 544e01a35d2f2e697231aa813deff9da
+      size: 289277
     - path: visualisation/reconstruction/reconstructed_images.png
-      md5: 63bde69716165e14fbf56c59f875dad6
-      size: 282463
+      md5: 66f1cedae454a2075c101b802cbed542
+      size: 323819
   cae_training:
     cmd: python3 src/cae_training.py
     deps:
