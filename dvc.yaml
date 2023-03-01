@@ -27,13 +27,13 @@ stages:
     outs:
     - data/processed/tabular/complexity.csv
     plots:
-    - visualisation/complexity/train_ok_front.png:
+    - visualisation/complexity/train_ok_front_hist.png:
         cache: false
-    - visualisation/complexity/test_ok_front.png:
+    - visualisation/complexity/val_ok_front_hist.png:
         cache: false
-    - visualisation/complexity/train_def_front.png:
+    - visualisation/complexity/train_def_front_hist.png:
         cache: false
-    - visualisation/complexity/test_def_front.png:
+    - visualisation/complexity/val_def_front_hist.png:
         cache: false
 # *** ---------------------------------------------
 
@@ -129,3 +129,26 @@ stages:
     outs:
     - models/best_cae.hdf5
     - models/training_history.csv
+
+# *** ---------------------------------------------
+
+  calculate_reconstruction_mse:
+    cmd: python3 src/calculate_reconstruction_mse.py
+    deps:
+    - src/calculate_reconstruction_mse.py
+    - models/best_cae.hdf5
+    - src/utils/data/complexityaux.py
+    - data/processed/train
+    - data/processed/val
+    - data/processed/test
+    outs:
+    - data/processed/tabular/cae_mse.csv
+    plots:
+    - visualisation/reconstruction/train_ok_front_hist.png:
+        cache: false
+    - visualisation/reconstruction/val_ok_front_hist.png:
+        cache: false
+    - visualisation/reconstruction/train_def_front_hist.png:
+        cache: false
+    - visualisation/reconstruction/val_def_front_hist.png:
+        cache: false

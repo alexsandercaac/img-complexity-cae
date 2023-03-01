@@ -77,8 +77,8 @@ stages:
       size: 22631897
       nfiles: 909
     - path: src/extract_complexity.py
-      md5: 40166a8b167653553832da7809346a04
-      size: 1274
+      md5: 56ab1c5823fce9ba56b1c50191a842a0
+      size: 1334
     - path: src/utils/data/complexityaux.py
       md5: 0fdd7a277d93e83da136646ac119929c
       size: 3092
@@ -87,20 +87,20 @@ stages:
       size: 1737
     outs:
     - path: data/processed/tabular/complexity.csv
-      md5: 18a29cacd78744f2d2288c899691ce69
-      size: 103971
-    - path: visualisation/complexity/test_def_front.png
-      md5: a0dad90afd98ac835b146b1a850cb618
-      size: 15086
-    - path: visualisation/complexity/test_ok_front.png
-      md5: 2a72fe3bc556ca2cffd97f692f8ebe7e
-      size: 14695
-    - path: visualisation/complexity/train_def_front.png
+      md5: ecda53a6bc784bf7d09ee5cb5ea7907f
+      size: 115041
+    - path: visualisation/complexity/train_def_front_hist.png
       md5: 90a330d24bc24694d9f96667b1173c8d
       size: 15961
-    - path: visualisation/complexity/train_ok_front.png
+    - path: visualisation/complexity/train_ok_front_hist.png
       md5: caf7700ffc8b8ae42a354892cd94604c
       size: 17457
+    - path: visualisation/complexity/val_def_front_hist.png
+      md5: a9865dfc48660d396eb1acd7d5994e20
+      size: 14415
+    - path: visualisation/complexity/val_ok_front_hist.png
+      md5: 2021c24b44827ab6a1202ca91d56cd61
+      size: 15099
   dataset_split:
     cmd: python3 src/dataset_split.py
     deps:
@@ -299,3 +299,43 @@ stages:
     - path: models/training_history.csv
       md5: 13ab31c657a1a5a24dda62b2e99fbe8d
       size: 9555
+  calculate_reconstruction_mse:
+    cmd: python3 src/calculate_reconstruction_mse.py
+    deps:
+    - path: data/processed/test
+      md5: 19d9cc427bb1e49c1a90516f7c8388b8.dir
+      size: 6549295
+      nfiles: 261
+    - path: data/processed/train
+      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+      size: 22631897
+      nfiles: 909
+    - path: data/processed/val
+      md5: 7e729c4bdd49129f6b3d87cd3d6de671.dir
+      size: 3221191
+      nfiles: 130
+    - path: models/best_cae.hdf5
+      md5: 731c6664272be9403773f55ecbdd3c84
+      size: 6029136
+    - path: src/calculate_reconstruction_mse.py
+      md5: f7c3844a58e1cb04781f9f8ad361297d
+      size: 1633
+    - path: src/utils/data/complexityaux.py
+      md5: 0fdd7a277d93e83da136646ac119929c
+      size: 3092
+    outs:
+    - path: data/processed/tabular/cae_mse.csv
+      md5: 8e3a48a3e4260644fafe30b747228132
+      size: 111470
+    - path: visualisation/reconstruction/train_def_front_hist.png
+      md5: ec8bab1863c261fea9f257904f4ff6e2
+      size: 14766
+    - path: visualisation/reconstruction/train_ok_front_hist.png
+      md5: 4f75085de29e7c9379f3df7e38ae6051
+      size: 13700
+    - path: visualisation/reconstruction/val_def_front_hist.png
+      md5: d8df7d3f933fa0cfdc475ed673593adc
+      size: 12749
+    - path: visualisation/reconstruction/val_ok_front_hist.png
+      md5: c30127f531cc75459eb3eee352ee81f8
+      size: 15323
