@@ -166,3 +166,15 @@ stages:
         cache: false
     - visualisation/reconstruction/val_def_front_hist.png:
         cache: false
+
+# *** ---------------------------------------------
+
+  complexity_vs_caemse:
+    cmd: python3 src/complexity_vs_caemse.py
+    deps:
+    - src/complexity_vs_caemse.py
+    - data/processed/tabular/complexity.csv
+    - data/processed/tabular/cae_mse.csv
+    plots:
+    - visualisation/complexity_vs_caemse.html:
+        cache: false

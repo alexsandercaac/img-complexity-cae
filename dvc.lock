@@ -372,3 +372,19 @@ stages:
     - path: visualisation/reconstruction/reconstructed_images.png
       md5: 4b36be76b6b0a2cb7350c025f80c5bbf
       size: 318735
+  complexity_vs_caemse:
+    cmd: python3 src/complexity_vs_caemse.py
+    deps:
+    - path: data/processed/tabular/cae_mse.csv
+      md5: 8e3a48a3e4260644fafe30b747228132
+      size: 111470
+    - path: data/processed/tabular/complexity.csv
+      md5: ecda53a6bc784bf7d09ee5cb5ea7907f
+      size: 115041
+    - path: src/complexity_vs_caemse.py
+      md5: e74e7bb74755a8194f314f60d54a1845
+      size: 2070
+    outs:
+    - path: visualisation/complexity_vs_caemse.html
+      md5: b032a134b40b7f497ff241206d0339eb
+      size: 3623610
