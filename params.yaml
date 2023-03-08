@@ -34,3 +34,6 @@ cae_training:
   epochs: 75
   min_lr: 0.00001
   learning_rate: 0.0001
+cae_mse_model:
+  n_iter: 25
+  score_func: 'f1'

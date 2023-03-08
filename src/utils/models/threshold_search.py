@@ -4,6 +4,7 @@
     error to make predictions.
 """
 import numpy as np
+import numpy.typing as npt
 from sklearn.base import BaseEstimator
 from skopt import BayesSearchCV
 from skopt.space import Real
@@ -16,8 +17,9 @@ class ScikitCaeEstimator(BaseEstimator):
     error to make predictions.
     """
 
-    def __init__(self, threshold: float = None):
+    def __init__(self, threshold: float = None, score_func=None):
         self.threshold = threshold
+        self.score_func = score_func
 
     def predict(self, X, y=None):
         return np.where(X > self.threshold, 1, 0)
@@ -25,16 +27,16 @@ class ScikitCaeEstimator(BaseEstimator):
     def fit(self, X, y=None):
         return self
 
-    def score(self, X, y=None, score_func=None):
+    def score(self, X, y=None):
         predictions = self.predict(X)
-        if score_func is not None:
-            return score_func(y, predictions)
+        if self.score_func is not None:
+            return self.score_func(y, predictions)
         else:
             return np.mean(predictions == y)
 
 
-def bayesian_search_th(inputs: np.typing.ArrayLike,
-                       labels: np.typing.ArrayLike,
+def bayesian_search_th(inputs: npt.ArrayLike,
+                       labels: npt.ArrayLike,
                        th_min: float, th_max: float,
                        prior: str = 'uniform',
                        score_func: callable = None,
@@ -73,14 +75,9 @@ def bayesian_search_th(inputs: np.typing.ArrayLike,
         ([0], list(range(len(labels)))) for _ in range(1)
     )
 
-    # If no score function is provided, the accuracy is used.
-    if score_func:
-        model = ScikitCaeEstimator(score_func=score_func)
-    else:
-        model = ScikitCaeEstimator()
-
     clf = BayesSearchCV(
-        model, params_grid, n_jobs=-1, cv=cv_splits, n_iter=n_iter
+        ScikitCaeEstimator(score_func=score_func),
+        params_grid, n_jobs=-1, cv=cv_splits, n_iter=n_iter
     )
 
     search = clf.fit(inputs, labels)

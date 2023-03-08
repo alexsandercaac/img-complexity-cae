@@ -4,10 +4,13 @@
     validation data.
 """
 import pandas as pd
-from utils.models.scikit_cae_estimator import ScikitCaeEstimator
-from skopt import BayesSearchCV
-from skopt.space import Real
+from sklearn.metrics import f1_score
 
+from utils.models.threshold_search import bayesian_search_th
+from utils.dvc.params import get_params
+
+
+params = get_params()
 cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
 
 cae_df['label'] = cae_df['label'].apply(
@@ -20,21 +23,20 @@ val_df = cae_df[mask].drop(columns=['data_split'])
 mask = cae_df['data_split'] == 'test'
 test_df = cae_df[mask].drop(columns=['data_split'])
 
+if params['score_func'] == 'accuracy':
+    score_func = None
+elif params['score_func'] == 'f1':
+    score_func = f1_score
+else:
+    raise ValueError(
+        f"Invalid score function {params['score_func']} specified.")
 
-params_grid = {
-    'threshold': Real(
-        val_df['cae_mse'].min(), val_df['cae_mse'].max(), prior='uniform')
-}
-
-cv_splits = (
-    ([0], list(range(len(val_df)))) for _ in range(1)
+search_results = bayesian_search_th(
+    val_df['cae_mse'].values, val_df['label'].values,
+    val_df['cae_mse'].min(), val_df['cae_mse'].max(),
+    n_iter=params['n_iter'], score_func=score_func
 )
 
-model = ScikitCaeEstimator()
-
-clf = BayesSearchCV(model, params_grid, n_jobs=-1, cv=cv_splits, n_iter=25)
-
-search = clf.fit(val_df['cae_mse'].values, val_df['label'].values)
-
-best_threshold = search.best_params_['threshold']
-best_score = search.best_score_
+# Write best threshold to file in models/params
+with open('models/params/cae_threshold.txt', 'w') as f:
+    f.write(str(search_results['threshold']))

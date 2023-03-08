@@ -3,7 +3,6 @@ stages:
     cmd: python3 src/dataset_split.py
     deps:
     - src/dataset_split.py
-    - src/utils/dvc/params.py
     - data/raw
     params:
     - dataset_split.split_ratio
@@ -41,7 +40,6 @@ stages:
     cmd: python3 src/cae_hp_tuning.py
     deps:
     - src/cae_hp_tuning.py
-    - src/utils/dvc/params.py
     - src/utils/models/kerascallbacks.py
     - src/utils/models/ktmodels.py
     - src/utils/data/tfdatasets.py
@@ -78,7 +76,6 @@ stages:
     deps:
     - src/augmentation_visualisation.py
     - src/utils/data/tfdatasets.py
-    - src/utils/dvc/params.py
     - data/processed/train
     params:
     - all.random_crop
@@ -101,7 +98,6 @@ stages:
     deps:
     - src/reconstruction_visualisation.py
     - src/utils/data/tfdatasets.py
-    - src/utils/dvc/params.py
     - data/processed/train
     - models/best_cae.hdf5
     params:
@@ -116,7 +112,6 @@ stages:
     cmd: python3 src/cae_training.py
     deps:
     - src/cae_training.py
-    - src/utils/dvc/params.py
     - src/utils/models/kerascallbacks.py
     - src/utils/data/tfdatasets.py
     - data/processed/train
@@ -178,3 +173,14 @@ stages:
     plots:
     - visualisation/complexity_vs_caemse.html:
         cache: false
+
+# *** ---------------------------------------------
+
+  cae_mse_model:
+    cmd: python3 src/cae_mse_model.py
+    deps:
+    - src/cae_mse_model.py
+    - src/utils/models/threshold_search.py
+    - data/processed/tabular/cae_mse.csv
+    outs:
+    - models/params/cae_threshold.txt
