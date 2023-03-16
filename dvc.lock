@@ -404,3 +404,22 @@ stages:
     - path: models/params/cae_threshold.txt
       md5: 6f24bbba838a0c3050f89ff65ff37224
       size: 19
+  evaluate:
+    cmd: python3 src/evaluate.py
+    deps:
+    - path: data/processed/tabular/cae_mse.csv
+      md5: 8e3a48a3e4260644fafe30b747228132
+      size: 111470
+    - path: models/params/cae_threshold.txt
+      md5: 6f24bbba838a0c3050f89ff65ff37224
+      size: 19
+    - path: src/evaluate.py
+      md5: 3ba854e86d66c41d858d5d8b364dce83
+      size: 1998
+    - path: src/utils/evaluation/classification_metrics.py
+      md5: 058a9cc1d3d17bd5e8edc4a4bed44243
+      size: 699
+    outs:
+    - path: metrics/cae_metrics.json
+      md5: c4fc27d1bbd9f36ef1812e3d99c7a3f3
+      size: 384

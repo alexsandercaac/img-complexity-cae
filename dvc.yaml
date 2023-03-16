@@ -184,3 +184,16 @@ stages:
     - data/processed/tabular/cae_mse.csv
     outs:
     - models/params/cae_threshold.txt
+
+# *** ---------------------------------------------
+
+  evaluate:
+    cmd: python3 src/evaluate.py
+    deps:
+    - src/evaluate.py
+    - src/utils/evaluation/classification_metrics.py
+    - data/processed/tabular/cae_mse.csv
+    - models/params/cae_threshold.txt
+    metrics:
+    - metrics/cae_metrics.json:
+        cache: false
