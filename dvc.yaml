@@ -182,6 +182,9 @@ stages:
     - src/cae_mse_model.py
     - src/utils/models/threshold_search.py
     - data/processed/tabular/cae_mse.csv
+    params:
+    - cae_mse_model.score_func
+    - cae_mse_model.n_iter
     outs:
     - models/params/mse_threshold.txt
     - visualisation/thresholds/mse.html:
@@ -195,6 +198,9 @@ stages:
     - src/corrected_model.py
     - src/utils/models/threshold_search.py
     - data/processed/tabular/cae_mse.csv
+    params:
+    - corrected_model.score_func
+    - corrected_model.n_iter
     outs:
     - models/params/corrected_mse_threshold.txt
     - visualisation/thresholds/corrected_mse.html:
