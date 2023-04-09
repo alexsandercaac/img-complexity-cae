@@ -183,7 +183,23 @@ stages:
     - src/utils/models/threshold_search.py
     - data/processed/tabular/cae_mse.csv
     outs:
-    - models/params/cae_threshold.txt
+    - models/params/mse_threshold.txt
+    - visualisation/thresholds/mse.html:
+        cache: false
+
+# *** ---------------------------------------------
+
+  corrected_model:
+    cmd: python3 src/corrected_model.py
+    deps:
+    - src/corrected_model.py
+    - src/utils/models/threshold_search.py
+    - data/processed/tabular/cae_mse.csv
+    outs:
+    - models/params/corrected_mse_threshold.txt
+    - visualisation/thresholds/corrected_mse.html:
+        cache: false
+
 
 # *** ---------------------------------------------
 
@@ -193,7 +209,10 @@ stages:
     - src/evaluate.py
     - src/utils/evaluation/classification_metrics.py
     - data/processed/tabular/cae_mse.csv
-    - models/params/cae_threshold.txt
+    - models/params/mse_threshold.txt
+    - models/params/corrected_mse_threshold.txt
     metrics:
     - metrics/cae_metrics.json:
+        cache: false
+    - metrics/corrected_cae_metrics.json:
         cache: false

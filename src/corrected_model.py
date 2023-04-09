@@ -1,7 +1,7 @@
 """
-    In this stage, the reconstruction error of the CAE is used as am outlier
-    score and prediction is made based on a threshold defined with the
-    validation data.
+    In this stage, the reconstruction error of the CAE, corrected by image
+    complexity is used as an outlier score and prediction is made based on a
+    threshold defined with the validation data.
 """
 import pandas as pd
 from sklearn.metrics import f1_score
@@ -12,8 +12,13 @@ from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
+
 params = get_params()
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
+cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv', index_col=0)
+complexity_df = pd.read_csv(
+    'data/processed/tabular/complexity.csv', index_col=0)
+complexity_df = complexity_df[['jpeg_mse']]
+cae_df = cae_df.join(complexity_df)
 
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'def_front' else 0)
@@ -29,17 +34,19 @@ else:
     raise ValueError(
         f"Invalid score function {params['score_func']} specified.")
 
+val_df['corrected_mse'] = val_df['cae_mse'] / val_df['jpeg_mse']
+
 search_results = bayesian_search_th(
-    val_df['cae_mse'].values, val_df['label'].values,
-    val_df['cae_mse'].min(), val_df['cae_mse'].max(),
+    val_df['corrected_mse'].values, val_df['label'].values,
+    val_df['corrected_mse'].min(), val_df['corrected_mse'].max(),
     n_iter=params['n_iter'], score_func=score_func
 )
 
 # Write best threshold to file in models/params
-with open('models/params/mse_threshold.txt', 'w') as f:
+with open('models/params/corrected_mse_threshold.txt', 'w') as f:
     f.write(str(search_results['threshold']))
 
-fig = val_df['cae_mse'].hist()
+fig = val_df['corrected_mse'].hist()
 
 fig.add_trace(
     go.Scatter(
@@ -52,8 +59,8 @@ fig.add_trace(
 )
 
 fig.update_layout(
-    title_text="Histogram of CAE-MSE",
-    xaxis_title_text="CAE-MSE",
+    title_text="Histogram of corrected MSE",
+    xaxis_title_text="Corrected MSE",
     yaxis_title_text="Count",
     legend_title_text="Legend",
     font=dict(
@@ -64,5 +71,4 @@ fig.update_layout(
 )
 
 # Save figure
-fig.write_html('visualisation/thresholds/mse.html')
-
+fig.write_html('visualisation/thresholds/corrected_mse.html')
