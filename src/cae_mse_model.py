@@ -39,7 +39,9 @@ search_results = bayesian_search_th(
 with open('models/params/mse_threshold.txt', 'w') as f:
     f.write(str(search_results['threshold']))
 
-fig = val_df['cae_mse'].hist()
+fig = val_df['cae_mse'].hist(
+    by=val_df['label'], color=val_df['label'].apply(
+        lambda x: 'def_front' if x == 1 else 'ok_front'), opacity=0.6)
 
 fig.add_trace(
     go.Scatter(
@@ -63,6 +65,4 @@ fig.update_layout(
     )
 )
 
-# Save figure
 fig.write_html('visualisation/thresholds/mse.html')
-

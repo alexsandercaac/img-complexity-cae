@@ -46,7 +46,11 @@ search_results = bayesian_search_th(
 with open('models/params/corrected_mse_threshold.txt', 'w') as f:
     f.write(str(search_results['threshold']))
 
-fig = val_df['corrected_mse'].hist()
+# Plot histogram of corrected_mse with different colors according to label
+fig = val_df['corrected_mse'].hist(
+    by=val_df['label'], color=val_df['label'].apply(
+        lambda x: 'def_front' if x == 1 else 'ok_front'), opacity=0.6)
+
 
 fig.add_trace(
     go.Scatter(
@@ -59,16 +63,14 @@ fig.add_trace(
 )
 
 fig.update_layout(
-    title_text="Histogram of corrected MSE",
-    xaxis_title_text="Corrected MSE",
+    title_text="Histogram of Corrected CAE-MSE",
+    xaxis_title_text="Corrected CAE-MSE",
     yaxis_title_text="Count",
     legend_title_text="Legend",
     font=dict(
         family="Courier New, monospace",
         size=18,
-        color="RebeccaPurple"
     )
 )
 
-# Save figure
 fig.write_html('visualisation/thresholds/corrected_mse.html')
