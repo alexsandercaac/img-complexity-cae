@@ -395,17 +395,21 @@ stages:
       md5: 8e3a48a3e4260644fafe30b747228132
       size: 111470
     - path: src/cae_mse_model.py
-      md5: 26b3f6a817207bfd9b1d4e9bfc749f19
-      size: 1940
+      md5: 013644d7aa07625411846a3e6ae3aece
+      size: 1973
     - path: src/utils/models/threshold_search.py
-      md5: e114a7721adcbc6c543eaca4974fbace
-      size: 2840
+      md5: 8fe5f3a703dcd0efcb41eb4d1cfb58ec
+      size: 3456
+    params:
+      params.yaml:
+        cae_mse_model.n_iter: 25
+        cae_mse_model.score_func: accuracy
     outs:
     - path: models/params/mse_threshold.txt
-      md5: 7bebf91e0733e8ad333aa34fa129044f
+      md5: 07f9e51c1f7349f17f8f261a5ffe09b4
       size: 18
     - path: visualisation/thresholds/mse.html
-      md5: b8d1d98debbac944e62525928e28f32f
+      md5: d3d98fd96aa983f1769f05cf44e2e5b1
       size: 3586735
   evaluate:
     cmd: python3 src/evaluate.py
@@ -414,10 +418,10 @@ stages:
       md5: 8e3a48a3e4260644fafe30b747228132
       size: 111470
     - path: models/params/corrected_mse_threshold.txt
-      md5: bdf8440e5ec27344214f60f6a3bf0964
-      size: 17
+      md5: 758811c7558934695a6995a790a311a4
+      size: 18
     - path: models/params/mse_threshold.txt
-      md5: 7bebf91e0733e8ad333aa34fa129044f
+      md5: 07f9e51c1f7349f17f8f261a5ffe09b4
       size: 18
     - path: src/evaluate.py
       md5: 91f3ff456791af7b65d74f94bc042df3
@@ -427,8 +431,8 @@ stages:
       size: 699
     outs:
     - path: metrics/cae_metrics.json
-      md5: 896cb0d39fd3850d9dfac0f04433ac92
-      size: 354
+      md5: a696ad435f75d7e0377dc912cb33f86d
+      size: 384
     - path: metrics/corrected_cae_metrics.json
       md5: 1071307458a74e671381f5ffa0c13c8b
       size: 236
@@ -439,15 +443,19 @@ stages:
       md5: 8e3a48a3e4260644fafe30b747228132
       size: 111470
     - path: src/corrected_model.py
-      md5: 48962414ea77b59258e8991aac5c662c
-      size: 2328
+      md5: abd9ad66d3b20ae329dadfef9a46bc9b
+      size: 2361
     - path: src/utils/models/threshold_search.py
-      md5: e114a7721adcbc6c543eaca4974fbace
-      size: 2840
+      md5: 8fe5f3a703dcd0efcb41eb4d1cfb58ec
+      size: 3456
+    params:
+      params.yaml:
+        corrected_model.n_iter: 25
+        corrected_model.score_func: accuracy
     outs:
     - path: models/params/corrected_mse_threshold.txt
-      md5: bdf8440e5ec27344214f60f6a3bf0964
-      size: 17
+      md5: 758811c7558934695a6995a790a311a4
+      size: 18
     - path: visualisation/thresholds/corrected_mse.html
-      md5: 32b6fab35b865eac0edb74bd73acedda
-      size: 3586611
+      md5: 64eea63de3df16fced2b93e75a1f2db1
+      size: 3586613

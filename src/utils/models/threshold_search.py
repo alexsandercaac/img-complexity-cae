@@ -40,7 +40,9 @@ def bayesian_search_th(inputs: npt.ArrayLike,
                        th_min: float, th_max: float,
                        prior: str = 'uniform',
                        score_func: callable = None,
-                       n_iter: int = 25
+                       n_iter: int = 25,
+                       balanced: bool = False,
+                       verbose: int = 0
                        ) -> dict:
     """
     This function performs a bayesian search to find the optimal threshold
@@ -60,6 +62,9 @@ def bayesian_search_th(inputs: npt.ArrayLike,
             Defaults to None, in which case the accuracy is used for scoring.
         n_iter(int): The number of iterations for the bayesian search.
             Defaults to 25.
+        balanced(bool): Whether to create a balanced dataset by undersampling
+            the majority class. Defaults to False.
+        verbose(int): The verbosity level. Defaults to 0.
 
     Returns:
         dict: The best threshold and its associated score.
@@ -71,13 +76,26 @@ def bayesian_search_th(inputs: npt.ArrayLike,
 
     # The bayesian search is performed using a single fold, and all data
     # is used in calculating the score.
-    cv_splits = (
-        ([0], list(range(len(labels)))) for _ in range(1)
-    )
+    if balanced:
+        pos_indices = np.where(labels == 1)[0]
+        neg_indices = np.where(labels == 0)[0]
+        minority_class = min(len(pos_indices), len(neg_indices))
+        pos_indices = pos_indices[:minority_class]
+        neg_indices = neg_indices[:minority_class]
+        indices = np.concatenate((pos_indices, neg_indices))
+
+        cv_splits = (
+            ([0], indices) for _ in range(1)
+        )
+
+    else:
+        cv_splits = (
+            ([0], list(range(len(labels)))) for _ in range(1)
+        )
 
     clf = BayesSearchCV(
         ScikitCaeEstimator(score_func=score_func),
-        params_grid, n_jobs=-1, cv=cv_splits, n_iter=n_iter
+        params_grid, n_jobs=-1, cv=cv_splits, n_iter=n_iter, verbose=verbose
     )
 
     search = clf.fit(inputs, labels)

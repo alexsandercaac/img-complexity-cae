@@ -32,7 +32,8 @@ else:
 search_results = bayesian_search_th(
     val_df['cae_mse'].values, val_df['label'].values,
     val_df['cae_mse'].min(), val_df['cae_mse'].max(),
-    n_iter=params['n_iter'], score_func=score_func
+    n_iter=params['n_iter'], score_func=score_func,
+    balanced=params['balanced']
 )
 
 # Write best threshold to file in models/params

@@ -39,7 +39,8 @@ val_df['corrected_mse'] = val_df['cae_mse'] / val_df['jpeg_mse']
 search_results = bayesian_search_th(
     val_df['corrected_mse'].values, val_df['label'].values,
     val_df['corrected_mse'].min(), val_df['corrected_mse'].max(),
-    n_iter=params['n_iter'], score_func=score_func
+    n_iter=params['n_iter'], score_func=score_func,
+    balanced=params['balanced'], verbose=3
 )
 
 # Write best threshold to file in models/params

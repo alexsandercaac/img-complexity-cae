@@ -36,7 +36,9 @@ cae_training:
   learning_rate: 0.0001
 cae_mse_model:
   n_iter: 25
-  score_func: 'f1'
+  score_func: 'accuracy'
+  balanced: true
 corrected_model:
   n_iter: 25
-  score_func: 'f1'
+  score_func: 'accuracy'
+  balanced: true
