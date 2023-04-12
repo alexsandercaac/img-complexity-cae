@@ -13,9 +13,9 @@ complexity_df = pd.read_csv(
 complexity_df = complexity_df[['jpeg_mse']]
 cae_df = cae_df.join(complexity_df)
 
-th = float(open('models/params/mse_threshold.txt', 'r').read())
+th = float(open('models/casting/params/mse_threshold.txt', 'r').read())
 corrected_th = float(
-    open('models/params/corrected_mse_threshold.txt', 'r').read())
+    open('models/casting/params/corrected_mse_threshold.txt', 'r').read())
 
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'def_front' else 0)
@@ -68,7 +68,7 @@ metrics = {
     'test_rec': test_rec
 }
 
-with open('metrics/cae_metrics.json', 'w') as f:
+with open('metrics/casting/cae_metrics.json', 'w') as f:
     json.dump(metrics, f)
 
 train_df['corrected_mse'] = train_df['cae_mse'] / train_df['jpeg_mse']
@@ -118,5 +118,5 @@ metrics = {
     'test_rec': test_rec
 }
 
-with open('metrics/corrected_cae_metrics.json', 'w') as f:
+with open('metrics/casting/corrected_cae_metrics.json', 'w') as f:
     json.dump(metrics, f)

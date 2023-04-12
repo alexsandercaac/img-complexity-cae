@@ -31,7 +31,7 @@ dataset = load_tf_img_dataset(
     color_mode='grayscale'
 )
 
-model = tf.keras.models.load_model('models/best_cae.hdf5')
+model = tf.keras.models.load_model('models/casting/best_cae.hdf5')
 
 plt.figure(figsize=(10, 10))
 for images, _ in dataset:
@@ -46,4 +46,4 @@ for images, _ in dataset:
         plt.axis("off")
     break
 
-plt.savefig('visualisation/reconstruction/reconstructed_images.png')
+plt.savefig('visualisation/reconstruction//casting/reconstructed_images.png')

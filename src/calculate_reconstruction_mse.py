@@ -22,7 +22,7 @@ DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
                           for label in ['ok_front', 'def_front']]
 
 model = tf.keras.models.load_model(
-    filepath='models/best_cae.hdf5'
+    filepath='models/casting/best_cae.hdf5'
 )
 
 for split, label in DATA_SPLITS_AND_LABELS:
@@ -43,7 +43,8 @@ for split, label in DATA_SPLITS_AND_LABELS:
         plt.title(f'CAE MSE for {split} {label}')
         plt.xlabel('MSE')
         plt.ylabel('Frequency')
-        plt.savefig(f'visualisation/reconstruction/{split}_{label}_hist.png')
+        plt.savefig(
+            f'visualisation/reconstruction/casting/{split}_{label}_hist.png')
         plt.close()
     with open('data/processed/tabular/cae_mse.csv', 'a') as f:
         for file, mse in zip(files, mses):

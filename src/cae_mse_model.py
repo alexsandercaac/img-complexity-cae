@@ -37,7 +37,7 @@ search_results = bayesian_search_th(
 )
 
 # Write best threshold to file in models/params
-with open('models/params/mse_threshold.txt', 'w') as f:
+with open('models/casting/params/mse_threshold.txt', 'w') as f:
     f.write(str(search_results['threshold']))
 
 fig = val_df['cae_mse'].hist(
@@ -66,4 +66,4 @@ fig.update_layout(
     )
 )
 
-fig.write_html('visualisation/thresholds/mse.html')
+fig.write_html('visualisation/thresholds/casting/mse.html')

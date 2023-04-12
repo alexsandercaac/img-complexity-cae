@@ -31,7 +31,8 @@ for split, label in DATA_SPLITS_AND_LABELS:
         plt.title(f'JPEG MSE for {split} {label}')
         plt.xlabel('MSE')
         plt.ylabel('Frequency')
-        plt.savefig(f'visualisation/complexity/{split}_{label}_hist.png')
+        plt.savefig(
+            f'visualisation/complexity/casting/{split}_{label}_hist.png')
         plt.close()
     with open('data/processed/tabular/complexity.csv', 'a') as f:
         for file, mse in zip(files, mses):

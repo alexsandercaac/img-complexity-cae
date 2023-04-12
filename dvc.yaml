@@ -26,13 +26,13 @@ stages:
     outs:
     - data/processed/tabular/complexity.csv
     plots:
-    - visualisation/complexity/train_ok_front_hist.png:
+    - visualisation/complexity/casting/train_ok_front_hist.png:
         cache: false
-    - visualisation/complexity/val_ok_front_hist.png:
+    - visualisation/complexity/casting/val_ok_front_hist.png:
         cache: false
-    - visualisation/complexity/train_def_front_hist.png:
+    - visualisation/complexity/casting/train_def_front_hist.png:
         cache: false
-    - visualisation/complexity/val_def_front_hist.png:
+    - visualisation/complexity/casting/val_def_front_hist.png:
         cache: false
 # *** ---------------------------------------------
 
@@ -67,7 +67,7 @@ stages:
     - cae_hp_tuning.log_path
 
     outs:
-    - models/logs
+    - models/casting/logs
   
 # *** ---------------------------------------------
 
@@ -88,7 +88,7 @@ stages:
     - all.random_translation_width
     - all.input_size
     plots:
-    - visualisation/augmentation/augmented_images.png:
+    - visualisation/augmentation/casting_augmented_images.png:
         cache: false
 
 # *** ---------------------------------------------
@@ -99,11 +99,11 @@ stages:
     - src/reconstruction_visualisation.py
     - src/utils/data/tfdatasets.py
     - data/processed/train
-    - models/best_cae.hdf5
+    - models/casting/best_cae.hdf5
     params:
     - all.input_size
     plots:
-    - visualisation/reconstruction/reconstructed_images.png:
+    - visualisation/reconstruction/casting/reconstructed_images.png:
         cache: false
 
 # *** ---------------------------------------------
@@ -116,7 +116,7 @@ stages:
     - src/utils/data/tfdatasets.py
     - data/processed/train
     - data/processed/val
-    - models/logs/hp_search_best.hdf5
+    - models/casting/logs/hp_search_best.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -136,8 +136,8 @@ stages:
     - cae_training.min_lr
     - cae_training.learning_rate
     outs:
-    - models/best_cae.hdf5
-    - models/training_history.csv
+    - models/casting/best_cae.hdf5
+    - models/casting/training_history.csv
 
 # *** ---------------------------------------------
 
@@ -145,7 +145,7 @@ stages:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
     - src/calculate_reconstruction_mse.py
-    - models/best_cae.hdf5
+    - models/casting/best_cae.hdf5
     - src/utils/data/complexityaux.py
     - data/processed/train
     - data/processed/val
@@ -153,13 +153,13 @@ stages:
     outs:
     - data/processed/tabular/cae_mse.csv
     plots:
-    - visualisation/reconstruction/train_ok_front_hist.png:
+    - visualisation/reconstruction/casting/train_ok_front_hist.png:
         cache: false
-    - visualisation/reconstruction/val_ok_front_hist.png:
+    - visualisation/reconstruction/casting/val_ok_front_hist.png:
         cache: false
-    - visualisation/reconstruction/train_def_front_hist.png:
+    - visualisation/reconstruction/casting/train_def_front_hist.png:
         cache: false
-    - visualisation/reconstruction/val_def_front_hist.png:
+    - visualisation/reconstruction/casting/val_def_front_hist.png:
         cache: false
 
 # *** ---------------------------------------------
@@ -171,7 +171,7 @@ stages:
     - data/processed/tabular/complexity.csv
     - data/processed/tabular/cae_mse.csv
     plots:
-    - visualisation/complexity_vs_caemse.html:
+    - visualisation/casting_complexity_vs_caemse.html:
         cache: false
 
 # *** ---------------------------------------------
@@ -186,8 +186,8 @@ stages:
     - cae_mse_model.score_func
     - cae_mse_model.n_iter
     outs:
-    - models/params/mse_threshold.txt
-    - visualisation/thresholds/mse.html:
+    - models/casting/params/mse_threshold.txt
+    - visualisation/thresholds/casting/mse.html:
         cache: false
 
 # *** ---------------------------------------------
@@ -202,8 +202,8 @@ stages:
     - corrected_model.score_func
     - corrected_model.n_iter
     outs:
-    - models/params/corrected_mse_threshold.txt
-    - visualisation/thresholds/corrected_mse.html:
+    - models/casting/params/corrected_mse_threshold.txt
+    - visualisation/thresholds/casting/corrected_mse.html:
         cache: false
 
 
@@ -215,10 +215,10 @@ stages:
     - src/evaluate.py
     - src/utils/evaluation/classification_metrics.py
     - data/processed/tabular/cae_mse.csv
-    - models/params/mse_threshold.txt
-    - models/params/corrected_mse_threshold.txt
+    - models/casting/params/mse_threshold.txt
+    - models/casting/params/corrected_mse_threshold.txt
     metrics:
-    - metrics/cae_metrics.json:
+    - metrics/casting/cae_metrics.json:
         cache: false
-    - metrics/corrected_cae_metrics.json:
+    - metrics/casting/corrected_cae_metrics.json:
         cache: false

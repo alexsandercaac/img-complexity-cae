@@ -20,10 +20,10 @@ cae_hp_tuning:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 20
-  min_lr: 0.00001
+  epochs: 25
+  min_lr: 0.000001
   max_trials: 50
-  log_path: models/logs
+  log_path: models/casting/logs
 cae_training:
   batch_size: 8
   alpha: 0.98

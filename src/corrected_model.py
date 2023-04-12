@@ -12,7 +12,6 @@ from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
-
 params = get_params()
 cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv', index_col=0)
 complexity_df = pd.read_csv(
@@ -44,7 +43,7 @@ search_results = bayesian_search_th(
 )
 
 # Write best threshold to file in models/params
-with open('models/params/corrected_mse_threshold.txt', 'w') as f:
+with open('models/casting/params/corrected_mse_threshold.txt', 'w') as f:
     f.write(str(search_results['threshold']))
 
 # Plot histogram of corrected_mse with different colors according to label
@@ -74,4 +73,4 @@ fig.update_layout(
     )
 )
 
-fig.write_html('visualisation/thresholds/corrected_mse.html')
+fig.write_html('visualisation/thresholds/casting/corrected_mse.html')

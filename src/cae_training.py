@@ -63,7 +63,7 @@ val_dataset = load_tf_img_dataset(
 )
 
 model = tf.keras.models.load_model(
-    filepath='models/logs/hp_search_best.hdf5'
+    filepath='models/casting/logs/hp_search_best.hdf5'
 )
 model.compile(loss=['mse'],
               optimizer=tf.keras.optimizers.Adam(
@@ -116,11 +116,11 @@ if val_mse_post > val_mse_pre:
     print('Validation loss increased after training.')
     print('Reverting to best model...')
     model = tf.keras.models.load_model(
-        filepath='models/logs/best_cae.hdf5')
-    model.save(filepath='models/best_cae.hdf5')
+        filepath='models/casting/logs/best_cae.hdf5')
+    model.save(filepath='models/casting/best_cae.hdf5')
 else:
     print('Validation loss decreased after training.')
     print('Saving model...')
-    model.save(filepath='models/best_cae.hdf5')
+    model.save(filepath='models/casting/best_cae.hdf5')
     history_df = pd.DataFrame(history.history)
-    history_df.to_csv('models/training_history.csv', index=False)
+    history_df.to_csv('models/casting/training_history.csv', index=False)

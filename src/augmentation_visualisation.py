@@ -52,4 +52,4 @@ for images in dataset:
         plt.axis("off")
     break
 
-plt.savefig('visualisation/augmentation/augmented_images.png')
+plt.savefig('visualisation/augmentation/casting_augmented_images.png')
