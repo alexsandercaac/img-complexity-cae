@@ -69,39 +69,40 @@ stages:
   extract_complexity:
     cmd: python3 src/extract_complexity.py
     deps:
-    - path: data/processed/test
-      md5: 19d9cc427bb1e49c1a90516f7c8388b8.dir
-      size: 6549295
-      nfiles: 261
-    - path: data/processed/train
-      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
+    - path: data/processed/casting/test
+      md5: 02bf3d112e9fef42f91bf947090dbed7.dir
+      size: 6568769
+      nfiles: 262
+    - path: data/processed/casting/train
+      md5: b4eaf37727ac0c2deecccb49e9c63192.dir
       size: 22631897
       nfiles: 909
+    - path: data/processed/casting/val
+      md5: 66a11b6123e34ce4f0e47991dfeb4cb1.dir
+      size: 3201717
+      nfiles: 129
     - path: src/extract_complexity.py
-      md5: 5d7f9514b0e9c6050741f9d9e051342d
-      size: 1355
+      md5: 83643f2649ddc98ba7338bb17303201b
+      size: 2295
     - path: src/utils/data/complexityaux.py
       md5: 0fdd7a277d93e83da136646ac119929c
       size: 3092
+    - path: src/utils/data/filemanipulation.py
+      md5: d4dcfb77a9553a20eec7937c45b5d001
+      size: 1131
     - path: src/utils/data/jpegmse.py
       md5: e342de2355d1636284f6312007774db5
       size: 1737
+    - path: src/utils/dvc/params.py
+      md5: c57ff0542069d8b6236b09e7aee32be8
+      size: 1268
     outs:
-    - path: data/processed/tabular/complexity.csv
-      md5: ecda53a6bc784bf7d09ee5cb5ea7907f
-      size: 115041
-    - path: visualisation/complexity/casting/train_def_front_hist.png
-      md5: 90a330d24bc24694d9f96667b1173c8d
-      size: 15961
-    - path: visualisation/complexity/casting/train_ok_front_hist.png
-      md5: caf7700ffc8b8ae42a354892cd94604c
-      size: 17457
-    - path: visualisation/complexity/casting/val_def_front_hist.png
-      md5: a9865dfc48660d396eb1acd7d5994e20
-      size: 14415
-    - path: visualisation/complexity/casting/val_ok_front_hist.png
-      md5: 2021c24b44827ab6a1202ca91d56cd61
-      size: 15099
+    - path: data/processed/casting/tabular/complexity.csv
+      md5: 4ac2449ad3fff42d693cf546a834b940
+      size: 123881
+    - path: visualisation/casting/complexity_hist.png
+      md5: 2c750982d2249610e9b9b793810c7504
+      size: 16593
   dataset_split:
     cmd: python3 src/dataset_split.py
     deps:
@@ -110,14 +111,17 @@ stages:
       size: 32402383
       nfiles: 1300
     - path: src/dataset_split.py
-      md5: f27ad206b012a1e2c3bab6733adfd210
-      size: 2602
+      md5: ec67a241c33272e856ea2037812c467b
+      size: 2588
     - path: src/utils/data/filemanipulation.py
       md5: d4dcfb77a9553a20eec7937c45b5d001
       size: 1131
     - path: src/utils/data/misc.py
       md5: 21d215adcb439b736c67451c33490895
       size: 783
+    - path: src/utils/dvc/params.py
+      md5: c57ff0542069d8b6236b09e7aee32be8
+      size: 1268
     params:
       params.yaml:
         all.dataset: casting
@@ -128,10 +132,18 @@ stages:
         - 0.1
         - 0.2
     outs:
-    - path: data/processed/casting
-      md5: 5d4dc42e9cb08a999b583a51eb5a5366.dir
-      size: 32402383
-      nfiles: 1300
+    - path: data/processed/casting/test
+      md5: 02bf3d112e9fef42f91bf947090dbed7.dir
+      size: 6568769
+      nfiles: 262
+    - path: data/processed/casting/train
+      md5: b4eaf37727ac0c2deecccb49e9c63192.dir
+      size: 22631897
+      nfiles: 909
+    - path: data/processed/casting/val
+      md5: 66a11b6123e34ce4f0e47991dfeb4cb1.dir
+      size: 3201717
+      nfiles: 129
   cae_hp_tuning:
     cmd: python3 src/cae_hp_tuning.py
     deps:

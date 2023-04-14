@@ -5,6 +5,7 @@ stages:
     - src/dataset_split.py
     - src/utils/data/misc.py
     - src/utils/data/filemanipulation.py
+    - src/utils/dvc/params.py
     - data/raw/${all.dataset}
     params:
     - dataset_split.split_ratio
@@ -12,7 +13,9 @@ stages:
     - all.seed
     - all.dataset
     outs:
-    - data/processed/${all.dataset}
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
 
 # *** ---------------------------------------------
 
@@ -22,18 +25,15 @@ stages:
     - src/extract_complexity.py
     - src/utils/data/jpegmse.py
     - src/utils/data/complexityaux.py
-    - data/processed/train
-    - data/processed/test
+    - src/utils/dvc/params.py
+    - src/utils/data/filemanipulation.py
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
     outs:
-    - data/processed/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
     plots:
-    - visualisation/complexity/casting/train_ok_front_hist.png:
-        cache: false
-    - visualisation/complexity/casting/val_ok_front_hist.png:
-        cache: false
-    - visualisation/complexity/casting/train_def_front_hist.png:
-        cache: false
-    - visualisation/complexity/casting/val_def_front_hist.png:
+    - visualisation/${all.dataset}/complexity_hist.png:
         cache: false
 
 # *** ---------------------------------------------

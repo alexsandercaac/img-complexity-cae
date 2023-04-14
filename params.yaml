@@ -13,6 +13,9 @@ all:   # Parameters used in multiple stages
 dataset_split:
   split_ratio: [0.7, 0.1, 0.2]
   shuffle: true
+extract_complexity:
+  grayscale: true
+  scale: 255
 cae_hp_tuning:
   batch_size: 4
   bottleneck_filters: 64
