@@ -9,6 +9,7 @@ all:   # Parameters used in multiple stages
   random_translation_width: [-0.1, 0.1]
   input_size: [224, 224, 1]
   seed: 13
+  dataset: 'casting'
 dataset_split:
   split_ratio: [0.7, 0.1, 0.2]
   shuffle: true

@@ -3,15 +3,16 @@ stages:
     cmd: python3 src/dataset_split.py
     deps:
     - src/dataset_split.py
-    - data/raw
+    - src/utils/data/misc.py
+    - src/utils/data/filemanipulation.py
+    - data/raw/${all.dataset}
     params:
     - dataset_split.split_ratio
     - dataset_split.shuffle
     - all.seed
+    - all.dataset
     outs:
-    - data/processed/train
-    - data/processed/val
-    - data/processed/test
+    - data/processed/${all.dataset}
 
 # *** ---------------------------------------------
 

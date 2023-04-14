@@ -105,15 +105,22 @@ stages:
   dataset_split:
     cmd: python3 src/dataset_split.py
     deps:
-    - path: data/raw
-      md5: 858f04ca03d1984aa4660e74c2ef1968.dir
-      size: 269089026
-      nfiles: 121307
+    - path: data/raw/casting
+      md5: b333fcc1e3fbef34d7e404ab1fd8af37.dir
+      size: 32402383
+      nfiles: 1300
     - path: src/dataset_split.py
-      md5: 0d119dbc2b686445c60ee6a2a9dff6a3
-      size: 4199
+      md5: c62a38a8619b0fc3dd33436349b1a741
+      size: 2688
+    - path: src/utils/data/filemanipulation.py
+      md5: d4dcfb77a9553a20eec7937c45b5d001
+      size: 1131
+    - path: src/utils/data/misc.py
+      md5: 21d215adcb439b736c67451c33490895
+      size: 783
     params:
       params.yaml:
+        all.dataset: casting
         all.seed: 13
         dataset_split.shuffle: true
         dataset_split.split_ratio:
@@ -121,18 +128,10 @@ stages:
         - 0.1
         - 0.2
     outs:
-    - path: data/processed/test
-      md5: 19d9cc427bb1e49c1a90516f7c8388b8.dir
-      size: 6549295
-      nfiles: 261
-    - path: data/processed/train
-      md5: fe46cb0152c9cbbcbd9310681d7f1138.dir
-      size: 22631897
-      nfiles: 909
-    - path: data/processed/val
-      md5: 7e729c4bdd49129f6b3d87cd3d6de671.dir
-      size: 3221191
-      nfiles: 130
+    - path: data/processed/casting
+      md5: 5d4dc42e9cb08a999b583a51eb5a5366.dir
+      size: 32402383
+      nfiles: 1300
   cae_hp_tuning:
     cmd: python3 src/cae_hp_tuning.py
     deps:
