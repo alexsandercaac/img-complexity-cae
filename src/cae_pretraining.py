@@ -1,8 +1,8 @@
 """
-    This stage loads the model pretrained in the previous stage and fits it to
-    the training dataset. The model is trained for a number of epochs and the
-    best performing model in validation is saved. The training history is
-    saved as a csv file and the model is saved as an hdf5 file.
+    This stage loads the model trained in the previous stage of hyperparameter
+    tuning and trains it on a general purpose dataset. The goal is that
+    the model will learn generalizable low level features that can be used
+    for the task of interest.
 """
 import os
 import logging
@@ -25,6 +25,8 @@ all_params = get_params('all')
 
 params = {**stage_params, **all_params}
 
+DATASET_PATH = 'data/raw/tiny-imagenet-200'
+
 # * Augmentation
 
 augmentation = augmentation_model(
@@ -40,8 +42,8 @@ augmentation = augmentation_model(
 
 # * Load dataset
 train_dataset = load_tf_img_dataset(
-    dir='train/ok_front',
-    dir_path='data/processed',
+    dir='train',
+    dir_path=DATASET_PATH,
     input_size=tuple(params['input_size'])[:2],
     mode='autoencoder',
     scale=255,
@@ -52,8 +54,8 @@ train_dataset = load_tf_img_dataset(
 )
 
 val_dataset = load_tf_img_dataset(
-    dir='val/ok_front',
-    dir_path='data/processed',
+    dir='val',
+    dir_path=DATASET_PATH,
     input_size=tuple(params['input_size'])[:2],
     mode='autoencoder',
     scale=255,
@@ -63,8 +65,14 @@ val_dataset = load_tf_img_dataset(
 )
 
 model = tf.keras.models.load_model(
-    filepath='models/casting/bin/pretrained_cae.hdf5'
+    filepath='models/casting/bin/hp_search_best.hdf5'
 )
+
+# Randomize model weights
+model.set_weights(
+    [tf.random.normal(shape=weight.shape) for weight in model.weights]
+)
+
 model.compile(loss=['mse'],
               optimizer=tf.keras.optimizers.Adam(
     learning_rate=params['learning_rate']),
@@ -82,14 +90,12 @@ lr_schedule = CustomLearningRateScheduler(
     min_lr=params['min_lr']
 )
 
+train_folder = os.path.join(DATASET_PATH, 'train')
+
 train_size = sum(
-    [len(files) for _, _, files in os.walk('data/processed/train')])
+    [len(files) for _, _, files in os.walk(train_folder)])
 
 print(f'Training samples: {train_size}')
-
-# Evaluate model on validation dataset before training
-print('Evaluating model on validation dataset before training...')
-val_loss_pre, val_mae_pre, val_mse_pre = model.evaluate(val_dataset, verbose=2)
 
 # * Train model
 
@@ -105,22 +111,10 @@ history = model.fit(
     verbose=0
 )
 
-# Evaluate model on validation dataset after training
-print('Evaluating model on validation dataset after training...')
-val_loss_post, val_mae_post, val_mse_post = model.evaluate(
-    val_dataset, verbose=2)
-
 # * Save model and history
 
-if val_mse_post > val_mse_pre:
-    print('Validation loss increased after training.')
-    print('Reverting to best model...')
-    model = tf.keras.models.load_model(
-        filepath='models/casting/bin/best_cae.hdf5')
-    model.save(filepath='models/casting/bin/best_cae.hdf5')
-else:
-    print('Validation loss decreased after training.')
-    print('Saving model...')
-    model.save(filepath='models/casting/bin/best_cae.hdf5')
-    history_df = pd.DataFrame(history.history)
-    history_df.to_csv('models/casting/logs/training_history.csv', index=False)
+print('Saving model...')
+model.save(filepath='models/casting/bin/pretrained_cae.hdf5')
+history_df = pd.DataFrame(history.history)
+history_df.to_csv(
+    'models/casting/logs/pretraining_history.csv', index=False)

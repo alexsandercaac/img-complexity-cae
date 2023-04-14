@@ -22,7 +22,7 @@ DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
                           for label in ['ok_front', 'def_front']]
 
 model = tf.keras.models.load_model(
-    filepath='models/casting/best_cae.hdf5'
+    filepath='models/casting/bin/best_cae.hdf5'
 )
 
 for split, label in DATA_SPLITS_AND_LABELS:

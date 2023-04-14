@@ -34,6 +34,29 @@ stages:
         cache: false
     - visualisation/complexity/casting/val_def_front_hist.png:
         cache: false
+
+# *** ---------------------------------------------
+
+  augmentation_visualisation:
+    cmd: python3 src/augmentation_visualisation.py
+    deps:
+    - src/augmentation_visualisation.py
+    - src/utils/data/tfdatasets.py
+    - data/processed/train
+    params:
+    - all.random_crop
+    - all.random_flip
+    - all.random_rotation
+    - all.random_zoom
+    - all.random_brightness
+    - all.random_contrast
+    - all.random_translation_height
+    - all.random_translation_width
+    - all.input_size
+    plots:
+    - visualisation/augmentation/casting_augmented_images.png:
+        cache: false
+
 # *** ---------------------------------------------
 
   cae_hp_tuning:
@@ -67,16 +90,22 @@ stages:
     - cae_hp_tuning.log_path
 
     outs:
-    - models/casting/logs
-  
+    - models/casting/logs/hp_search/CAE
+    - models/casting/logs/hp_search/tb
+    - models/casting/bin/hp_search_best.hdf5
+    - models/casting/logs/hp_search/hp_search_results.txt
+    
+
 # *** ---------------------------------------------
 
-  augmentation_visualisation:
-    cmd: python3 src/augmentation_visualisation.py
+  cae_pretraining:
+    cmd: python3 src/cae_pretraining.py
     deps:
-    - src/augmentation_visualisation.py
+    - src/cae_pretraining.py
+    - src/utils/models/kerascallbacks.py
     - src/utils/data/tfdatasets.py
-    - data/processed/train
+    - data/raw/tiny-imagenet-200
+    - models/casting/bin/hp_search_best.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -86,25 +115,18 @@ stages:
     - all.random_contrast
     - all.random_translation_height
     - all.random_translation_width
-    - all.input_size
-    plots:
-    - visualisation/augmentation/casting_augmented_images.png:
-        cache: false
-
-# *** ---------------------------------------------
-
-  reconstruction_visualisation:
-    cmd: python3 src/reconstruction_visualisation.py
-    deps:
-    - src/reconstruction_visualisation.py
-    - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - models/casting/best_cae.hdf5
-    params:
-    - all.input_size
-    plots:
-    - visualisation/reconstruction/casting/reconstructed_images.png:
-        cache: false
+    - cae_pretraining.batch_size
+    - cae_pretraining.alpha
+    - cae_pretraining.beta
+    - cae_pretraining.patience
+    - cae_pretraining.revive_best
+    - cae_pretraining.early_stopping
+    - cae_pretraining.epochs
+    - cae_pretraining.min_lr
+    - cae_pretraining.learning_rate
+    outs:
+    - models/casting/bin/pretrained_cae.hdf5
+    - models/casting/logs/pretraining_history.csv
 
 # *** ---------------------------------------------
 
@@ -116,7 +138,7 @@ stages:
     - src/utils/data/tfdatasets.py
     - data/processed/train
     - data/processed/val
-    - models/casting/logs/hp_search_best.hdf5
+    - models/casting/bin/pretrained_cae.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -136,8 +158,23 @@ stages:
     - cae_training.min_lr
     - cae_training.learning_rate
     outs:
-    - models/casting/best_cae.hdf5
-    - models/casting/training_history.csv
+    - models/casting/bin/best_cae.hdf5
+    - models/casting/logs/training_history.csv
+
+# *** ---------------------------------------------
+
+  reconstruction_visualisation:
+    cmd: python3 src/reconstruction_visualisation.py
+    deps:
+    - src/reconstruction_visualisation.py
+    - src/utils/data/tfdatasets.py
+    - data/processed/train
+    - models/casting/bin/best_cae.hdf5
+    params:
+    - all.input_size
+    plots:
+    - visualisation/reconstruction/casting/reconstructed_images.png:
+        cache: false
 
 # *** ---------------------------------------------
 
@@ -145,7 +182,7 @@ stages:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
     - src/calculate_reconstruction_mse.py
-    - models/casting/best_cae.hdf5
+    - models/casting/bin/best_cae.hdf5
     - src/utils/data/complexityaux.py
     - data/processed/train
     - data/processed/val

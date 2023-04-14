@@ -105,4 +105,4 @@ with open(params['log_path'] + '/hp_search_results.txt', 'w') as file:
 sys.stdout = old_stdout
 
 best_model = tuner.get_best_models()[0]
-best_model.save(params['log_path'] + '/hp_search_best.hdf5')
+best_model.save('models/casting/bin/hp_search_best.hdf5')

@@ -23,7 +23,17 @@ cae_hp_tuning:
   epochs: 25
   min_lr: 0.000001
   max_trials: 50
-  log_path: models/casting/logs
+  log_path: models/casting/logs/hp_search
+cae_pretraining:
+  batch_size: 2
+  alpha: 0.98
+  beta: 0.9
+  patience: 3
+  revive_best: true
+  early_stopping: false
+  epochs: 2
+  min_lr: 0.00001
+  learning_rate: 0.001
 cae_training:
   batch_size: 8
   alpha: 0.98
@@ -31,9 +41,9 @@ cae_training:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 75
+  epochs: 2
   min_lr: 0.00001
-  learning_rate: 0.0001
+  learning_rate: 0.0005
 cae_mse_model:
   n_iter: 25
   score_func: 'accuracy'
