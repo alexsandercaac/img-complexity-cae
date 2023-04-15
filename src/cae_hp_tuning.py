@@ -11,7 +11,7 @@ import tensorflow as tf
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
 from utils.models.ktmodels import CAE
-from utils.models.kerascallbacks import CustomLearningRateScheduler
+from utils.models.kerasaux import CustomLearningRateScheduler
 from utils.misc import catch_stdout
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL

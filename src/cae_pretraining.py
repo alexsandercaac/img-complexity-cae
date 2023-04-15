@@ -13,59 +13,86 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.models.kerascallbacks import CustomLearningRateScheduler
+from utils.models.kerasaux import CustomLearningRateScheduler, \
+    reset_model_weights
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
 
-stage_params = get_params()
-all_params = get_params('all')
 
-params = {**stage_params, **all_params}
+params = get_params()
 
-DATASET_PATH = 'data/raw/tiny-imagenet-200'
+# Data parameters
+DATASET = params['dataset']
+INPUT_SIZE = tuple(params['input_size'])
+SCALE = params['scale']
+GRAYSCALE = params['grayscale']
 
-# * Augmentation
+# Model parameters
+BATCH_SIZE = params['batch_size']
+BOTTLENECK_FILTERS = params['bottleneck_filters']
+ALPHA = params['alpha']
+BETA = params['beta']
+PATIENCE = params['patience']
+EARLY_STOPPING = params['early_stopping']
+REVIVE_BEST = params['revive_best']
+MIN_LR = params['min_lr']
+MAX_TRIALS = params['max_trials']
+SEED = params['seed']
+EPOCHS = params['epochs']
 
+# Augmentation parameters
+RANDOM_CROP = tuple(params['random_crop'])
+RANDOM_FLIP = params['random_flip']
+RANDOM_ROTATION = params['random_rotation']
+RANDOM_ZOOM = tuple(params['random_zoom'])
+RANDOM_BRIGHTNESS = params['random_brightness']
+RANDOM_CONTRAST = params['random_contrast']
+RANDOM_TRANSLATION_HEIGHT = tuple(params['random_translation_height'])
+RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
+
+# * Dataset loading
 augmentation = augmentation_model(
-    random_crop=tuple(params['random_crop']),
-    random_flip=params['random_flip'],
-    random_rotation=params['random_rotation'],
-    random_zoom=tuple(params['random_zoom']),
-    random_brightness=params['random_brightness'],
-    random_contrast=params['random_contrast'],
-    random_translation_height=tuple(params['random_translation_height']),
-    random_translation_width=tuple(params['random_translation_width'])
+    random_crop=RANDOM_CROP,
+    random_flip=RANDOM_FLIP,
+    random_rotation=RANDOM_ROTATION,
+    random_zoom=RANDOM_ZOOM,
+    random_brightness=RANDOM_BRIGHTNESS,
+    random_contrast=RANDOM_CONTRAST,
+    random_translation_height=RANDOM_TRANSLATION_HEIGHT,
+    random_translation_width=RANDOM_TRANSLATION_WIDTH
 )
 
-# * Load dataset
+data_dir = os.path.join('data', 'raw', 'tiny-imagenet-200')
+
 train_dataset = load_tf_img_dataset(
     dir='train',
-    dir_path=DATASET_PATH,
-    input_size=tuple(params['input_size'])[:2],
+    dir_path=data_dir,
+    input_size=INPUT_SIZE[:2],
     mode='autoencoder',
-    scale=255,
+    scale=SCALE,
     shuffle=True,
     augmentation=augmentation,
-    batch_size=params['batch_size'],
-    color_mode='grayscale'
+    batch_size=BATCH_SIZE,
+    color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
 val_dataset = load_tf_img_dataset(
     dir='val',
-    dir_path=DATASET_PATH,
-    input_size=tuple(params['input_size'])[:2],
+    dir_path=data_dir,
+    input_size=RANDOM_CROP,
     mode='autoencoder',
-    scale=255,
-    shuffle=True,
-    batch_size=params['batch_size'],
-    color_mode='grayscale'
+    scale=SCALE,
+    shuffle=False,
+    batch_size=BATCH_SIZE,
+    color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
+model_dir = os.path.join('models', DATASET, 'bin')
 model = tf.keras.models.load_model(
-    filepath='models/casting/bin/hp_search_best.hdf5'
+    filepath=os.path.join(model_dir, 'hp_search_best.hdf5')
 )
 
 # Randomize model weights
