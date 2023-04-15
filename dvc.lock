@@ -82,8 +82,8 @@ stages:
       size: 3201717
       nfiles: 129
     - path: src/extract_complexity.py
-      md5: 15961b14269a3fc319a6fc406fd41a1d
-      size: 2242
+      md5: 046e781e765ab812fe45d4669205e48f
+      size: 2128
     - path: src/utils/data/complexityaux.py
       md5: 0fdd7a277d93e83da136646ac119929c
       size: 3092

@@ -12,14 +12,9 @@ from matplotlib import pyplot as plt
 import os
 
 import matplotlib.ticker as ticker
-import numpy as np
 
 
-params = get_params()
-stage_params = get_params()
-all_params = get_params('all')
-
-params = {**stage_params, **all_params}
+params = get_params('all')
 
 DATASET = params['dataset']
 GRAYSCLAE = params['grayscale']
