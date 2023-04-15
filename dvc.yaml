@@ -145,7 +145,7 @@ stages:
     - cae_training.min_lr
     - cae_training.learning_rate
     outs:
-    - models/casting/bin/best_cae.hdf5
+    - models/casting/bin/trained_cae.hdf5
     - models/casting/logs/training_history.csv
 
 # *** ---------------------------------------------
@@ -156,7 +156,7 @@ stages:
     - src/reconstruction_visualisation.py
     - src/utils/data/tfdatasets.py
     - data/processed/train
-    - models/casting/bin/best_cae.hdf5
+    - models/casting/bin/trained_cae.hdf5
     params:
     - all.input_size
     plots:
@@ -169,7 +169,7 @@ stages:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
     - src/calculate_reconstruction_mse.py
-    - models/casting/bin/best_cae.hdf5
+    - models/casting/bin/trained_cae.hdf5
     - src/utils/data/complexityaux.py
     - data/processed/train
     - data/processed/val

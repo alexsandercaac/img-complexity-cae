@@ -51,8 +51,6 @@ REVIVE_BEST = params['revive_best']
 MIN_LR = params['min_lr']
 SEED = params['seed']
 EPOCHS = params['epochs']
-MODEL_INPUT_DIM = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
-                   else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
 
 # Directories
 DATA_DIR = os.path.join('data', 'raw', 'tiny-imagenet-200')
@@ -142,6 +140,4 @@ history = model.fit(
 print('Saving model...')
 model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
 history_df = pd.DataFrame(history.history)
-history_df.to_csv(
-    os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
-    index=False)
+

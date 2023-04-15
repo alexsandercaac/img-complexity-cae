@@ -13,77 +13,108 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.models.kerasaux import CustomLearningRateScheduler
+from utils.misc import create_dir
+from utils.models.kerasaux import CustomLearningRateScheduler, \
+    randomize_model_weigths
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
 
-stage_params = get_params()
-all_params = get_params('all')
+params = get_params()
 
-params = {**stage_params, **all_params}
+# Data parameters
+DATASET = params['dataset']
+INPUT_SIZE = tuple(params['input_size'])
+SCALE = params['scale']
+GRAYSCALE = params['grayscale']
 
-# * Augmentation
+# Augmentation parameters
+RANDOM_CROP = tuple(params['random_crop'])
+RANDOM_FLIP = params['random_flip']
+RANDOM_ROTATION = params['random_rotation']
+RANDOM_ZOOM = tuple(params['random_zoom'])
+RANDOM_BRIGHTNESS = params['random_brightness']
+RANDOM_CONTRAST = params['random_contrast']
+RANDOM_TRANSLATION_HEIGHT = tuple(params['random_translation_height'])
+RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
 
+# Model parameters
+BATCH_SIZE = params['batch_size']
+LEARNING_RATE = params['learning_rate']
+ALPHA = params['alpha']
+BETA = params['beta']
+PATIENCE = params['patience']
+EARLY_STOPPING = params['early_stopping']
+REVIVE_BEST = params['revive_best']
+MIN_LR = params['min_lr']
+SEED = params['seed']
+EPOCHS = params['epochs']
+
+# Directories
+DATA_DIR = os.path.join('data', 'processed', DATASET)
+MODEL_DIR = os.path.join('models', DATASET, 'bin')
+
+# * Dataset loading
 augmentation = augmentation_model(
-    random_crop=tuple(params['random_crop']),
-    random_flip=params['random_flip'],
-    random_rotation=params['random_rotation'],
-    random_zoom=tuple(params['random_zoom']),
-    random_brightness=params['random_brightness'],
-    random_contrast=params['random_contrast'],
-    random_translation_height=tuple(params['random_translation_height']),
-    random_translation_width=tuple(params['random_translation_width'])
+    random_crop=RANDOM_CROP,
+    random_flip=RANDOM_FLIP,
+    random_rotation=RANDOM_ROTATION,
+    random_zoom=RANDOM_ZOOM,
+    random_brightness=RANDOM_BRIGHTNESS,
+    random_contrast=RANDOM_CONTRAST,
+    random_translation_height=RANDOM_TRANSLATION_HEIGHT,
+    random_translation_width=RANDOM_TRANSLATION_WIDTH
 )
 
-# * Load dataset
 train_dataset = load_tf_img_dataset(
-    dir='train/ok_front',
-    dir_path='data/processed',
-    input_size=tuple(params['input_size'])[:2],
+    dir='train/negative',
+    dir_path=DATA_DIR,
+    input_size=INPUT_SIZE[:2],
     mode='autoencoder',
-    scale=255,
+    scale=SCALE,
     shuffle=True,
     augmentation=augmentation,
-    batch_size=params['batch_size'],
-    color_mode='grayscale'
+    batch_size=BATCH_SIZE,
+    color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
 val_dataset = load_tf_img_dataset(
-    dir='val/ok_front',
-    dir_path='data/processed',
-    input_size=tuple(params['input_size'])[:2],
+    dir='val/negative',
+    dir_path=DATA_DIR,
+    input_size=RANDOM_CROP,
     mode='autoencoder',
-    scale=255,
-    shuffle=True,
-    batch_size=params['batch_size'],
-    color_mode='grayscale'
+    scale=SCALE,
+    shuffle=False,
+    batch_size=BATCH_SIZE,
+    color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
 model = tf.keras.models.load_model(
-    filepath='models/casting/bin/pretrained_cae.hdf5'
+    filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5')
 )
+
 model.compile(loss=['mse'],
               optimizer=tf.keras.optimizers.Adam(
-    learning_rate=params['learning_rate']),
+    learning_rate=LEARNING_RATE),
     metrics=['mae', 'mse']
 )
+
 lr_schedule = CustomLearningRateScheduler(
     metric='val_mse',
     secondary_metric='val_mae',
-    alpha=params['alpha'],
-    beta=params['beta'],
+    alpha=ALPHA,
+    beta=BETA,
     verbose=2,
-    patience=params['patience'],
-    early_stopping=params['early_stopping'],
-    revive_best=params['revive_best'],
-    min_lr=params['min_lr']
+    patience=PATIENCE,
+    early_stopping=EARLY_STOPPING,
+    revive_best=REVIVE_BEST,
+    min_lr=MIN_LR
 )
 
 train_size = sum(
-    [len(files) for _, _, files in os.walk('data/processed/train')])
+    [len(files) for _, _, files in os.walk(os.path.join(DATA_DIR, 'train'))])
 
 print(f'Training samples: {train_size}')
 
@@ -95,16 +126,15 @@ val_loss_pre, val_mae_pre, val_mse_pre = model.evaluate(val_dataset, verbose=2)
 
 history = model.fit(
     train_dataset,
-    epochs=params['epochs'],
+    epochs=EPOCHS,
     validation_data=val_dataset,
     callbacks=[lr_schedule,
                TqdmCallback(verbose=2,
                             data_size=train_size,
-                            batch_size=params['batch_size'],
-                            epochs=params['epochs'])],
+                            batch_size=BATCH_SIZE,
+                            epochs=EPOCHS)],
     verbose=0
 )
-
 # Evaluate model on validation dataset after training
 print('Evaluating model on validation dataset after training...')
 val_loss_post, val_mae_post, val_mse_post = model.evaluate(
@@ -112,15 +142,9 @@ val_loss_post, val_mae_post, val_mse_post = model.evaluate(
 
 # * Save model and history
 
-if val_mse_post > val_mse_pre:
-    print('Validation loss increased after training.')
-    print('Reverting to best model...')
-    model = tf.keras.models.load_model(
-        filepath='models/casting/bin/best_cae.hdf5')
-    model.save(filepath='models/casting/bin/best_cae.hdf5')
-else:
-    print('Validation loss decreased after training.')
-    print('Saving model...')
-    model.save(filepath='models/casting/bin/best_cae.hdf5')
-    history_df = pd.DataFrame(history.history)
-    history_df.to_csv('models/casting/logs/training_history.csv', index=False)
+print('Saving model...')
+model.save(filepath=os.path.join(MODEL_DIR, 'trained_cae.hdf5'))
+history_df = pd.DataFrame(history.history)
+history_df.to_csv(
+    os.path.join('models', DATASET, 'logs', 'training_history.csv'),
+    index=False)
