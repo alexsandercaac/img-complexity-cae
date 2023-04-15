@@ -4,7 +4,7 @@
 from utils.data.jpegmse import calculate_jpeg_mse
 from utils.data.complexityaux import load_imgs_gen
 from utils.dvc.params import get_params
-from utils.data.filemanipulation import create_dir
+from utils.misc import create_dir
 
 from tqdm.rich import tqdm
 from matplotlib import pyplot as plt

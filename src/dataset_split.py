@@ -5,8 +5,7 @@
 """
 from rich import print, pretty
 
-from utils.data.filemanipulation import create_dir, copy_files
-from utils.data.misc import list_split
+from utils.misc import list_split, create_dir, copy_files
 from utils.dvc.params import get_params
 
 import os
