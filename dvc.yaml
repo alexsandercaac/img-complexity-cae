@@ -150,21 +150,6 @@ stages:
 
 # *** ---------------------------------------------
 
-  reconstruction_visualisation:
-    cmd: python3 src/reconstruction_visualisation.py
-    deps:
-    - src/reconstruction_visualisation.py
-    - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - models/casting/bin/trained_cae.hdf5
-    params:
-    - all.input_size
-    plots:
-    - visualisation/reconstruction/casting/reconstructed_images.png:
-        cache: false
-
-# *** ---------------------------------------------
-
   calculate_reconstruction_mse:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
