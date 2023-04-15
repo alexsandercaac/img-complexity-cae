@@ -38,8 +38,6 @@ DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
 
 fig, ax = plt.subplots()
 cmap = plt.get_cmap('cool')
-
-# Define colour dictionary
 colours = {
     ('train', 'positive'): cmap(0.1),
     ('val', 'positive'): cmap(0.2),
@@ -69,8 +67,7 @@ for split, label in DATA_SPLITS_AND_LABELS:
 
 ax.set_xlabel('MSE')
 # Format the x-axis with powers of 10
-ax.xaxis.set_major_formatter(
-    ticker.FuncFormatter(lambda x, _: f"$10^{{{int(np.log10(x))}}}$"))
+ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{x:.1e}"))
 ax.set_ylabel('Frequency')
 ax.legend()
 fig_dir = os.path.join('visualisation', DATASET)
