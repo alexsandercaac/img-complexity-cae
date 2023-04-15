@@ -38,28 +38,6 @@ stages:
 
 # *** ---------------------------------------------
 
-  augmentation_visualisation:
-    cmd: python3 src/augmentation_visualisation.py
-    deps:
-    - src/augmentation_visualisation.py
-    - src/utils/data/tfdatasets.py
-    - data/processed/train
-    params:
-    - all.random_crop
-    - all.random_flip
-    - all.random_rotation
-    - all.random_zoom
-    - all.random_brightness
-    - all.random_contrast
-    - all.random_translation_height
-    - all.random_translation_width
-    - all.input_size
-    plots:
-    - visualisation/augmentation/casting_augmented_images.png:
-        cache: false
-
-# *** ---------------------------------------------
-
   cae_hp_tuning:
     cmd: python3 src/cae_hp_tuning.py
     deps:
