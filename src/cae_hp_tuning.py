@@ -12,7 +12,7 @@ from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
 from utils.models.ktmodels import CAE
 from utils.models.kerasaux import CustomLearningRateScheduler
-from utils.misc import catch_stdout
+from utils.misc import catch_stdout, create_dir
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
@@ -27,6 +27,16 @@ INPUT_SIZE = tuple(params['input_size'])
 SCALE = params['scale']
 GRAYSCALE = params['grayscale']
 
+# Augmentation parameters
+RANDOM_CROP = tuple(params['random_crop'])
+RANDOM_FLIP = params['random_flip']
+RANDOM_ROTATION = params['random_rotation']
+RANDOM_ZOOM = tuple(params['random_zoom'])
+RANDOM_BRIGHTNESS = params['random_brightness']
+RANDOM_CONTRAST = params['random_contrast']
+RANDOM_TRANSLATION_HEIGHT = tuple(params['random_translation_height'])
+RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
+
 # Model parameters
 BATCH_SIZE = params['batch_size']
 BOTTLENECK_FILTERS = params['bottleneck_filters']
@@ -39,16 +49,15 @@ MIN_LR = params['min_lr']
 MAX_TRIALS = params['max_trials']
 SEED = params['seed']
 EPOCHS = params['epochs']
+MODEL_INPUT_DIM = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
+                   else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
 
-# Augmentation parameters
-RANDOM_CROP = tuple(params['random_crop'])
-RANDOM_FLIP = params['random_flip']
-RANDOM_ROTATION = params['random_rotation']
-RANDOM_ZOOM = tuple(params['random_zoom'])
-RANDOM_BRIGHTNESS = params['random_brightness']
-RANDOM_CONTRAST = params['random_contrast']
-RANDOM_TRANSLATION_HEIGHT = tuple(params['random_translation_height'])
-RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
+# Directories
+DATA_DIR = os.path.join('data', 'processed', DATASET)
+LOG_PATH = os.path.join('models', DATASET, 'logs', 'hp_search')
+create_dir(LOG_PATH)
+MODELS_BIN_DIR = os.path.join('models', DATASET, 'bin')
+create_dir(MODELS_BIN_DIR)
 
 # * Dataset loading
 augmentation = augmentation_model(
@@ -62,11 +71,9 @@ augmentation = augmentation_model(
     random_translation_width=RANDOM_TRANSLATION_WIDTH
 )
 
-data_dir = os.path.join('data', 'processed', DATASET)
-
 train_dataset = load_tf_img_dataset(
     dir='train/negative',
-    dir_path=data_dir,
+    dir_path=DATA_DIR,
     input_size=INPUT_SIZE[:2],
     mode='autoencoder',
     scale=SCALE,
@@ -78,7 +85,7 @@ train_dataset = load_tf_img_dataset(
 
 val_dataset = load_tf_img_dataset(
     dir='val/negative',
-    dir_path=data_dir,
+    dir_path=DATA_DIR,
     input_size=RANDOM_CROP,
     mode='autoencoder',
     scale=SCALE,
@@ -88,9 +95,7 @@ val_dataset = load_tf_img_dataset(
 )
 
 # * Hyperparameter tuning
-model_input_dim = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
-                   else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
-search_model = CAE(model_input_dim, BOTTLENECK_FILTERS)
+search_model = CAE(MODEL_INPUT_DIM, BOTTLENECK_FILTERS)
 
 lr_schedule = CustomLearningRateScheduler(
     metric='val_mse',
@@ -104,10 +109,8 @@ lr_schedule = CustomLearningRateScheduler(
     min_lr=MIN_LR
 )
 
-log_path = os.path.join('models', DATASET, 'logs', 'hp_search')
-
 tbcallback = tf.keras.callbacks.TensorBoard(
-    os.path.join(log_path, 'tb')
+    os.path.join(LOG_PATH, 'tb')
 )
 
 tuner = kt.BayesianOptimization(
@@ -116,7 +119,7 @@ tuner = kt.BayesianOptimization(
     max_trials=MAX_TRIALS,
     overwrite=False,
     project_name='CAE',
-    directory=log_path,
+    directory=LOG_PATH,
     seed=SEED,
     distribution_strategy=tf.distribute.MirroredStrategy()
 )
@@ -135,9 +138,8 @@ history = tuner.search(train_dataset,
 results_summary = catch_stdout(tuner.results_summary)
 results = results_summary()
 
-with open(os.path.join(log_path, 'hp_search_results.txt'), 'w') as file:
+with open(os.path.join(LOG_PATH, 'hp_search_results.txt'), 'w') as file:
     file.write(results)
 
 best_model = tuner.get_best_models()[0]
-models_bin_dir = os.path.join('models', DATASET, 'bin')
-best_model.save(os.path.join(models_bin_dir, 'hp_search_best.hdf5'))
+best_model.save(os.path.join(MODELS_BIN_DIR, 'hp_search_best.hdf5'))

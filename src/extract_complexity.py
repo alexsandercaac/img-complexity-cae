@@ -20,12 +20,16 @@ DATASET = params['dataset']
 GRAYSCLAE = params['grayscale']
 SCALE = params['scale']
 
-tabular_data_dir = os.path.join('data', 'processed', DATASET, 'tabular')
-create_dir(tabular_data_dir)
+# Directories
+TABULAR_DATA_DIR = os.path.join('data', 'processed', DATASET, 'tabular')
+create_dir(TABULAR_DATA_DIR)
+FIG_DIR = os.path.join('visualisation', DATASET)
+create_dir(FIG_DIR)
 
-file_name = 'complexity.csv'
+OUTPUT_FILE_NAME = 'complexity.csv'
 
-with open(os.path.join(tabular_data_dir, file_name), 'w') as f:
+# Initialise the output file
+with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'w') as f:
     f.write('file,jpeg_mse,data_split,label\n')
 
 DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
@@ -56,7 +60,7 @@ for split, label in DATA_SPLITS_AND_LABELS:
         ax.hist(mses, bins=50, label=f'{split} {label}', alpha=0.7,
                 color=colours[(split, label)])
 
-    with open(os.path.join(tabular_data_dir, file_name), 'a') as f:
+    with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
         for file, mse in zip(files, mses):
             f.write(f'{file},{mse},{split},{label}\n')
 
@@ -65,7 +69,5 @@ ax.set_xlabel('MSE')
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{x:.1e}"))
 ax.set_ylabel('Frequency')
 ax.legend()
-fig_dir = os.path.join('visualisation', DATASET)
-create_dir(fig_dir)
 
-plt.savefig(os.path.join(fig_dir, 'complexity_hist.png'))
+plt.savefig(os.path.join(FIG_DIR, 'complexity_hist.png'))

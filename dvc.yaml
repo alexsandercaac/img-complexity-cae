@@ -85,6 +85,7 @@ stages:
     - src/cae_pretraining.py
     - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
+    - src/utils/misc.py
     - data/raw/tiny-imagenet-200
     - models/${all.dataset}/bin/hp_search_best.hdf5
     params:

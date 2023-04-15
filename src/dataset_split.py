@@ -22,12 +22,16 @@ SHUFFLE = params['shuffle']
 SEED = params['seed']
 DATASET = params['dataset']
 
-# * Get file names from raw data for each class
-positive_dir = os.path.join('data', 'raw', DATASET, 'positive')
-negative_dir = os.path.join('data', 'raw', DATASET, 'negative')
+# Directories
+POSITIVE_DIR = os.path.join('data', 'raw', DATASET, 'positive')
+NEGATIVE_DIR = os.path.join('data', 'raw', DATASET, 'negative')
+TRAIN_DIR = os.path.join('data', 'processed', DATASET, 'train')
+VAL_DIR = os.path.join('data', 'processed', DATASET, 'val')
+TEST_DIR = os.path.join('data', 'processed', DATASET, 'test')
+SUBDIRS = ['negative', 'positive']
 
-file_names_positive = os.listdir(positive_dir)
-file_names_negative = os.listdir(negative_dir)
+file_names_positive = os.listdir(POSITIVE_DIR)
+file_names_negative = os.listdir(NEGATIVE_DIR)
 
 print(f"Found {len(file_names_negative)} negative class images.")
 print(f"Found {len(file_names_positive)} positive class images.")
@@ -55,23 +59,17 @@ print(
 print(f"Test set contains {len(test_neg)} negative class images.")
 print(f"Test set contains {len(test_pos)} positive class images.")
 
+
 # * Save the split into the folders at data/processed/$DATASET
 
-train_dir = os.path.join('data', 'processed', DATASET, 'train')
-subdirs = ['negative', 'positive']
+create_dir(TRAIN_DIR, SUBDIRS)
+copy_files(train_neg, NEGATIVE_DIR, os.path.join(TRAIN_DIR, 'negative'))
+copy_files(train_pos, POSITIVE_DIR, os.path.join(TRAIN_DIR, 'positive'))
 
-create_dir(train_dir, subdirs)
-copy_files(train_neg, negative_dir, os.path.join(train_dir, 'negative'))
-copy_files(train_pos, positive_dir, os.path.join(train_dir, 'positive'))
+create_dir(VAL_DIR, SUBDIRS)
+copy_files(val_neg, NEGATIVE_DIR, os.path.join(VAL_DIR, 'negative'))
+copy_files(val_pos, POSITIVE_DIR, os.path.join(VAL_DIR, 'positive'))
 
-val_dir = os.path.join('data', 'processed', DATASET, 'val')
-
-create_dir(val_dir, subdirs)
-copy_files(val_neg, negative_dir, os.path.join(val_dir, 'negative'))
-copy_files(val_pos, positive_dir, os.path.join(val_dir, 'positive'))
-
-test_dir = os.path.join('data', 'processed', DATASET, 'test')
-
-create_dir(test_dir, subdirs)
-copy_files(test_neg, negative_dir, os.path.join(test_dir, 'negative'))
-copy_files(test_pos, positive_dir, os.path.join(test_dir, 'positive'))
+create_dir(TEST_DIR, SUBDIRS)
+copy_files(test_neg, NEGATIVE_DIR, os.path.join(TEST_DIR, 'negative'))
+copy_files(test_pos, POSITIVE_DIR, os.path.join(TEST_DIR, 'positive'))

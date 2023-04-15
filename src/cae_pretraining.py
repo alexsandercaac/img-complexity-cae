@@ -13,14 +13,14 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
+from utils.misc import create_dir
 from utils.models.kerasaux import CustomLearningRateScheduler, \
-    reset_model_weights
+    randomize_model_weigths
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
-
 
 params = get_params()
 
@@ -29,19 +29,6 @@ DATASET = params['dataset']
 INPUT_SIZE = tuple(params['input_size'])
 SCALE = params['scale']
 GRAYSCALE = params['grayscale']
-
-# Model parameters
-BATCH_SIZE = params['batch_size']
-BOTTLENECK_FILTERS = params['bottleneck_filters']
-ALPHA = params['alpha']
-BETA = params['beta']
-PATIENCE = params['patience']
-EARLY_STOPPING = params['early_stopping']
-REVIVE_BEST = params['revive_best']
-MIN_LR = params['min_lr']
-MAX_TRIALS = params['max_trials']
-SEED = params['seed']
-EPOCHS = params['epochs']
 
 # Augmentation parameters
 RANDOM_CROP = tuple(params['random_crop'])
@@ -52,6 +39,25 @@ RANDOM_BRIGHTNESS = params['random_brightness']
 RANDOM_CONTRAST = params['random_contrast']
 RANDOM_TRANSLATION_HEIGHT = tuple(params['random_translation_height'])
 RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
+
+# Model parameters
+BATCH_SIZE = params['batch_size']
+LEARNING_RATE = params['learning_rate']
+ALPHA = params['alpha']
+BETA = params['beta']
+PATIENCE = params['patience']
+EARLY_STOPPING = params['early_stopping']
+REVIVE_BEST = params['revive_best']
+MIN_LR = params['min_lr']
+SEED = params['seed']
+EPOCHS = params['epochs']
+MODEL_INPUT_DIM = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
+                   else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
+
+# Directories
+DATA_DIR = os.path.join('data', 'raw', 'tiny-imagenet-200')
+MODEL_DIR = os.path.join('models', DATASET, 'bin')
+TRAIN_DIR = os.path.join(DATA_DIR, 'train')
 
 # * Dataset loading
 augmentation = augmentation_model(
@@ -65,11 +71,9 @@ augmentation = augmentation_model(
     random_translation_width=RANDOM_TRANSLATION_WIDTH
 )
 
-data_dir = os.path.join('data', 'raw', 'tiny-imagenet-200')
-
 train_dataset = load_tf_img_dataset(
     dir='train',
-    dir_path=data_dir,
+    dir_path=DATA_DIR,
     input_size=INPUT_SIZE[:2],
     mode='autoencoder',
     scale=SCALE,
@@ -81,7 +85,7 @@ train_dataset = load_tf_img_dataset(
 
 val_dataset = load_tf_img_dataset(
     dir='val',
-    dir_path=data_dir,
+    dir_path=DATA_DIR,
     input_size=RANDOM_CROP,
     mode='autoencoder',
     scale=SCALE,
@@ -90,37 +94,32 @@ val_dataset = load_tf_img_dataset(
     color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
-model_dir = os.path.join('models', DATASET, 'bin')
 model = tf.keras.models.load_model(
-    filepath=os.path.join(model_dir, 'hp_search_best.hdf5')
+    filepath=os.path.join(MODEL_DIR, 'hp_search_best.hdf5')
 )
 
-# Randomize model weights
-model.set_weights(
-    [tf.random.normal(shape=weight.shape) for weight in model.weights]
-)
+randomize_model_weigths(model)
 
 model.compile(loss=['mse'],
               optimizer=tf.keras.optimizers.Adam(
-    learning_rate=params['learning_rate']),
+    learning_rate=LEARNING_RATE),
     metrics=['mae', 'mse']
 )
+
 lr_schedule = CustomLearningRateScheduler(
     metric='val_mse',
     secondary_metric='val_mae',
-    alpha=params['alpha'],
-    beta=params['beta'],
+    alpha=ALPHA,
+    beta=BETA,
     verbose=2,
-    patience=params['patience'],
-    early_stopping=params['early_stopping'],
-    revive_best=params['revive_best'],
-    min_lr=params['min_lr']
+    patience=PATIENCE,
+    early_stopping=EARLY_STOPPING,
+    revive_best=REVIVE_BEST,
+    min_lr=MIN_LR
 )
 
-train_folder = os.path.join(DATASET_PATH, 'train')
-
 train_size = sum(
-    [len(files) for _, _, files in os.walk(train_folder)])
+    [len(files) for _, _, files in os.walk(TRAIN_DIR)])
 
 print(f'Training samples: {train_size}')
 
@@ -128,20 +127,21 @@ print(f'Training samples: {train_size}')
 
 history = model.fit(
     train_dataset,
-    epochs=params['epochs'],
+    epochs=EPOCHS,
     validation_data=val_dataset,
     callbacks=[lr_schedule,
                TqdmCallback(verbose=2,
                             data_size=train_size,
-                            batch_size=params['batch_size'],
-                            epochs=params['epochs'])],
+                            batch_size=BATCH_SIZE,
+                            epochs=EPOCHS)],
     verbose=0
 )
 
 # * Save model and history
 
 print('Saving model...')
-model.save(filepath='models/casting/bin/pretrained_cae.hdf5')
+model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
 history_df = pd.DataFrame(history.history)
 history_df.to_csv(
-    'models/casting/logs/pretraining_history.csv', index=False)
+    os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
+    index=False)
