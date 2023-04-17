@@ -96,7 +96,7 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
 
 
 def augmentation_model(
-    random_crop: Tuple[int, int] = (None, None),
+        random_crop: Tuple[int, int] = (None, None),
         random_flip: str = None, random_rotation: float = None,
         random_zoom: Tuple[float, float] = (None, None),
         random_brightness: float = None,
