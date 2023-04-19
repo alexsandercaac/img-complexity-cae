@@ -13,8 +13,7 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.models.kerasaux import CustomLearningRateScheduler, \
-    randomize_model_weigths
+from utils.models.kerasaux import CustomLearningRateScheduler
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)

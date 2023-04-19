@@ -41,6 +41,7 @@ stages:
     cmd: python3 src/cae_hp_tuning.py
     deps:
     - src/cae_hp_tuning.py
+    - src/utils/dvc/params.py
     - src/utils/misc.py
     - src/utils/models/kerasaux.py
     - src/utils/models/ktmodels.py
@@ -83,6 +84,7 @@ stages:
     cmd: python3 src/cae_pretraining.py
     deps:
     - src/cae_pretraining.py
+    - src/utils/dvc/params.py
     - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
     - src/utils/misc.py
@@ -121,6 +123,7 @@ stages:
     cmd: python3 src/cae_training.py
     deps:
     - src/cae_training.py
+    - src/utils/dvc/params.py
     - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
     - data/processed/${all.dataset}/train
@@ -159,21 +162,16 @@ stages:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
     - src/calculate_reconstruction_mse.py
-    - models/casting/bin/trained_cae.hdf5
+    - src/utils/dvc/params.py
+    - models/${all.dataset}/bin/trained_cae.hdf5
     - src/utils/data/complexityaux.py
-    - data/processed/train
-    - data/processed/val
-    - data/processed/test
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
     outs:
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     plots:
-    - visualisation/reconstruction/casting/train_ok_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/val_ok_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/train_def_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/val_def_front_hist.png:
+    - visualisation/${all.dataset}/caemse_hist.png:
         cache: false
 
 # *** ---------------------------------------------
@@ -182,10 +180,10 @@ stages:
     cmd: python3 src/complexity_vs_caemse.py
     deps:
     - src/complexity_vs_caemse.py
-    - data/processed/tabular/complexity.csv
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     plots:
-    - visualisation/casting_complexity_vs_caemse.html:
+    - visualisation/${all.dataset}/complexity_vs_caemse.html:
         cache: false
 
 # *** ---------------------------------------------

@@ -16,6 +16,7 @@ import matplotlib.ticker as ticker
 
 params = get_params('all')
 
+# Data parameters
 DATASET = params['dataset']
 GRAYSCLAE = params['grayscale']
 SCALE = params['scale']
@@ -64,7 +65,7 @@ for split, label in DATA_SPLITS_AND_LABELS:
         for file, mse in zip(files, mses):
             f.write(f'{file},{mse},{split},{label}\n')
 
-ax.set_xlabel('MSE')
+ax.set_xlabel('JPEG MSE')
 # Format the x-axis with powers of 10
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{x:.1e}"))
 ax.set_ylabel('Frequency')
