@@ -13,7 +13,6 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.misc import create_dir
 from utils.models.kerasaux import CustomLearningRateScheduler, \
     randomize_model_weigths
 
@@ -114,7 +113,8 @@ lr_schedule = CustomLearningRateScheduler(
 )
 
 train_size = sum(
-    [len(files) for _, _, files in os.walk(os.path.join(DATA_DIR, 'train'))])
+    [len(files) for _, _, files in os.walk(os.path.join(
+        DATA_DIR, 'train/negative'))])
 
 print(f'Training samples: {train_size}')
 

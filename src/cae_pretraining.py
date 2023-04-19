@@ -13,7 +13,6 @@ import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.misc import create_dir
 from utils.models.kerasaux import CustomLearningRateScheduler, \
     randomize_model_weigths
 
@@ -140,4 +139,3 @@ history = model.fit(
 print('Saving model...')
 model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
 history_df = pd.DataFrame(history.history)
-

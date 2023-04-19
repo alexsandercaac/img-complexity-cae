@@ -123,9 +123,9 @@ stages:
     - src/cae_training.py
     - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - data/processed/val
-    - models/casting/bin/pretrained_cae.hdf5
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - models/${all.dataset}/bin/pretrained_cae.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -135,6 +135,11 @@ stages:
     - all.random_contrast
     - all.random_translation_height
     - all.random_translation_width
+    - all.input_size
+    - all.scale
+    - all.grayscale
+    - all.dataset
+    - all.seed
     - cae_training.batch_size
     - cae_training.alpha
     - cae_training.beta
@@ -145,8 +150,8 @@ stages:
     - cae_training.min_lr
     - cae_training.learning_rate
     outs:
-    - models/casting/bin/trained_cae.hdf5
-    - models/casting/logs/training_history.csv
+    - models/${all.dataset}/bin/trained_cae.hdf5
+    - models/${all.dataset}/logs/training_history.csv
 
 # *** ---------------------------------------------
 
