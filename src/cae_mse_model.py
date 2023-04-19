@@ -3,17 +3,27 @@
     score and prediction is made based on a threshold defined with the
     validation data.
 """
+import os
+
 import pandas as pd
 from sklearn.metrics import f1_score
 import plotly.graph_objects as go
 
 from utils.models.threshold_search import bayesian_search_th
+from utils.misc import create_dir
 from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
 params = get_params()
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
+
+DATASET = params['dataset']
+TH_DIR = os.path.join('models', DATASET, 'params')
+create_dir(TH_DIR)
+
+cae_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
+)
 
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'def_front' else 0)
@@ -37,7 +47,7 @@ search_results = bayesian_search_th(
 )
 
 # Write best threshold to file in models/params
-with open('models/casting/params/mse_threshold.txt', 'w') as f:
+with open(os.path.join(TH_DIR, 'mse_threshold.txt'), 'w') as f:
     f.write(str(search_results['threshold']))
 
 fig = val_df['cae_mse'].hist(
@@ -66,4 +76,5 @@ fig.update_layout(
     )
 )
 
-fig.write_html('visualisation/thresholds/casting/mse.html')
+fig.write_html(
+    os.path.join('visualisation', DATASET, 'thresholds', 'mse.html'))

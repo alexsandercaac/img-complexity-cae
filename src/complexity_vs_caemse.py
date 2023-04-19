@@ -1,11 +1,25 @@
 """
     In this stage, plots with image complexity data are generated.
 """
+import os
+
 import pandas as pd
 import plotly.graph_objects as go
 
-complexity_df = pd.read_csv('data/processed/tabular/complexity.csv')
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
+from utils.dvc.params import get_params
+
+
+params = get_params('all')
+
+DATASET = params['dataset']
+FIG_DIR = os.path.join('visualisation', DATASET)
+
+
+complexity_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'))
+
+cae_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv'))
 
 mask = ((complexity_df['data_split'] == 'train') |
         (complexity_df['data_split'] == 'val'))
@@ -68,4 +82,6 @@ fig.add_annotation(
     )
 )
 
-fig.write_html('visualisation/casting_complexity_vs_caemse.html')
+fig.write_html(
+    os.path.join(FIG_DIR, 'complexity_vs_caemse.html')
+)

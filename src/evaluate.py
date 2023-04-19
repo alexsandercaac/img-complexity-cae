@@ -1,21 +1,37 @@
 """
     In this stage, various classification metrics are extracted from the model.
 """
+import os
+
 import pandas as pd
 import json
 
 from utils.evaluation.classification_metrics import get_classification_metrics
+from utils.dvc.params import get_params
 
 
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
+params = get_params()
+
+DATASET = params['dataset']
+TH_DIR = os.path.join('models', DATASET, 'params')
+
+cae_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
+)
+
 complexity_df = pd.read_csv(
-    'data/processed/tabular/complexity.csv', index_col=0)
+    os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),
+    index_col=0)
+
 complexity_df = complexity_df[['jpeg_mse']]
 cae_df = cae_df.join(complexity_df)
 
-th = float(open('models/casting/params/mse_threshold.txt', 'r').read())
+th = float(
+    open(
+        os.path.join(TH_DIR, 'mse_threshold.txt'), 'r').read())
 corrected_th = float(
-    open('models/casting/params/corrected_mse_threshold.txt', 'r').read())
+    open(
+        os.path.join(TH_DIR, 'corrected_mse_threshold.txt'), 'r').read())
 
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'def_front' else 0)
@@ -68,7 +84,8 @@ metrics = {
     'test_rec': test_rec
 }
 
-with open('metrics/casting/cae_metrics.json', 'w') as f:
+with open(
+        os.path.join('metrics', DATASET, 'cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
 
 train_df['corrected_mse'] = train_df['cae_mse'] / train_df['jpeg_mse']
@@ -118,5 +135,7 @@ metrics = {
     'test_rec': test_rec
 }
 
-with open('metrics/casting/corrected_cae_metrics.json', 'w') as f:
+with open(
+        os.path.join(
+            'metrics', DATASET, 'corrected_cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)

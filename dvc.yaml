@@ -29,6 +29,10 @@ stages:
     - data/processed/${all.dataset}/train
     - data/processed/${all.dataset}/val
     - data/processed/${all.dataset}/test
+    params:
+    - all.dataset
+    - all.grayscale
+    - all.scale
     outs:
     - data/processed/${all.dataset}/tabular/complexity.csv
     plots:
@@ -168,6 +172,10 @@ stages:
     - data/processed/${all.dataset}/train
     - data/processed/${all.dataset}/val
     - data/processed/${all.dataset}/test
+    params:
+    - all.dataset
+    - all.grayscale
+    - all.scale
     outs:
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     plots:
@@ -180,8 +188,11 @@ stages:
     cmd: python3 src/complexity_vs_caemse.py
     deps:
     - src/complexity_vs_caemse.py
+    - src/utils/dvc/params.py
     - data/processed/${all.dataset}/tabular/complexity.csv
     - data/processed/${all.dataset}/tabular/cae_mse.csv
+    params:
+    - all.dataset
     plots:
     - visualisation/${all.dataset}/complexity_vs_caemse.html:
         cache: false
@@ -192,14 +203,17 @@ stages:
     cmd: python3 src/cae_mse_model.py
     deps:
     - src/cae_mse_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
     - src/utils/models/threshold_search.py
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
+    - all.dataset
     - cae_mse_model.score_func
     - cae_mse_model.n_iter
     outs:
-    - models/casting/params/mse_threshold.txt
-    - visualisation/thresholds/casting/mse.html:
+    - models/${all.dataset}/params/mse_threshold.txt
+    - visualisation/${all.dataset}/mse.html:
         cache: false
 
 # *** ---------------------------------------------
@@ -208,16 +222,19 @@ stages:
     cmd: python3 src/corrected_model.py
     deps:
     - src/corrected_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
     - src/utils/models/threshold_search.py
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
+    - all.dataset
     - corrected_model.score_func
     - corrected_model.n_iter
     outs:
-    - models/casting/params/corrected_mse_threshold.txt
-    - visualisation/thresholds/casting/corrected_mse.html:
+    - models/${all.dataset}/params/corrected_mse_threshold.txt
+    - visualisation/${all.dataset}/corrected_mse.html:
         cache: false
-
 
 # *** ---------------------------------------------
 
@@ -225,12 +242,13 @@ stages:
     cmd: python3 src/evaluate.py
     deps:
     - src/evaluate.py
+    - src/utils/dvc/params.py
     - src/utils/evaluation/classification_metrics.py
     - data/processed/tabular/cae_mse.csv
     - models/casting/params/mse_threshold.txt
     - models/casting/params/corrected_mse_threshold.txt
     metrics:
-    - metrics/casting/cae_metrics.json:
+    - metrics/${all.dataset}/cae_metrics.json:
         cache: false
-    - metrics/casting/corrected_cae_metrics.json:
+    - metrics/${all.dataset}/corrected_cae_metrics.json:
         cache: false

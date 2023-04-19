@@ -3,19 +3,32 @@
     complexity is used as an outlier score and prediction is made based on a
     threshold defined with the validation data.
 """
+import os
+
 import pandas as pd
 from sklearn.metrics import f1_score
 import plotly.graph_objects as go
 
 from utils.models.threshold_search import bayesian_search_th
+from utils.misc import create_dir
 from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
 params = get_params()
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv', index_col=0)
+
+DATASET = params['dataset']
+TH_DIR = os.path.join('models', DATASET, 'params')
+create_dir(TH_DIR)
+
+cae_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
+)
+
 complexity_df = pd.read_csv(
-    'data/processed/tabular/complexity.csv', index_col=0)
+    os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),
+    index_col=0)
+
 complexity_df = complexity_df[['jpeg_mse']]
 cae_df = cae_df.join(complexity_df)
 
@@ -43,14 +56,13 @@ search_results = bayesian_search_th(
 )
 
 # Write best threshold to file in models/params
-with open('models/casting/params/corrected_mse_threshold.txt', 'w') as f:
+with open(os.path.join(TH_DIR, 'corrected_mse_threshold.txt'), 'w') as f:
     f.write(str(search_results['threshold']))
 
 # Plot histogram of corrected_mse with different colors according to label
 fig = val_df['corrected_mse'].hist(
     by=val_df['label'], color=val_df['label'].apply(
         lambda x: 'def_front' if x == 1 else 'ok_front'), opacity=0.6)
-
 
 fig.add_trace(
     go.Scatter(
@@ -73,4 +85,5 @@ fig.update_layout(
     )
 )
 
-fig.write_html('visualisation/thresholds/casting/corrected_mse.html')
+fig.write_html(
+    os.path.join('visualisation', DATASET, 'thresholds', 'corrected_mse.html'))
