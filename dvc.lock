@@ -206,26 +206,26 @@ stages:
         cae_hp_tuning.beta: 0.9
         cae_hp_tuning.bottleneck_filters: 64
         cae_hp_tuning.early_stopping: false
-        cae_hp_tuning.epochs: 2
-        cae_hp_tuning.max_trials: 2
+        cae_hp_tuning.epochs: 15
+        cae_hp_tuning.max_trials: 50
         cae_hp_tuning.min_lr: 1e-06
         cae_hp_tuning.patience: 3
         cae_hp_tuning.revive_best: true
     outs:
     - path: models/casting/bin/hp_search_best.hdf5
-      md5: a41ccc43f6c460d6d53a52129a8ec1c2
-      size: 5172040
+      md5: 77d2520f9f2f1743006dcfcb1d5ba4fa
+      size: 6641856
     - path: models/casting/logs/hp_search/CAE
-      md5: c33358a3304ff970df2fdfeb08d50c8f.dir
-      size: 34114392
-      nfiles: 10
+      md5: f9074ba89d6aa3ead05dd7a83d18cf84.dir
+      size: 1001010264
+      nfiles: 202
     - path: models/casting/logs/hp_search/hp_search_results.txt
-      md5: 698ce996329db96b32976fd5f356d0e8
-      size: 587
+      md5: efc0c8c80eed55a7dd2cd0c413b5f3e3
+      size: 2339
     - path: models/casting/logs/hp_search/tb
-      md5: 9371937d4ada61b60ccf1edee66dc4c5.dir
-      size: 867723
-      nfiles: 6
+      md5: 5797dacb29ba63c20752355f604dee3b.dir
+      size: 24066945
+      nfiles: 150
   visualisation:
     cmd: python3 src/visualisation.py
     deps:
@@ -282,8 +282,8 @@ stages:
       size: 3201717
       nfiles: 129
     - path: models/casting/bin/pretrained_cae.hdf5
-      md5: cd9dd35562b914566929c35720b34850
-      size: 15336840
+      md5: 12300b02acac50cc06a3e1eff61cae49
+      size: 19744952
     - path: src/cae_training.py
       md5: 9c0a82081c72e6b59838693fb36f2d3e
       size: 4320
@@ -326,18 +326,18 @@ stages:
         cae_training.batch_size: 8
         cae_training.beta: 0.9
         cae_training.early_stopping: false
-        cae_training.epochs: 2
+        cae_training.epochs: 50
         cae_training.learning_rate: 0.0005
         cae_training.min_lr: 1e-05
         cae_training.patience: 3
         cae_training.revive_best: true
     outs:
     - path: models/casting/bin/trained_cae.hdf5
-      md5: de8732c5d3f9bb6ee0339e32c5fc2ff9
-      size: 15336840
+      md5: ac48e357904cc821a5dd20c7def89349
+      size: 19744952
     - path: models/casting/logs/training_history.csv
-      md5: 8571621e6d9cc23169007b065178f0eb
-      size: 290
+      md5: 735070340961c4ead093a7c3f70dadbb
+      size: 6448
   calculate_reconstruction_mse:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
@@ -354,8 +354,8 @@ stages:
       size: 3201717
       nfiles: 129
     - path: models/casting/bin/trained_cae.hdf5
-      md5: de8732c5d3f9bb6ee0339e32c5fc2ff9
-      size: 15336840
+      md5: ac48e357904cc821a5dd20c7def89349
+      size: 19744952
     - path: src/calculate_reconstruction_mse.py
       md5: 209aa9175b282a084c782d4c3f9e9677
       size: 2330
@@ -372,11 +372,11 @@ stages:
         all.scale: 255
     outs:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 94633e7d75800c98dcd65cf22e52736e
-      size: 120337
+      md5: 4d477b18275079f6619194c4af745687
+      size: 120318
     - path: visualisation/casting/caemse_hist.png
-      md5: e1e9d9daa503b02a173afd25e448f2e6
-      size: 20634
+      md5: d1a083fc2a80b8c1f08c01b8b6416d56
+      size: 20428
   reconstruction_visualisation:
     cmd: python3 src/reconstruction_visualisation.py
     deps:
@@ -407,8 +407,8 @@ stages:
     cmd: python3 src/complexity_vs_caemse.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 94633e7d75800c98dcd65cf22e52736e
-      size: 120337
+      md5: 4d477b18275079f6619194c4af745687
+      size: 120318
     - path: data/processed/casting/tabular/complexity.csv
       md5: 4ac2449ad3fff42d693cf546a834b940
       size: 123881
@@ -423,14 +423,14 @@ stages:
         all.dataset: casting
     outs:
     - path: visualisation/casting/complexity_vs_caemse.html
-      md5: bfb0c9ceca26968dc6f60e9f35410cf3
-      size: 3623562
+      md5: b370646ee97d81bf3bd165b258b8a190
+      size: 3623559
   cae_mse_model:
     cmd: python3 src/cae_mse_model.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 94633e7d75800c98dcd65cf22e52736e
-      size: 120337
+      md5: 4d477b18275079f6619194c4af745687
+      size: 120318
     - path: src/cae_mse_model.py
       md5: 8aeb8ee3b69f08e786707ba7167b36f0
       size: 2263
@@ -450,22 +450,22 @@ stages:
         cae_mse_model.score_func: accuracy
     outs:
     - path: models/casting/params/mse_threshold.txt
-      md5: c11447aa35c591462f478279ff0ffeb5
+      md5: 4d2cf246841f53903893701778760a00
       size: 19
     - path: visualisation/casting/mse.html
-      md5: 6d917654bc3925e15942ffd7255f9e46
-      size: 3586717
+      md5: b8760d01312429edd5ebfe28d1df6a0d
+      size: 3586709
   evaluate:
     cmd: python3 src/evaluate.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 94633e7d75800c98dcd65cf22e52736e
-      size: 120337
+      md5: 4d477b18275079f6619194c4af745687
+      size: 120318
     - path: models/casting/params/corrected_mse_threshold.txt
-      md5: 609860d3c0ad2979727f76b7a679b5cb
-      size: 18
+      md5: 58eb3a1a4d0682549c1ed13d200a2d8d
+      size: 17
     - path: models/casting/params/mse_threshold.txt
-      md5: c11447aa35c591462f478279ff0ffeb5
+      md5: 4d2cf246841f53903893701778760a00
       size: 19
     - path: src/evaluate.py
       md5: 73b48f870a6907ea589c3c1c10ff9d94
@@ -478,8 +478,8 @@ stages:
       size: 699
     outs:
     - path: metrics/casting/cae_metrics.json
-      md5: d646282e027824af979b842abdf1bc79
-      size: 248
+      md5: 5f1cc761cb5ee3a1d12d03f9ea3e2760
+      size: 249
     - path: metrics/casting/corrected_cae_metrics.json
       md5: 2c1dbe37e2f546c1374a300d80e94502
       size: 204
@@ -487,8 +487,8 @@ stages:
     cmd: python3 src/corrected_model.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 94633e7d75800c98dcd65cf22e52736e
-      size: 120337
+      md5: 4d477b18275079f6619194c4af745687
+      size: 120318
     - path: data/processed/casting/tabular/complexity.csv
       md5: 4ac2449ad3fff42d693cf546a834b940
       size: 123881
@@ -511,11 +511,11 @@ stages:
         corrected_model.score_func: accuracy
     outs:
     - path: models/casting/params/corrected_mse_threshold.txt
-      md5: 609860d3c0ad2979727f76b7a679b5cb
-      size: 18
+      md5: 58eb3a1a4d0682549c1ed13d200a2d8d
+      size: 17
     - path: visualisation/casting/corrected_mse.html
-      md5: 75a7230a195ef4895e23268f124faf50
-      size: 3586596
+      md5: 83698ade7569784833741286e9c3d455
+      size: 3586591
   cae_pretraining:
     cmd: python3 src/cae_pretraining.py
     deps:
@@ -524,8 +524,8 @@ stages:
       size: 236686390
       nfiles: 120003
     - path: models/casting/bin/hp_search_best.hdf5
-      md5: a41ccc43f6c460d6d53a52129a8ec1c2
-      size: 5172040
+      md5: 77d2520f9f2f1743006dcfcb1d5ba4fa
+      size: 6641856
     - path: src/cae_pretraining.py
       md5: 309b66fa2377561bb1080445a5dac7ca
       size: 3914
@@ -571,15 +571,15 @@ stages:
         cae_pretraining.batch_size: 2
         cae_pretraining.beta: 0.9
         cae_pretraining.early_stopping: false
-        cae_pretraining.epochs: 1
+        cae_pretraining.epochs: 5
         cae_pretraining.learning_rate: 0.001
         cae_pretraining.min_lr: 1e-05
         cae_pretraining.patience: 3
         cae_pretraining.revive_best: true
     outs:
     - path: models/casting/bin/pretrained_cae.hdf5
-      md5: cd9dd35562b914566929c35720b34850
-      size: 15336840
+      md5: 12300b02acac50cc06a3e1eff61cae49
+      size: 19744952
     - path: models/casting/logs/pretraining_history.csv
-      md5: a67f931cce444a532507fc58d543d11d
-      size: 163
+      md5: 3548268d879fbb40988bb58cb50f0bb1
+      size: 682
