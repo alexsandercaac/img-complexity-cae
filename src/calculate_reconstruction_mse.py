@@ -17,7 +17,7 @@ from utils.dvc.params import get_params
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
-params = get_params()
+params = get_params('all')
 
 # Data parameters
 DATASET = params['dataset']
@@ -32,7 +32,7 @@ with open(OUTPUT_FILE, 'w') as f:
     f.write('file,cae_mse,data_split,label\n')
 
 DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
-                          for label in ['ok_front', 'def_front']]
+                          for label in ['positive', 'negative']]
 
 model = tf.keras.models.load_model(
     filepath=os.path.join('models', DATASET, 'bin', 'trained_cae.hdf5')

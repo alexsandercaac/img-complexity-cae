@@ -244,9 +244,9 @@ stages:
     - src/evaluate.py
     - src/utils/dvc/params.py
     - src/utils/evaluation/classification_metrics.py
-    - data/processed/tabular/cae_mse.csv
-    - models/casting/params/mse_threshold.txt
-    - models/casting/params/corrected_mse_threshold.txt
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    - models/${all.dataset}/params/mse_threshold.txt
+    - models/${all.dataset}/params/corrected_mse_threshold.txt
     metrics:
     - metrics/${all.dataset}/cae_metrics.json:
         cache: false

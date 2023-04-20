@@ -139,3 +139,5 @@ history = model.fit(
 print('Saving model...')
 model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
 history_df = pd.DataFrame(history.history)
+history_df.to_csv(
+    os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'))

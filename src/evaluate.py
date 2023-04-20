@@ -10,7 +10,7 @@ from utils.evaluation.classification_metrics import get_classification_metrics
 from utils.dvc.params import get_params
 
 
-params = get_params()
+params = get_params('all')
 
 DATASET = params['dataset']
 TH_DIR = os.path.join('models', DATASET, 'params')

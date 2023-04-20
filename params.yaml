@@ -23,9 +23,9 @@ cae_hp_tuning:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 25
+  epochs: 2
   min_lr: 0.000001
-  max_trials: 50
+  max_trials: 2
 cae_pretraining:
   batch_size: 2
   alpha: 0.98
@@ -33,7 +33,7 @@ cae_pretraining:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 2
+  epochs: 1
   min_lr: 0.00001
   learning_rate: 0.001
 cae_training:
