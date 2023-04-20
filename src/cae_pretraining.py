@@ -1,18 +1,20 @@
 """
-    DVC stage for hyperparameter optimzation of the CAE model using the
-    Keras Tuner library.
+    This stage loads the model trained in the previous stage of hyperparameter
+    tuning and trains it on a general purpose dataset. The goal is that
+    the model will learn generalizable low level features that can be used
+    for the task of interest.
 """
 import os
 import logging
 
-import keras_tuner as kt
 import tensorflow as tf
+from tqdm.keras import TqdmCallback
+import pandas as pd
 
 from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
-from utils.models.ktmodels import CAE
-from utils.models.kerasaux import CustomLearningRateScheduler
-from utils.misc import catch_stdout, create_dir
+from utils.models.kerasaux import CustomLearningRateScheduler, \
+    randomize_model_weigths
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
@@ -39,25 +41,20 @@ RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
 
 # Model parameters
 BATCH_SIZE = params['batch_size']
-BOTTLENECK_FILTERS = params['bottleneck_filters']
+LEARNING_RATE = params['learning_rate']
 ALPHA = params['alpha']
 BETA = params['beta']
 PATIENCE = params['patience']
 EARLY_STOPPING = params['early_stopping']
 REVIVE_BEST = params['revive_best']
 MIN_LR = params['min_lr']
-MAX_TRIALS = params['max_trials']
 SEED = params['seed']
 EPOCHS = params['epochs']
-MODEL_INPUT_DIM = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
-                   else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
 
 # Directories
-DATA_DIR = os.path.join('data', 'processed', DATASET)
-LOG_PATH = os.path.join('models', DATASET, 'logs', 'hp_search')
-create_dir(LOG_PATH)
-MODELS_BIN_DIR = os.path.join('models', DATASET, 'bin')
-create_dir(MODELS_BIN_DIR)
+DATA_DIR = os.path.join('data', 'raw', 'tiny-imagenet-200')
+MODEL_DIR = os.path.join('models', DATASET, 'bin')
+TRAIN_DIR = os.path.join(DATA_DIR, 'train')
 
 # * Dataset loading
 augmentation = augmentation_model(
@@ -72,7 +69,7 @@ augmentation = augmentation_model(
 )
 
 train_dataset = load_tf_img_dataset(
-    dir='train/negative',
+    dir='train',
     dir_path=DATA_DIR,
     input_size=INPUT_SIZE[:2],
     mode='autoencoder',
@@ -84,7 +81,7 @@ train_dataset = load_tf_img_dataset(
 )
 
 val_dataset = load_tf_img_dataset(
-    dir='val/negative',
+    dir='val',
     dir_path=DATA_DIR,
     input_size=RANDOM_CROP,
     mode='autoencoder',
@@ -94,8 +91,17 @@ val_dataset = load_tf_img_dataset(
     color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
-# * Hyperparameter tuning
-search_model = CAE(MODEL_INPUT_DIM, BOTTLENECK_FILTERS)
+model = tf.keras.models.load_model(
+    filepath=os.path.join(MODEL_DIR, 'hp_search_best.hdf5')
+)
+
+randomize_model_weigths(model)
+
+model.compile(loss=['mse'],
+              optimizer=tf.keras.optimizers.Adam(
+    learning_rate=LEARNING_RATE),
+    metrics=['mae', 'mse']
+)
 
 lr_schedule = CustomLearningRateScheduler(
     metric='val_mse',
@@ -109,37 +115,29 @@ lr_schedule = CustomLearningRateScheduler(
     min_lr=MIN_LR
 )
 
-tbcallback = tf.keras.callbacks.TensorBoard(
-    os.path.join(LOG_PATH, 'tb')
+train_size = sum(
+    [len(files) for _, _, files in os.walk(TRAIN_DIR)])
+
+print(f'Training samples: {train_size}')
+
+# * Train model
+
+history = model.fit(
+    train_dataset,
+    epochs=EPOCHS,
+    validation_data=val_dataset,
+    callbacks=[lr_schedule,
+               TqdmCallback(verbose=2,
+                            data_size=train_size,
+                            batch_size=BATCH_SIZE,
+                            epochs=EPOCHS)],
+    verbose=0
 )
 
-tuner = kt.BayesianOptimization(
-    search_model,
-    'val_mse',
-    max_trials=MAX_TRIALS,
-    overwrite=False,
-    project_name='CAE',
-    directory=LOG_PATH,
-    seed=SEED,
-    distribution_strategy=tf.distribute.MirroredStrategy()
-)
-tuner.search_space_summary()
+# * Save model and history
 
-history = tuner.search(train_dataset,
-                       validation_data=val_dataset,
-                       callbacks=[lr_schedule,
-                                  tbcallback],
-                       epochs=EPOCHS,
-                       shuffle=True,
-                       batch_size=BATCH_SIZE,
-                       verbose=1
-                       )
-
-results_summary = catch_stdout(tuner.results_summary)
-results = results_summary()
-
-with open(os.path.join(LOG_PATH, 'hp_search_results.txt'), 'w') as file:
-    file.write(results)
-
-best_model = tuner.get_best_models()[0]
-best_model.save(os.path.join(MODELS_BIN_DIR, 'hp_search_best.hdf5'))
+print('Saving model...')
+model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
+history_df = pd.DataFrame(history.history)
+history_df.to_csv(
+    os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'))

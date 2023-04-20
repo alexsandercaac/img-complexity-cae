@@ -3,15 +3,18 @@ stages:
     cmd: python3 src/dataset_split.py
     deps:
     - src/dataset_split.py
-    - data/raw
+    - src/utils/misc.py
+    - src/utils/dvc/params.py
+    - data/raw/${all.dataset}
     params:
     - dataset_split.split_ratio
     - dataset_split.shuffle
     - all.seed
+    - all.dataset
     outs:
-    - data/processed/train
-    - data/processed/val
-    - data/processed/test
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
 
 # *** ---------------------------------------------
 
@@ -21,30 +24,34 @@ stages:
     - src/extract_complexity.py
     - src/utils/data/jpegmse.py
     - src/utils/data/complexityaux.py
-    - data/processed/train
-    - data/processed/test
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
+    params:
+    - all.dataset
+    - all.grayscale
+    - all.scale
     outs:
-    - data/processed/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
     plots:
-    - visualisation/complexity/casting/train_ok_front_hist.png:
+    - visualisation/${all.dataset}/complexity_hist.png:
         cache: false
-    - visualisation/complexity/casting/val_ok_front_hist.png:
-        cache: false
-    - visualisation/complexity/casting/train_def_front_hist.png:
-        cache: false
-    - visualisation/complexity/casting/val_def_front_hist.png:
-        cache: false
+
 # *** ---------------------------------------------
 
   cae_hp_tuning:
     cmd: python3 src/cae_hp_tuning.py
     deps:
     - src/cae_hp_tuning.py
-    - src/utils/models/kerascallbacks.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
+    - src/utils/models/kerasaux.py
     - src/utils/models/ktmodels.py
     - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - data/processed/val
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
     params:
     - all.random_crop
     - all.random_flip
@@ -54,6 +61,11 @@ stages:
     - all.random_contrast
     - all.random_translation_height
     - all.random_translation_width
+    - all.input_size
+    - all.scale
+    - all.grayscale
+    - all.dataset
+    - all.seed
     - cae_hp_tuning.batch_size
     - cae_hp_tuning.bottleneck_filters
     - cae_hp_tuning.alpha
@@ -64,19 +76,24 @@ stages:
     - cae_hp_tuning.epochs
     - cae_hp_tuning.min_lr
     - cae_hp_tuning.max_trials
-    - cae_hp_tuning.log_path
-
     outs:
-    - models/casting/logs
-  
+    - models/${all.dataset}/logs/hp_search/CAE
+    - models/${all.dataset}/logs/hp_search/tb
+    - models/${all.dataset}/bin/hp_search_best.hdf5
+    - models/${all.dataset}/logs/hp_search/hp_search_results.txt
+    
 # *** ---------------------------------------------
 
-  augmentation_visualisation:
-    cmd: python3 src/augmentation_visualisation.py
+  cae_pretraining:
+    cmd: python3 src/cae_pretraining.py
     deps:
-    - src/augmentation_visualisation.py
+    - src/cae_pretraining.py
+    - src/utils/dvc/params.py
+    - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
-    - data/processed/train
+    - src/utils/misc.py
+    - data/raw/tiny-imagenet-200
+    - models/${all.dataset}/bin/hp_search_best.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -87,24 +104,22 @@ stages:
     - all.random_translation_height
     - all.random_translation_width
     - all.input_size
-    plots:
-    - visualisation/augmentation/casting_augmented_images.png:
-        cache: false
-
-# *** ---------------------------------------------
-
-  reconstruction_visualisation:
-    cmd: python3 src/reconstruction_visualisation.py
-    deps:
-    - src/reconstruction_visualisation.py
-    - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - models/casting/best_cae.hdf5
-    params:
-    - all.input_size
-    plots:
-    - visualisation/reconstruction/casting/reconstructed_images.png:
-        cache: false
+    - all.scale
+    - all.grayscale
+    - all.dataset
+    - all.seed
+    - cae_pretraining.batch_size
+    - cae_pretraining.alpha
+    - cae_pretraining.beta
+    - cae_pretraining.patience
+    - cae_pretraining.revive_best
+    - cae_pretraining.early_stopping
+    - cae_pretraining.epochs
+    - cae_pretraining.min_lr
+    - cae_pretraining.learning_rate
+    outs:
+    - models/${all.dataset}/bin/pretrained_cae.hdf5
+    - models/${all.dataset}/logs/pretraining_history.csv
 
 # *** ---------------------------------------------
 
@@ -112,11 +127,12 @@ stages:
     cmd: python3 src/cae_training.py
     deps:
     - src/cae_training.py
-    - src/utils/models/kerascallbacks.py
+    - src/utils/dvc/params.py
+    - src/utils/models/kerasaux.py
     - src/utils/data/tfdatasets.py
-    - data/processed/train
-    - data/processed/val
-    - models/casting/logs/hp_search_best.hdf5
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - models/${all.dataset}/bin/pretrained_cae.hdf5
     params:
     - all.random_crop
     - all.random_flip
@@ -126,6 +142,11 @@ stages:
     - all.random_contrast
     - all.random_translation_height
     - all.random_translation_width
+    - all.input_size
+    - all.scale
+    - all.grayscale
+    - all.dataset
+    - all.seed
     - cae_training.batch_size
     - cae_training.alpha
     - cae_training.beta
@@ -136,8 +157,8 @@ stages:
     - cae_training.min_lr
     - cae_training.learning_rate
     outs:
-    - models/casting/best_cae.hdf5
-    - models/casting/training_history.csv
+    - models/${all.dataset}/bin/trained_cae.hdf5
+    - models/${all.dataset}/logs/training_history.csv
 
 # *** ---------------------------------------------
 
@@ -145,21 +166,20 @@ stages:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
     - src/calculate_reconstruction_mse.py
-    - models/casting/best_cae.hdf5
+    - src/utils/dvc/params.py
+    - models/${all.dataset}/bin/trained_cae.hdf5
     - src/utils/data/complexityaux.py
-    - data/processed/train
-    - data/processed/val
-    - data/processed/test
+    - data/processed/${all.dataset}/train
+    - data/processed/${all.dataset}/val
+    - data/processed/${all.dataset}/test
+    params:
+    - all.dataset
+    - all.grayscale
+    - all.scale
     outs:
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     plots:
-    - visualisation/reconstruction/casting/train_ok_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/val_ok_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/train_def_front_hist.png:
-        cache: false
-    - visualisation/reconstruction/casting/val_def_front_hist.png:
+    - visualisation/${all.dataset}/caemse_hist.png:
         cache: false
 
 # *** ---------------------------------------------
@@ -168,10 +188,13 @@ stages:
     cmd: python3 src/complexity_vs_caemse.py
     deps:
     - src/complexity_vs_caemse.py
-    - data/processed/tabular/complexity.csv
-    - data/processed/tabular/cae_mse.csv
+    - src/utils/dvc/params.py
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    params:
+    - all.dataset
     plots:
-    - visualisation/casting_complexity_vs_caemse.html:
+    - visualisation/${all.dataset}/complexity_vs_caemse.html:
         cache: false
 
 # *** ---------------------------------------------
@@ -180,14 +203,17 @@ stages:
     cmd: python3 src/cae_mse_model.py
     deps:
     - src/cae_mse_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
     - src/utils/models/threshold_search.py
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
+    - all.dataset
     - cae_mse_model.score_func
     - cae_mse_model.n_iter
     outs:
-    - models/casting/params/mse_threshold.txt
-    - visualisation/thresholds/casting/mse.html:
+    - models/${all.dataset}/params/mse_threshold.txt
+    - visualisation/${all.dataset}/mse.html:
         cache: false
 
 # *** ---------------------------------------------
@@ -196,16 +222,19 @@ stages:
     cmd: python3 src/corrected_model.py
     deps:
     - src/corrected_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
     - src/utils/models/threshold_search.py
-    - data/processed/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
+    - all.dataset
     - corrected_model.score_func
     - corrected_model.n_iter
     outs:
-    - models/casting/params/corrected_mse_threshold.txt
-    - visualisation/thresholds/casting/corrected_mse.html:
+    - models/${all.dataset}/params/corrected_mse_threshold.txt
+    - visualisation/${all.dataset}/corrected_mse.html:
         cache: false
-
 
 # *** ---------------------------------------------
 
@@ -213,12 +242,13 @@ stages:
     cmd: python3 src/evaluate.py
     deps:
     - src/evaluate.py
+    - src/utils/dvc/params.py
     - src/utils/evaluation/classification_metrics.py
-    - data/processed/tabular/cae_mse.csv
-    - models/casting/params/mse_threshold.txt
-    - models/casting/params/corrected_mse_threshold.txt
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    - models/${all.dataset}/params/mse_threshold.txt
+    - models/${all.dataset}/params/corrected_mse_threshold.txt
     metrics:
-    - metrics/casting/cae_metrics.json:
+    - metrics/${all.dataset}/cae_metrics.json:
         cache: false
-    - metrics/casting/corrected_cae_metrics.json:
+    - metrics/${all.dataset}/corrected_cae_metrics.json:
         cache: false

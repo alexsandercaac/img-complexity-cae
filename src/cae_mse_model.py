@@ -3,46 +3,62 @@
     score and prediction is made based on a threshold defined with the
     validation data.
 """
+import os
+
 import pandas as pd
 from sklearn.metrics import f1_score
 import plotly.graph_objects as go
 
 from utils.models.threshold_search import bayesian_search_th
+from utils.misc import create_dir
 from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
 params = get_params()
-cae_df = pd.read_csv('data/processed/tabular/cae_mse.csv')
+
+DATASET = params['dataset']
+TH_DIR = os.path.join('models', DATASET, 'params')
+create_dir(TH_DIR)
+
+# Algorithm parameters
+SCORE_FUNC = params['score_func']
+N_ITER = params['n_iter']
+BALANCED = params['balanced']
+
+cae_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv'),
+    index_col=0
+)
 
 cae_df['label'] = cae_df['label'].apply(
-    lambda x: 1 if x == 'def_front' else 0)
+    lambda x: 1 if x == 'positive' else 0)
 
 mask = cae_df['data_split'] == 'val'
 val_df = cae_df[mask].drop(columns=['data_split'])
 
-if params['score_func'] == 'accuracy':
+if SCORE_FUNC == 'accuracy':
     score_func = None
-elif params['score_func'] == 'f1':
+elif SCORE_FUNC == 'f1':
     score_func = f1_score
 else:
     raise ValueError(
-        f"Invalid score function {params['score_func']} specified.")
+        f"Invalid score function {SCORE_FUNC} specified.")
 
 search_results = bayesian_search_th(
     val_df['cae_mse'].values, val_df['label'].values,
     val_df['cae_mse'].min(), val_df['cae_mse'].max(),
-    n_iter=params['n_iter'], score_func=score_func,
-    balanced=params['balanced']
+    n_iter=N_ITER, score_func=score_func,
+    balanced=BALANCED
 )
 
 # Write best threshold to file in models/params
-with open('models/casting/params/mse_threshold.txt', 'w') as f:
+with open(os.path.join(TH_DIR, 'mse_threshold.txt'), 'w') as f:
     f.write(str(search_results['threshold']))
 
 fig = val_df['cae_mse'].hist(
     by=val_df['label'], color=val_df['label'].apply(
-        lambda x: 'def_front' if x == 1 else 'ok_front'), opacity=0.6)
+        lambda x: 'positive' if x == 1 else 'negative'), opacity=0.6)
 
 fig.add_trace(
     go.Scatter(
@@ -66,4 +82,5 @@ fig.update_layout(
     )
 )
 
-fig.write_html('visualisation/thresholds/casting/mse.html')
+fig.write_html(
+    os.path.join('visualisation', DATASET, 'mse.html'))

@@ -1,14 +1,27 @@
 """
-    Module with custom Keras callbacks to log information during training,
-    as well as control of the learning rate schedule.
+    Module with auxiliary function for Keras models.
+    such as custom Keras callbacks to log information during training, as well
+    as control of the learning rate schedule.
 
 """
-# Dependencies ---------------------------------------------------------------
 from numpy.core.numeric import Inf
-import tensorflow as tf
 from tqdm import tqdm
 from typing import Union
-# ----------------------------------------------------------------------------
+
+import tensorflow as tf
+
+
+def randomize_model_weigths(model: tf.keras.Model) -> None:
+    """Randomize the weights of a Keras model.
+
+    Args:
+        model (tf.keras.Model): model to be randomized.
+    Returns:
+        None
+    """
+    model.set_weights(
+        [tf.random.normal(shape=weight.shape) for weight in model.weights]
+    )
 
 
 class CustomLearningRateScheduler(tf.keras.callbacks.Callback):

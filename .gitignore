@@ -1,3 +1,6 @@
+# models
+*.hdf5
+
 # images
 *.jpeg
 *.jpg

@@ -7,8 +7,11 @@ all:   # Parameters used in multiple stages
   random_contrast: 0.2
   random_translation_height: [-0.1, 0.1]
   random_translation_width: [-0.1, 0.1]
-  input_size: [224, 224, 1]
+  input_size: [256, 256, 1]
   seed: 13
+  dataset: 'casting'
+  grayscale: true
+  scale: 255
 dataset_split:
   split_ratio: [0.7, 0.1, 0.2]
   shuffle: true
@@ -20,10 +23,19 @@ cae_hp_tuning:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 25
+  epochs: 15
   min_lr: 0.000001
   max_trials: 50
-  log_path: models/casting/logs
+cae_pretraining:
+  batch_size: 2
+  alpha: 0.98
+  beta: 0.9
+  patience: 3
+  revive_best: true
+  early_stopping: false
+  epochs: 5
+  min_lr: 0.00001
+  learning_rate: 0.001
 cae_training:
   batch_size: 8
   alpha: 0.98
@@ -31,9 +43,9 @@ cae_training:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 75
+  epochs: 50
   min_lr: 0.00001
-  learning_rate: 0.0001
+  learning_rate: 0.0005
 cae_mse_model:
   n_iter: 25
   score_func: 'accuracy'
