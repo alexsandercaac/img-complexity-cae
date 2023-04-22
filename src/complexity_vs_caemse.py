@@ -31,7 +31,7 @@ cae_df = cae_df[mask].drop(columns=['data_split', 'label'])
 complexity_caemse_df = complexity_df.merge(cae_df, on='file')
 
 complexity_caemse_df['label'] = complexity_caemse_df['label'].apply(
-    lambda x: 1 if x == 'def_front' else 0)
+    lambda x: 1 if x == 'positive' else 0)
 
 fig = go.Figure()
 # Plot complexity vs CAE MSE using labels as color

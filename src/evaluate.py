@@ -34,7 +34,7 @@ corrected_th = float(
         os.path.join(TH_DIR, 'corrected_mse_threshold.txt'), 'r').read())
 
 cae_df['label'] = cae_df['label'].apply(
-    lambda x: 1 if x == 'def_front' else 0)
+    lambda x: 1 if x == 'positive' else 0)
 
 mask = cae_df['data_split'] == 'train'
 train_df = cae_df[mask].drop(columns=['data_split'])
