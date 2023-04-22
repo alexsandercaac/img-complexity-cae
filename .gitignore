@@ -4,6 +4,7 @@
 # images
 *.jpeg
 *.jpg
+*.JPG
 
 # vscode
 *.code-workspace
