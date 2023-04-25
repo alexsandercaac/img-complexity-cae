@@ -42,28 +42,31 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
 
   Args:
         alpha (float): scaling to be applied to the learning rate when there
-                       was improvement in the metric between current and last
-                       epoch.
+            was improvement in the metric between current and last epoch.
         beta (float): scaling to be applied to the learning rate when there was
-                      NO improvement in the metric.
+            NO improvement in the metric.
         metric (string): metric evaluated for determining the scaling of the
-                         learning rate.
+            learning rate.
         min_lr (float): lower threshold for the learning rate.
         return_best_weights (bool): if True, weights associated with epoch of
-                                    best main metric are set to the model.
+            best main metric are set to the model.
         early_stopping (bool): if True, stop training if "patience" epochs
-                               without improvemnt are reached. IGNORED if
-                               revive_best is True.
+            without improvemnt are reached. IGNORED if
+            revive_best is True.
         revive_best (bool): if True, reset model weights to the best epoch and
-                            proceed training with smaller learning rate.
-                            Used for exploiting, after exploring is done.
+            proceed training with smaller learning rate.
+            Used for exploiting, after exploring is done.
         maximize (bool): if true, main metric is to be maximized.
         patience (int): epochs to wait before revive or early stopping; ignored
-                        if both revive_best and early_stopping are set to False
+            if both revive_best and early_stopping are set to False
         secondary_metric (string): secondary metric to keep track of.
+        bin_checkpoint (bool): if True, save model weights in binary format.
+        bin_path (string): path to save binary checkpoint.
         verbose (int): if < 1, supress most messages; if 1, present some
-                       messages; if >1, present all messages.
-
+            messages; if >1, present all messages.
+        initial_metric (float): value to initialize the metric. Useful when
+            using a pretrained model. If None, the metric is initialized
+            with the +-Inf value, depending on the maximize flag.
   """
 
     def __init__(self, alpha: float = 0.98, beta: float = 0.9,
@@ -100,15 +103,16 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
     def on_train_begin(self, logs=None):
         self.__no_improv_epochs = 0
         self.stopped_epoch = 0
+        self.__metric_value = self.__initial_metric
+        # If an initial metric is provided, the model is assumed to be
+        # pretrained and the initial metric is used to initialize the
+        # best metric.
         if self.__initial_metric:
-            self.__metric_value = self.__initial_metric
             lr = float(tf.keras.backend.get_value(
                 self.model.optimizer.learning_rate))
             self.summary_history['lr'].append(lr)
             self.best_metric = self.__metric_value
             self.best_weights = self.model.get_weights()
-        else:
-            self.__metric_value = None
 
     def on_train_end(self, logs=None):
         if self.stopped_epoch > 0 and self.verbose > 0:
@@ -118,11 +122,14 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                 tqdm.write("Restoring model weights from the end of" +
                            " the best epoch")
             self.model.set_weights(self.best_weights)
-        first_log = self.summary_history['logs'][0]
+            if self.__initial_metric:
+                first_log = self.summary_history['logs'][0]
+                first_log = {
+                    key: None if key != self.metric else self.__initial_metric
+                    for key in first_log.keys()}
 
-        first_log = {key: None if key != self.metric else self.__initial_metric
-                     for key in first_log.keys()}
-        self.summary_history['logs'][0] = first_log
+                self.summary_history['logs'] = (
+                    [first_log] + self.summary_history['logs'])
 
     def on_epoch_end(self, epoch, logs=None):
 
@@ -173,7 +180,6 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                     self.best_secondary = logs[self.secondary_metric]
                 scheduled_lr = self.alpha*lr
                 set_lr(scheduled_lr, epoch, self.model)
-
 
         else:
             # Compare current metric with last logged metric

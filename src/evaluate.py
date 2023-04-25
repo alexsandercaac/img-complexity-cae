@@ -8,12 +8,15 @@ import json
 
 from utils.evaluation.classification_metrics import get_classification_metrics
 from utils.dvc.params import get_params
+from utils.misc import create_dir
 
 
 params = get_params('all')
 
 DATASET = params['dataset']
 TH_DIR = os.path.join('models', DATASET, 'params')
+METRICS_DIR = os.path.join('metrics', DATASET)
+create_dir(METRICS_DIR)
 
 cae_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
@@ -85,7 +88,7 @@ metrics = {
 }
 
 with open(
-        os.path.join('metrics', DATASET, 'cae_metrics.json'), 'w') as f:
+        os.path.join(METRICS_DIR, 'cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
 
 train_df['corrected_mse'] = train_df['cae_mse'] / train_df['jpeg_mse']
@@ -137,5 +140,5 @@ metrics = {
 
 with open(
         os.path.join(
-            'metrics', DATASET, 'corrected_cae_metrics.json'), 'w') as f:
+            METRICS_DIR, 'corrected_cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
