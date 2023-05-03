@@ -122,8 +122,8 @@ stages:
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
     - path: src/utils/misc.py
-      md5: bb013696f537643f9f9b79d9fdbeadd6
-      size: 2390
+      md5: e29c4af95c5e5d4228701c6303e83b86
+      size: 3503
     params:
       params.yaml:
         all.dataset: streets
@@ -583,3 +583,13 @@ stages:
     - path: models/streets/logs/pretraining_history.csv
       md5: 0d7e5db44612cdf10c30970e67d69ea9
       size: 673
+  metrify:
+    cmd: python3 src/metrify.py
+    deps:
+    - path: src/metrify.py
+      md5: f079444cd2f2e35019789a7bae64c94f
+      size: 910
+    outs:
+    - path: metrics/metrics.json
+      md5: 669cd4655520ee661314f69f1c880b6d
+      size: 662

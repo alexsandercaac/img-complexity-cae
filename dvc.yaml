@@ -247,8 +247,16 @@ stages:
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     - models/${all.dataset}/params/mse_threshold.txt
     - models/${all.dataset}/params/corrected_mse_threshold.txt
+    outs:
+    - metrics/${all.dataset}/cae_metrics.json
+    - metrics/${all.dataset}/corrected_cae_metrics.json
+
+# *** ---------------------------------------------
+
+  metrify:
+    cmd: python3 src/metrify.py
+    deps:
+    - src/metrify.py
     metrics:
-    - metrics/${all.dataset}/cae_metrics.json:
-        cache: false
-    - metrics/${all.dataset}/corrected_cae_metrics.json:
+    - metrics/metrics.json:
         cache: false

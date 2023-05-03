@@ -1,37 +1,33 @@
 ```mermaid
 flowchart TD
-	node1["augmentation_visualisation"]
-	node2["cae_hp_tuning"]
-	node3["cae_mse_model"]
-	node4["cae_pretraining"]
-	node5["cae_training"]
-	node6["calculate_reconstruction_mse"]
-	node7["complexity_vs_caemse"]
-	node8["corrected_model"]
-	node9["data/raw/casting_512x512.dvc"]
-	node10["data/raw/tiny-imagenet-200.dvc"]
-	node11["dataset_split"]
-	node12["evaluate"]
-	node13["extract_complexity"]
-	node14["reconstruction_visualisation"]
-	node2-->node4
-	node3-->node12
+	node1["cae_hp_tuning"]
+	node2["cae_mse_model"]
+	node3["cae_pretraining"]
+	node4["cae_training"]
+	node5["calculate_reconstruction_mse"]
+	node6["complexity_vs_caemse"]
+	node7["corrected_model"]
+	node8["data/raw/streets.dvc"]
+	node9["data/raw/tiny-imagenet-200.dvc"]
+	node10["dataset_split"]
+	node11["evaluate"]
+	node12["extract_complexity"]
+	node1-->node3
+	node2-->node11
+	node3-->node4
 	node4-->node5
+	node5-->node2
 	node5-->node6
-	node5-->node14
-	node6-->node3
-	node6-->node7
-	node6-->node8
-	node6-->node12
-	node8-->node12
-	node9-->node11
+	node5-->node7
+	node5-->node11
+	node7-->node11
+	node8-->node10
+	node9-->node3
+	node10-->node1
 	node10-->node4
-	node10-->node11
-	node11-->node1
-	node11-->node2
-	node11-->node5
-	node11-->node6
-	node11-->node13
-	node11-->node14
-	node13-->node7
+	node10-->node5
+	node10-->node12
+	node12-->node6
+	node12-->node7
+	node13["data/raw/casting.dvc"]
 ```

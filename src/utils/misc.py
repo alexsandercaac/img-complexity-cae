@@ -96,3 +96,41 @@ def catch_stdout(func):
         return results
 
     return wrapper
+
+
+def list_subdirectories(directory):
+    """
+    Lists only subdirectories in a given directory and its subdirectories,
+    but does not list files.
+
+    Args:
+        directory (str): The directory to list subdirectories from.
+
+    Returns:
+        list: A list of subdirectories.
+    """
+    subdirectories = []
+    for dirpath, dirnames, _ in os.walk(directory):
+        # Exclude files and only append directories to the subdirectories list
+        subdirectories.extend([os.path.join(dirpath, dirname)
+                              for dirname in dirnames])
+    return subdirectories
+
+
+def list_files(directory):
+    """
+    Lists only files in a given directory and its subdirectories,
+    but does not list subdirectories.
+
+    Args:
+        directory (str): The directory to list files from.
+
+    Returns:
+        list: A list of files.
+    """
+    files = []
+    for dirpath, _, filenames in os.walk(directory):
+        # Exclude directories and only append files to the files list
+        files.extend([os.path.join(dirpath, filename)
+                      for filename in filenames])
+    return files
