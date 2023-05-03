@@ -587,9 +587,9 @@ stages:
     cmd: python3 src/metrify.py
     deps:
     - path: src/metrify.py
-      md5: f079444cd2f2e35019789a7bae64c94f
-      size: 910
+      md5: f3e8bc228b26b88683dd726e2d04c0a2
+      size: 872
     outs:
     - path: metrics/metrics.json
-      md5: 669cd4655520ee661314f69f1c880b6d
-      size: 662
+      md5: a1d6e39407dee52bc0c0c5ba74d6dc75
+      size: 1364
