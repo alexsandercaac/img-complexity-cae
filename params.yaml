@@ -1,7 +1,7 @@
 all:   # Parameters used in multiple stages
   random_crop: [224, 224]
-  random_flip: 'horizontal_and_vertical'
-  random_rotation: 0.4
+  random_flip: 'horizontal'
+  random_rotation: 0.2
   random_zoom: [-0.1, 0.1]
   random_brightness: 0.2
   random_contrast: 0.2
@@ -13,7 +13,7 @@ all:   # Parameters used in multiple stages
   grayscale: false
   scale: 255
 dataset_split:
-  split_ratio: [0.7, 0.1, 0.2]
+  split_ratio: [0.8, 0.1, 0.1]
   shuffle: true
 cae_hp_tuning:
   batch_size: 4
@@ -25,15 +25,15 @@ cae_hp_tuning:
   early_stopping: false
   epochs: 15
   min_lr: 0.000001
-  max_trials: 50
+  max_trials: 30
 cae_pretraining:
   batch_size: 2
   alpha: 0.98
-  beta: 0.9
+  beta: 0.94
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 5
+  epochs: 10
   min_lr: 0.00001
   learning_rate: 0.001
 cae_training:
