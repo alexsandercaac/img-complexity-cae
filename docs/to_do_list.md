@@ -9,4 +9,6 @@
 - [x] Calculate the reconstruction error of each image on the test set using the optimized CAE
 - [ ] Analyse if the CAE is overfitting during the hyperparameter optimization for very small datasets
 - - - [ ] Consider different strategies for building the architecture
-- - - [ ] Consider collecting more samples to smaller datasets 
+- - - [ ] Consider collecting more samples to smaller datasets
+- [ ] Using a general purpose CAE for baseline comparison
+- [ ] Using a general purpose dataset for baseline comparison
