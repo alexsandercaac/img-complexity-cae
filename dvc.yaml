@@ -257,6 +257,7 @@ stages:
     cmd: python3 src/metrify.py
     deps:
     - src/metrify.py
+    - metrics/${all.dataset}
     metrics:
     - metrics/metrics.json:
         cache: false
