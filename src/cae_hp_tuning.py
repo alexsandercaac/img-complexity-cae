@@ -1,6 +1,13 @@
 """
     DVC stage for hyperparameter optimzation of the CAE model using the
     Keras Tuner library.
+
+    The script will save the best model found in the
+    models/$DATASET/bin folder and a description of the top models in the
+    models/$DATASET/logs/hp_search folder.
+
+    The tensorboard logs will be saved in the models/$DATASET/logs/hp_search
+    folder.
 """
 import os
 import logging
@@ -14,7 +21,8 @@ from utils.models.ktmodels import CAE
 from utils.models.kerasaux import CustomLearningRateScheduler
 from utils.misc import catch_stdout, create_dir
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
+# Suppress tensorflow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 # * Parameters
@@ -52,14 +60,14 @@ EPOCHS = params['epochs']
 MODEL_INPUT_DIM = ((RANDOM_CROP[0], RANDOM_CROP[1], 1) if GRAYSCALE
                    else (RANDOM_CROP[0], RANDOM_CROP[1], 3))
 
-# Directories
+# * Directories
 DATA_DIR = os.path.join('data', 'processed', DATASET)
 LOG_PATH = os.path.join('models', DATASET, 'logs', 'hp_search')
 create_dir(LOG_PATH)
 MODELS_BIN_DIR = os.path.join('models', DATASET, 'bin')
 create_dir(MODELS_BIN_DIR)
 
-# * Dataset loading
+
 augmentation = augmentation_model(
     random_crop=RANDOM_CROP,
     random_flip=RANDOM_FLIP,
@@ -94,7 +102,7 @@ val_dataset = load_tf_img_dataset(
     color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
-# * Hyperparameter tuning
+
 search_model = CAE(MODEL_INPUT_DIM, BOTTLENECK_FILTERS)
 
 lr_schedule = CustomLearningRateScheduler(

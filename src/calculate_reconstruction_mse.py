@@ -13,24 +13,29 @@ import matplotlib.ticker as ticker
 from utils.data.complexityaux import image_mse, load_imgs_gen
 from utils.dvc.params import get_params
 
-
+# Suppress tensorflow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
+
+# * Parameters
 
 params = get_params('all')
 
 # Data parameters
 DATASET = params['dataset']
-GRAYSCLAE = params['grayscale']
+GRAYSCALE = params['grayscale']
 SCALE = params['scale']
 
-# Directories and files
+# * Directories
+# Initialize csv file that will store the reconstruction MSE for each image,
+# along with the data split and label
 OUTPUT_FILE = os.path.join(
     'data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
 FIG_DIR = os.path.join('visualisation', DATASET)
 with open(OUTPUT_FILE, 'w') as f:
     f.write('file,cae_mse,data_split,label\n')
 
+# Create a list of tuples containing the data split and label combinations
 DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
                           for label in ['positive', 'negative']]
 
@@ -48,10 +53,11 @@ colours = {
 }
 
 for split, label in DATA_SPLITS_AND_LABELS:
+    # Create a list of all the images of that split and label
     data_dir = os.path.join('data', 'processed', DATASET, split, label)
     files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
 
-    img_gen = load_imgs_gen(files, grayscale=GRAYSCLAE, scale=SCALE)
+    img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 
     mses = []
     pbar = tqdm(total=len(files))

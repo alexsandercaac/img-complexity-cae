@@ -13,19 +13,21 @@ from utils.models.threshold_search import bayesian_search_th
 from utils.misc import create_dir
 from utils.dvc.params import get_params
 
-
 pd.options.plotting.backend = "plotly"
+
+# * Parameters
 
 params = get_params()
 
 DATASET = params['dataset']
-TH_DIR = os.path.join('models', DATASET, 'params')
-create_dir(TH_DIR)
 
 # Algorithm parameters
 SCORE_FUNC = params['score_func']
 N_ITER = params['n_iter']
 BALANCED = params['balanced']
+
+TH_DIR = os.path.join('models', DATASET, 'params')
+create_dir(TH_DIR)
 
 cae_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv'),
@@ -63,7 +65,6 @@ search_results = bayesian_search_th(
     balanced=BALANCED, verbose=3
 )
 
-# Write best threshold to file in models/params
 with open(os.path.join(TH_DIR, 'corrected_mse_threshold.txt'), 'w') as f:
     f.write(str(search_results['threshold']))
 

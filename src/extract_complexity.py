@@ -13,15 +13,17 @@ import os
 
 import matplotlib.ticker as ticker
 
+# * Parameters
+
 
 params = get_params('all')
 
 # Data parameters
 DATASET = params['dataset']
-GRAYSCLAE = params['grayscale']
+GRAYSCALE = params['grayscale']
 SCALE = params['scale']
 
-# Directories
+# * Directories
 TABULAR_DATA_DIR = os.path.join('data', 'processed', DATASET, 'tabular')
 create_dir(TABULAR_DATA_DIR)
 FIG_DIR = os.path.join('visualisation', DATASET)
@@ -32,7 +34,7 @@ OUTPUT_FILE_NAME = 'complexity.csv'
 # Initialise the output file
 with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'w') as f:
     f.write('file,jpeg_mse,data_split,label\n')
-
+# Create a list of tuples containing the data split and label combinations
 DATA_SPLITS_AND_LABELS = [(split, label) for split in ['train', 'val', 'test']
                           for label in ['positive', 'negative']]
 
@@ -49,7 +51,7 @@ for split, label in DATA_SPLITS_AND_LABELS:
     data_dir = os.path.join('data', 'processed', DATASET, split, label)
     files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
 
-    img_gen = load_imgs_gen(files, grayscale=GRAYSCLAE, scale=SCALE)
+    img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 
     mses = []
     pbar = tqdm(total=len(files))

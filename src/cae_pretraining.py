@@ -3,6 +3,9 @@
     tuning and trains it on a general purpose dataset. The goal is that
     the model will learn generalizable low level features that can be used
     for the task of interest.
+
+    The pretrained model binary will be saved in the models/$DATASET/bin folder
+    and the training logs will be saved in the models/$DATASET/logs folder.
 """
 import os
 import logging
@@ -16,6 +19,7 @@ from utils.dvc.params import get_params
 from utils.models.kerasaux import CustomLearningRateScheduler, \
     randomize_model_weigths
 
+# Suppress tensorflow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
@@ -51,12 +55,12 @@ MIN_LR = params['min_lr']
 SEED = params['seed']
 EPOCHS = params['epochs']
 
-# Directories
+# * Directories
 DATA_DIR = os.path.join('data', 'raw', 'tiny-imagenet-200')
 MODEL_DIR = os.path.join('models', DATASET, 'bin')
 TRAIN_DIR = os.path.join(DATA_DIR, 'train')
 
-# * Dataset loading
+
 augmentation = augmentation_model(
     random_crop=RANDOM_CROP,
     random_flip=RANDOM_FLIP,
@@ -91,6 +95,7 @@ val_dataset = load_tf_img_dataset(
     color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
+
 model = tf.keras.models.load_model(
     filepath=os.path.join(MODEL_DIR, 'hp_search_best.hdf5')
 )
@@ -120,7 +125,6 @@ train_size = sum(
 
 print(f'Training samples: {train_size}')
 
-# * Train model
 
 history = model.fit(
     train_dataset,
@@ -134,7 +138,6 @@ history = model.fit(
     verbose=0
 )
 
-# * Save model and history
 
 print('Saving model...')
 model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))

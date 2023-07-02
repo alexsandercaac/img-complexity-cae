@@ -72,14 +72,15 @@ def load_imgs_gen(imgs_path: list,
         imgs_path = [imgs_path]
     if shuffle:
         np.random.shuffle(imgs_path)
-
+    if grayscale:
+        mode = 'L'
+    else:
+        mode = 'RGB'
     for img_path in imgs_path:
         img = np.asarray(
-            Image.open(img_path).convert('RGB').resize(target_size))
+            Image.open(img_path).convert(mode).resize(target_size))
         if scale:
             img = img / scale
-        if grayscale:
-            img = image_rgb_to_gray_to_numpy(img)
         if return_pil:
             yield Image.fromarray(img)
         else:

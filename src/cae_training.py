@@ -1,8 +1,10 @@
 """
     This stage loads the model pretrained in the previous stage and fits it to
     the training dataset. The model is trained for a number of epochs and the
-    best performing model in validation is saved. The training history is
-    saved as a csv file and the model is saved as an hdf5 file.
+    best performing model in validation is saved.
+
+    The rained model binary will be saved in the models/$DATASET/bin folder and
+    the training logs will be saved in the models/$DATASET/logs folder.
 """
 import os
 import logging
@@ -15,6 +17,7 @@ from utils.data.tfdatasets import load_tf_img_dataset, augmentation_model
 from utils.dvc.params import get_params
 from utils.models.kerasaux import CustomLearningRateScheduler
 
+# Suppress tensorflow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
@@ -50,11 +53,11 @@ MIN_LR = params['min_lr']
 SEED = params['seed']
 EPOCHS = params['epochs']
 
-# Directories
+# * Directories
 DATA_DIR = os.path.join('data', 'processed', DATASET)
 MODEL_DIR = os.path.join('models', DATASET, 'bin')
 
-# * Dataset loading
+
 augmentation = augmentation_model(
     random_crop=RANDOM_CROP,
     random_flip=RANDOM_FLIP,
@@ -89,6 +92,7 @@ val_dataset = load_tf_img_dataset(
     color_mode='grayscale' if GRAYSCALE else 'rgb'
 )
 
+
 model = tf.keras.models.load_model(
     filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5')
 )
@@ -117,11 +121,9 @@ train_size = sum(
 
 print(f'Training samples: {train_size}')
 
-# Evaluate model on validation dataset before training
+
 print('Evaluating model on validation dataset before training...')
 val_loss_pre, val_mae_pre, val_mse_pre = model.evaluate(val_dataset, verbose=2)
-
-# * Train model
 
 history = model.fit(
     train_dataset,
@@ -134,12 +136,11 @@ history = model.fit(
                             epochs=EPOCHS)],
     verbose=0
 )
-# Evaluate model on validation dataset after training
+
 print('Evaluating model on validation dataset after training...')
 val_loss_post, val_mae_post, val_mse_post = model.evaluate(
     val_dataset, verbose=2)
 
-# * Save model and history
 
 print('Saving model...')
 model.save(filepath=os.path.join(MODEL_DIR, 'trained_cae.hdf5'))

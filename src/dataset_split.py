@@ -1,7 +1,7 @@
 """
-    The dataset is not split into train and test set. This script will split
-    the dataset into train and test set. The split will be saved in the folder
-    data/processed/train and data/processed/test. Class balance will be kept.
+    The raw datasets are not inherently divided into train, validation and test
+    sets. As such, this script will split the dataset, saving the outputs in
+    the data/processed/$DATASET folders. Class balance will be kept.
 """
 from rich import print, pretty
 
@@ -22,7 +22,7 @@ SHUFFLE = params['shuffle']
 SEED = params['seed']
 DATASET = params['dataset']
 
-# Directories
+# * Directories
 POSITIVE_DIR = os.path.join('data', 'raw', DATASET, 'positive')
 NEGATIVE_DIR = os.path.join('data', 'raw', DATASET, 'negative')
 TRAIN_DIR = os.path.join('data', 'processed', DATASET, 'train')
