@@ -112,12 +112,12 @@ stages:
     cmd: python3 src/dataset_split.py
     deps:
     - path: data/raw/streets
-      md5: d9bf0b355ef785ec402a75a67c77ccfa.dir
-      size: 216850820
-      nfiles: 713
+      md5: abbd03a5905276626a644e8d176e274b.dir
+      size: 38115409
+      nfiles: 570
     - path: src/dataset_split.py
-      md5: 31c39b1a480e9dea7cd49629c28236f5
-      size: 2508
+      md5: fd43a20218ff832aedd35d7e7dd988bb
+      size: 2502
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -135,31 +135,31 @@ stages:
         - 0.1
     outs:
     - path: data/processed/streets/test
-      md5: 88f389ea0a0b8829288a47ec0b276632.dir
-      size: 19109077
-      nfiles: 73
+      md5: 8737307fda41b41e1e57ff9650387aef.dir
+      size: 4276585
+      nfiles: 59
     - path: data/processed/streets/train
-      md5: 2ee8f98856aa26a3e8b1b63db7745423.dir
-      size: 178514824
-      nfiles: 569
+      md5: a96c5200e5eb9bc7af4d4ab2155e2ad4.dir
+      size: 30376822
+      nfiles: 454
     - path: data/processed/streets/val
-      md5: 9af890f72f17830a88aa30a193467e23.dir
-      size: 19226919
-      nfiles: 71
+      md5: 4cf7b450308b4031cc8f2a79380b5ee0.dir
+      size: 3461454
+      nfiles: 56
   cae_hp_tuning:
     cmd: python3 src/cae_hp_tuning.py
     deps:
     - path: data/processed/streets/train
-      md5: 2ee8f98856aa26a3e8b1b63db7745423.dir
-      size: 178514824
-      nfiles: 569
+      md5: a96c5200e5eb9bc7af4d4ab2155e2ad4.dir
+      size: 30376822
+      nfiles: 454
     - path: data/processed/streets/val
-      md5: 9af890f72f17830a88aa30a193467e23.dir
-      size: 19226919
-      nfiles: 71
+      md5: 4cf7b450308b4031cc8f2a79380b5ee0.dir
+      size: 3461454
+      nfiles: 56
     - path: src/cae_hp_tuning.py
-      md5: 065e595235ce737a7a482683597860af
-      size: 4139
+      md5: 948c38992d703fa2b4e89cc6a4cbcfaa
+      size: 4380
     - path: src/utils/data/tfdatasets.py
       md5: 6d886d24705a0b39ce24c4f9f1076529
       size: 6588
@@ -204,7 +204,7 @@ stages:
         cae_hp_tuning.alpha: 0.98
         cae_hp_tuning.batch_size: 4
         cae_hp_tuning.beta: 0.9
-        cae_hp_tuning.bottleneck_filters: 64
+        cae_hp_tuning.bottleneck_filters: 32
         cae_hp_tuning.early_stopping: false
         cae_hp_tuning.epochs: 15
         cae_hp_tuning.max_trials: 30
@@ -213,18 +213,18 @@ stages:
         cae_hp_tuning.revive_best: true
     outs:
     - path: models/streets/bin/hp_search_best.hdf5
-      md5: d537208be3b5edf9081c69c4926082a6
-      size: 2332808
+      md5: 2e571e6c0713f68bc51b4c70fa595241
+      size: 2055416
     - path: models/streets/logs/hp_search/CAE
-      md5: 380092daf475427f6cabd6c4564068f0.dir
-      size: 630307809
+      md5: 6c343185d114b05b3d17e31864689398.dir
+      size: 503816506
       nfiles: 122
     - path: models/streets/logs/hp_search/hp_search_results.txt
-      md5: d31b9747f76c2f87c3d3b2597acb69dc
-      size: 2335
+      md5: 3b3f5afaaf8a6cd7b53bd505bd815ed4
+      size: 2334
     - path: models/streets/logs/hp_search/tb
-      md5: 5542025a5d2139371e2c9cef0c5d8435.dir
-      size: 14741673
+      md5: a4e7c7bc1031ce5a2dce49f6aae04c9a.dir
+      size: 15786819
       nfiles: 90
   visualisation:
     cmd: python3 src/visualisation.py
