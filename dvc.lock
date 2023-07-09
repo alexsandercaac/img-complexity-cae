@@ -588,10 +588,14 @@ stages:
   metrify:
     cmd: python3 src/metrify.py
     deps:
+    - path: metrics/streets
+      md5: 25901b701c270c89df01ccb0182af69f.dir
+      size: 614
+      nfiles: 3
     - path: src/metrify.py
-      md5: f3e8bc228b26b88683dd726e2d04c0a2
-      size: 872
+      md5: 3d08853cc94e47af19fa489b63bd13cd
+      size: 926
     outs:
     - path: metrics/metrics.json
-      md5: a1d6e39407dee52bc0c0c5ba74d6dc75
-      size: 1364
+      md5: 970737c3ae9fa9b03e4e90b279b51e44
+      size: 1154

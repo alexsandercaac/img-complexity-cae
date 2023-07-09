@@ -21,9 +21,10 @@ metrics = {}
 for dataset in DATASETS:
     metrics[dataset] = {}
     for file in METRICS_FILES[dataset]:
-        with open(file, 'r') as f:
-            file = file.split(os.sep)[-1].split('.')[0]
-            metrics[dataset][file] = json.load(f)
+        if file.split('.')[-1] == 'json':
+            with open(file, 'r') as f:
+                file = file.split(os.sep)[-1].split('.')[0]
+                metrics[dataset][file] = json.load(f)
 
 with open(os.path.join('metrics', 'metrics.json'), 'w') as f:
     json.dump(metrics, f)
