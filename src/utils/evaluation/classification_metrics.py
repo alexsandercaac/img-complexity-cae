@@ -3,11 +3,17 @@
 """
 from sklearn.metrics import f1_score, accuracy_score, precision_score, \
     recall_score
+from numpy.typing import ArrayLike
 
 
-def get_classification_metrics(y_true, y_pred):
+def get_classification_metrics(y_true: ArrayLike, y_pred: ArrayLike
+                               ) -> dict[str, float]:
     """
-    Calculates the classification metrics.
+    Calculates the following classification metrics:
+        - F1 score
+        - Accuracy
+        - Precision
+        - Recall
 
     Args:
         y_true: The true labels.
