@@ -9,8 +9,8 @@ all:   # Parameters used in multiple stages
   random_translation_width: [-0.1, 0.1]
   input_size: [256, 256, 3]
   seed: 13
-  dataset: 'casting'
-  grayscale: true
+  dataset: 'streets'
+  grayscale: false
   scale: 255
 dataset_split:
   split_ratio: [0.8, 0.1, 0.1]
