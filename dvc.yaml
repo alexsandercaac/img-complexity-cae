@@ -211,6 +211,7 @@ stages:
     - all.dataset
     - cae_mse_model.score_func
     - cae_mse_model.n_iter
+    - cae_mse_model.balanced
     outs:
     - models/${all.dataset}/params/mse_threshold.txt
     - visualisation/${all.dataset}/mse.html:
@@ -231,6 +232,7 @@ stages:
     - all.dataset
     - corrected_model.score_func
     - corrected_model.n_iter
+    - corrected_model.balanced
     outs:
     - models/${all.dataset}/params/corrected_mse_threshold.txt
     - visualisation/${all.dataset}/corrected_mse.html:

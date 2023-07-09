@@ -27,7 +27,7 @@ cae_hp_tuning:
   min_lr: 0.000001
   max_trials: 30
 cae_pretraining:
-  batch_size: 2
+  batch_size: 8
   alpha: 0.98
   beta: 0.94
   patience: 3
@@ -48,9 +48,9 @@ cae_training:
   learning_rate: 0.0005
 cae_mse_model:
   n_iter: 25
-  score_func: 'accuracy'
-  balanced: true
+  score_func: 'f1'
+  balanced: false
 corrected_model:
   n_iter: 25
-  score_func: 'accuracy'
-  balanced: true
+  score_func: 'f1'
+  balanced: false
