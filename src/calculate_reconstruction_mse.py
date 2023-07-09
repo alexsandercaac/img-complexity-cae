@@ -12,6 +12,7 @@ import matplotlib.ticker as ticker
 
 from utils.data.complexityaux import image_mse, load_imgs_gen
 from utils.dvc.params import get_params
+from utils.misc import create_dir
 
 # Suppress tensorflow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
@@ -29,8 +30,9 @@ SCALE = params['scale']
 # * Directories
 # Initialize csv file that will store the reconstruction MSE for each image,
 # along with the data split and label
-OUTPUT_FILE = os.path.join(
-    'data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
+TABULAR_DATA_DIR = os.path.join('data', 'processed', DATASET, 'tabular')
+create_dir(TABULAR_DATA_DIR)
+OUTPUT_FILE = os.path.join(TABULAR_DATA_DIR, 'cae_mse.csv')
 FIG_DIR = os.path.join('visualisation', DATASET)
 with open(OUTPUT_FILE, 'w') as f:
     f.write('file,cae_mse,data_split,label\n')
