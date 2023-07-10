@@ -21,14 +21,22 @@ complexity_df = pd.read_csv(
 cae_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv'))
 
+mask = complexity_df['data_split'] == 'baseline'
+baseline_complexity_df = complexity_df[mask].drop(
+    columns=['label', 'data_split'])
+
 mask = ((complexity_df['data_split'] == 'train') |
         (complexity_df['data_split'] == 'val'))
-complexity_df = complexity_df[mask].drop(columns=['data_split'])
+complexity_df = complexity_df[mask].drop(columns=['data_split', 'label'])
 mask = ((cae_df['data_split'] == 'train') |
         (cae_df['data_split'] == 'val'))
-cae_df = cae_df[mask].drop(columns=['data_split', 'label'])
+mask = cae_df['data_split'] == 'baseline'
+baseline_cae_df = cae_df[mask].drop(columns=['data_split', 'label'])
+cae_df = cae_df[~mask]
 
 complexity_caemse_df = complexity_df.merge(cae_df, on='file')
+baseline_complexity_caemse_df = baseline_complexity_df.merge(
+    baseline_cae_df, on='file')
 
 complexity_caemse_df['label'] = complexity_caemse_df['label'].apply(
     lambda x: 1 if x == 'positive' else 0)
@@ -55,6 +63,17 @@ fig.add_trace(go.Scatter(
         size=5
     )
 ))
+fig.add_trace(go.Scatter(
+    x=baseline_complexity_caemse_df['jpeg_mse'],
+    y=baseline_complexity_caemse_df['cae_mse'],
+    mode='markers',
+    name='Baseline',
+    marker=dict(
+        color='green',
+        size=5
+    )
+))
+
 fig.update_layout(
     title='Complexity vs CAE MSE',
     xaxis_title='Complexity',

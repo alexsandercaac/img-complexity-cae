@@ -84,3 +84,21 @@ ax.set_ylabel('Frequency')
 ax.legend()
 
 plt.savefig(os.path.join(FIG_DIR, 'caemse_hist.png'))
+
+# Concat reconstruction mse of baseline images
+data_dir = os.path.join(
+    'data', 'raw', 'tiny-imagenet-200', 'test', 'images')
+
+files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
+
+img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
+
+mses = []
+pbar = tqdm(total=len(files))
+for image in img_gen:
+    pred = model.predict(image, verbose=0)
+    mses.append(image_mse(image[0], pred[0]))
+pbar.close()
+with open(OUTPUT_FILE, 'a') as f:
+    for file, mse in zip(files, mses):
+        f.write(f'{file},{mse},baseline,\n')

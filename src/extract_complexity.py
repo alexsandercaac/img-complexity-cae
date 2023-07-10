@@ -74,3 +74,21 @@ ax.set_ylabel('Frequency')
 ax.legend()
 
 plt.savefig(os.path.join(FIG_DIR, 'complexity_hist.png'))
+
+# Concat complexity of baseline images in the test split of tinyimagenet
+data_dir = os.path.join(
+    'data', 'raw', 'tiny-imagenet-200', 'test', 'images')
+
+files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
+
+img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
+
+mses = []
+pbar = tqdm(total=len(files))
+for image in img_gen:
+    mses.append(calculate_jpeg_mse(image))
+    pbar.update(1)
+pbar.close()
+with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
+    for file, mse in zip(files, mses):
+        f.write(f'{file},{mse},baseline,\n')
