@@ -1,7 +1,7 @@
 all:   # Parameters used in multiple stages
   random_crop: [224, 224]
   random_flip: 'horizontal'
-  random_rotation: 0.2
+  random_rotation: 0
   random_zoom: [-0.1, 0.1]
   random_brightness: 0.2
   random_contrast: 0.2
@@ -16,8 +16,8 @@ dataset_split:
   split_ratio: [0.8, 0.1, 0.1]
   shuffle: true
 cae_hp_tuning:
-  batch_size: 4
-  bottleneck_filters: 32
+  batch_size: 8
+  bottleneck_filters: 16
   alpha: 0.98
   beta: 0.9
   patience: 3
@@ -29,7 +29,7 @@ cae_hp_tuning:
 cae_pretraining:
   batch_size: 8
   alpha: 0.98
-  beta: 0.94
+  beta: 0.9
   patience: 3
   revive_best: true
   early_stopping: false
@@ -43,7 +43,7 @@ cae_training:
   patience: 3
   revive_best: true
   early_stopping: false
-  epochs: 50
+  epochs: 100
   min_lr: 0.00001
   learning_rate: 0.0005
 cae_mse_model:

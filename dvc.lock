@@ -82,8 +82,8 @@ stages:
       size: 3461454
       nfiles: 56
     - path: src/extract_complexity.py
-      md5: 332de232a5271ccfeafb1a49ddcfbf82
-      size: 2290
+      md5: 28790520eb6406c4aa7edac0d863f4f8
+      size: 2873
     - path: src/utils/data/complexityaux.py
       md5: c9fb812b32f9aeeacfef342bb1296d95
       size: 3086
@@ -103,8 +103,8 @@ stages:
         all.scale: 255
     outs:
     - path: data/processed/streets/tabular/complexity.csv
-      md5: b68ae8f338bbec13bb0bdcfc98cbc3f3
-      size: 57842
+      md5: 90e996654f2c0b5f51b43729a009cfa5
+      size: 917980
     - path: visualisation/streets/complexity_hist.png
       md5: f6d0dfd60b55b99544eacb0493b85e93
       size: 21078
@@ -189,7 +189,7 @@ stages:
         - 224
         - 224
         all.random_flip: horizontal
-        all.random_rotation: 0.2
+        all.random_rotation: 0
         all.random_translation_height:
         - -0.1
         - 0.1
@@ -202,9 +202,9 @@ stages:
         all.scale: 255
         all.seed: 13
         cae_hp_tuning.alpha: 0.98
-        cae_hp_tuning.batch_size: 4
+        cae_hp_tuning.batch_size: 8
         cae_hp_tuning.beta: 0.9
-        cae_hp_tuning.bottleneck_filters: 32
+        cae_hp_tuning.bottleneck_filters: 16
         cae_hp_tuning.early_stopping: false
         cae_hp_tuning.epochs: 15
         cae_hp_tuning.max_trials: 30
@@ -213,18 +213,18 @@ stages:
         cae_hp_tuning.revive_best: true
     outs:
     - path: models/streets/bin/hp_search_best.hdf5
-      md5: 2e571e6c0713f68bc51b4c70fa595241
-      size: 2055416
+      md5: 47a2ce2b5d3d8063cd2b18f25118546d
+      size: 1936632
     - path: models/streets/logs/hp_search/CAE
-      md5: 6c343185d114b05b3d17e31864689398.dir
-      size: 503816506
+      md5: c6850f233b1234a4753ba2c297d0c1dd.dir
+      size: 450007372
       nfiles: 122
     - path: models/streets/logs/hp_search/hp_search_results.txt
-      md5: 3b3f5afaaf8a6cd7b53bd505bd815ed4
-      size: 2334
+      md5: dab0fc0d31e01373a397c11590bcb656
+      size: 2339
     - path: models/streets/logs/hp_search/tb
-      md5: a4e7c7bc1031ce5a2dce49f6aae04c9a.dir
-      size: 15786819
+      md5: 71d1a4fd0ede2a730b485f0a9200fe79.dir
+      size: 14741930
       nfiles: 90
   visualisation:
     cmd: python3 src/visualisation.py
@@ -282,8 +282,8 @@ stages:
       size: 3461454
       nfiles: 56
     - path: models/streets/bin/pretrained_cae.hdf5
-      md5: eba1deedcf15cea1c77066cf20564e97
-      size: 5958496
+      md5: dbe6be1e828cbbc76751589b87785d1f
+      size: 5600168
     - path: src/cae_training.py
       md5: 491ddf5b491f193c66f00eaac20f0326
       size: 4249
@@ -310,7 +310,7 @@ stages:
         - 224
         - 224
         all.random_flip: horizontal
-        all.random_rotation: 0.2
+        all.random_rotation: 0
         all.random_translation_height:
         - -0.1
         - 0.1
@@ -326,18 +326,18 @@ stages:
         cae_training.batch_size: 8
         cae_training.beta: 0.9
         cae_training.early_stopping: false
-        cae_training.epochs: 50
+        cae_training.epochs: 100
         cae_training.learning_rate: 0.0005
         cae_training.min_lr: 1e-05
         cae_training.patience: 3
         cae_training.revive_best: true
     outs:
     - path: models/streets/bin/trained_cae.hdf5
-      md5: dadfdb851208299320988302905fa1a1
-      size: 5958496
+      md5: 1e923eab443619888f4b4705891d2a28
+      size: 5600168
     - path: models/streets/logs/training_history.csv
-      md5: f0c1fc58ac75cb32c6e7f133a43b4432
-      size: 6396
+      md5: 3214c47dfe6ed7ecfeed126bb81c4f7b
+      size: 12766
   calculate_reconstruction_mse:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
@@ -354,11 +354,11 @@ stages:
       size: 3461454
       nfiles: 56
     - path: models/streets/bin/trained_cae.hdf5
-      md5: dadfdb851208299320988302905fa1a1
-      size: 5958496
+      md5: 1e923eab443619888f4b4705891d2a28
+      size: 5600168
     - path: src/calculate_reconstruction_mse.py
-      md5: af1df992aeac65310aa2960565b3f2ce
-      size: 2620
+      md5: b6a90a2082be79f82b04455703737631
+      size: 3275
     - path: src/utils/data/complexityaux.py
       md5: c9fb812b32f9aeeacfef342bb1296d95
       size: 3086
@@ -372,11 +372,11 @@ stages:
         all.scale: 255
     outs:
     - path: data/processed/streets/tabular/cae_mse.csv
-      md5: 060b8e0374f629fdc5883211df99eda0
-      size: 57384
+      md5: bbfb2621d4260fcba021f5990287b7fd
+      size: 914405
     - path: visualisation/streets/caemse_hist.png
-      md5: 7d94a31a630dfcfde93ce86a1be195f1
-      size: 20469
+      md5: 186daec8a480bda6f0f623d94593330e
+      size: 20531
   reconstruction_visualisation:
     cmd: python3 src/reconstruction_visualisation.py
     deps:
@@ -407,14 +407,14 @@ stages:
     cmd: python3 src/complexity_vs_caemse.py
     deps:
     - path: data/processed/streets/tabular/cae_mse.csv
-      md5: 060b8e0374f629fdc5883211df99eda0
-      size: 57384
+      md5: bbfb2621d4260fcba021f5990287b7fd
+      size: 914405
     - path: data/processed/streets/tabular/complexity.csv
-      md5: b68ae8f338bbec13bb0bdcfc98cbc3f3
-      size: 57842
+      md5: 90e996654f2c0b5f51b43729a009cfa5
+      size: 917980
     - path: src/complexity_vs_caemse.py
-      md5: b8a845a4bf7db6950f8126618cceff80
-      size: 2319
+      md5: b24e7f6cf9661963f48002a73b9b4f93
+      size: 2863
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -423,14 +423,14 @@ stages:
         all.dataset: streets
     outs:
     - path: visualisation/streets/complexity_vs_caemse.html
-      md5: 1a93cc6209d3bd908905ce96cca77211
-      size: 3603011
+      md5: 0aa56fe993ecf99da3e2c3f3a04aa25a
+      size: 4015640
   cae_mse_model:
     cmd: python3 src/cae_mse_model.py
     deps:
     - path: data/processed/streets/tabular/cae_mse.csv
-      md5: 060b8e0374f629fdc5883211df99eda0
-      size: 57384
+      md5: bbfb2621d4260fcba021f5990287b7fd
+      size: 914405
     - path: src/cae_mse_model.py
       md5: 8aeb8ee3b69f08e786707ba7167b36f0
       size: 2263
@@ -451,22 +451,22 @@ stages:
         cae_mse_model.score_func: f1
     outs:
     - path: models/streets/params/mse_threshold.txt
-      md5: 9301f9122698b394504609fb6370e654
+      md5: 764d3c5c0d523c341f64b49a4cd0b31d
       size: 20
     - path: visualisation/streets/mse.html
-      md5: 422b53ffc7f8dbbdffcb70a2f39c1a0c
-      size: 3585338
+      md5: d73b42facdafa70157633043749d4c19
+      size: 3585334
   evaluate:
     cmd: python3 src/evaluate.py
     deps:
     - path: data/processed/streets/tabular/cae_mse.csv
-      md5: 060b8e0374f629fdc5883211df99eda0
-      size: 57384
+      md5: bbfb2621d4260fcba021f5990287b7fd
+      size: 914405
     - path: models/streets/params/corrected_mse_threshold.txt
-      md5: 3b9f2d6aa79951cb58463e83f6337145
+      md5: 7fd777e5bae9424700307107896e246b
       size: 17
     - path: models/streets/params/mse_threshold.txt
-      md5: 9301f9122698b394504609fb6370e654
+      md5: 764d3c5c0d523c341f64b49a4cd0b31d
       size: 20
     - path: src/evaluate.py
       md5: 4ba3c9794aeb8ef456f3ba5ef0ca2883
@@ -475,12 +475,12 @@ stages:
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
     - path: src/utils/evaluation/classification_metrics.py
-      md5: 058a9cc1d3d17bd5e8edc4a4bed44243
-      size: 699
+      md5: b91b008cdb407c438b390291881baea4
+      size: 893
     outs:
     - path: metrics/streets/cae_metrics.json
-      md5: 73e80f97a1fb93d0c76181e880985010
-      size: 359
+      md5: 20ca907e6769a34d406b47475fb96fd9
+      size: 375
     - path: metrics/streets/corrected_cae_metrics.json
       md5: d83759b2b2333a5709de30419d702dfd
       size: 249
@@ -488,11 +488,11 @@ stages:
     cmd: python3 src/corrected_model.py
     deps:
     - path: data/processed/streets/tabular/cae_mse.csv
-      md5: 060b8e0374f629fdc5883211df99eda0
-      size: 57384
+      md5: bbfb2621d4260fcba021f5990287b7fd
+      size: 914405
     - path: data/processed/streets/tabular/complexity.csv
-      md5: b68ae8f338bbec13bb0bdcfc98cbc3f3
-      size: 57842
+      md5: 90e996654f2c0b5f51b43729a009cfa5
+      size: 917980
     - path: src/corrected_model.py
       md5: 527530fc447b3086f3586fe9b1b54f57
       size: 2655
@@ -513,11 +513,11 @@ stages:
         corrected_model.score_func: f1
     outs:
     - path: models/streets/params/corrected_mse_threshold.txt
-      md5: 3b9f2d6aa79951cb58463e83f6337145
+      md5: 7fd777e5bae9424700307107896e246b
       size: 17
     - path: visualisation/streets/corrected_mse.html
-      md5: 9f41fa82e49d068fe424054091ad0558
-      size: 3585285
+      md5: db5f39f4754e39ba53ab4f82a5955ef5
+      size: 3585283
   cae_pretraining:
     cmd: python3 src/cae_pretraining.py
     deps:
@@ -526,8 +526,8 @@ stages:
       size: 236686390
       nfiles: 120003
     - path: models/streets/bin/hp_search_best.hdf5
-      md5: 2e571e6c0713f68bc51b4c70fa595241
-      size: 2055416
+      md5: 47a2ce2b5d3d8063cd2b18f25118546d
+      size: 1936632
     - path: src/cae_pretraining.py
       md5: 23ce2b41b813f5cc19d47b81fd3afd8e
       size: 4060
@@ -557,7 +557,7 @@ stages:
         - 224
         - 224
         all.random_flip: horizontal
-        all.random_rotation: 0.2
+        all.random_rotation: 0
         all.random_translation_height:
         - -0.1
         - 0.1
@@ -571,7 +571,7 @@ stages:
         all.seed: 13
         cae_pretraining.alpha: 0.98
         cae_pretraining.batch_size: 8
-        cae_pretraining.beta: 0.94
+        cae_pretraining.beta: 0.9
         cae_pretraining.early_stopping: false
         cae_pretraining.epochs: 10
         cae_pretraining.learning_rate: 0.001
@@ -580,18 +580,22 @@ stages:
         cae_pretraining.revive_best: true
     outs:
     - path: models/streets/bin/pretrained_cae.hdf5
-      md5: eba1deedcf15cea1c77066cf20564e97
-      size: 5958496
+      md5: dbe6be1e828cbbc76751589b87785d1f
+      size: 5600168
     - path: models/streets/logs/pretraining_history.csv
-      md5: 169a0b0114ec5c9ec802ac99b08c7d7c
-      size: 1297
+      md5: 8c7a7d3969a882244f3ad24fb10bcbbb
+      size: 1305
   metrify:
     cmd: python3 src/metrify.py
     deps:
+    - path: metrics/streets
+      md5: dd4fdd56d092816d81b189a264c152bd.dir
+      size: 630
+      nfiles: 3
     - path: src/metrify.py
-      md5: f3e8bc228b26b88683dd726e2d04c0a2
-      size: 872
+      md5: 3d08853cc94e47af19fa489b63bd13cd
+      size: 926
     outs:
     - path: metrics/metrics.json
-      md5: a1d6e39407dee52bc0c0c5ba74d6dc75
-      size: 1364
+      md5: 1133e83fd075dd1e418f6f50ea0162a7
+      size: 696
