@@ -38,6 +38,7 @@ stages:
     plots:
     - visualisation/${all.dataset}/complexity_hist.png:
         cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
@@ -119,7 +120,9 @@ stages:
     - cae_pretraining.learning_rate
     outs:
     - models/${all.dataset}/bin/pretrained_cae.hdf5
-    - models/${all.dataset}/logs/pretraining_history.csv
+    - models/${all.dataset}/logs/pretraining_history.csv: 
+        persist: true
+
 
 # *** ---------------------------------------------
 
@@ -158,7 +161,8 @@ stages:
     - cae_training.learning_rate
     outs:
     - models/${all.dataset}/bin/trained_cae.hdf5
-    - models/${all.dataset}/logs/training_history.csv
+    - models/${all.dataset}/logs/training_history.csv:
+        persist: true
 
 # *** ---------------------------------------------
 
@@ -181,6 +185,7 @@ stages:
     plots:
     - visualisation/${all.dataset}/caemse_hist.png:
         cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
@@ -196,6 +201,7 @@ stages:
     plots:
     - visualisation/${all.dataset}/complexity_vs_caemse.html:
         cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
@@ -216,6 +222,7 @@ stages:
     - models/${all.dataset}/params/mse_threshold.txt
     - visualisation/${all.dataset}/mse.html:
         cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
@@ -237,6 +244,7 @@ stages:
     - models/${all.dataset}/params/corrected_mse_threshold.txt
     - visualisation/${all.dataset}/corrected_mse.html:
         cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
