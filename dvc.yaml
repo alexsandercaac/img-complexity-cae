@@ -271,3 +271,17 @@ stages:
     metrics:
     - metrics/metrics.json:
         cache: false
+
+# *** ---------------------------------------------
+
+  metrify_reconstruction:
+    cmd: python3 src/metrify_reconstruction.py
+    deps:
+    - src/metrify_reconstruction.py
+    - src/utils/dvc/params.py
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    outs:
+    - metrics/${all.dataset}/reconstruction_data.csv
+    metrics:
+    - metrics/${all.dataset}/reconstruction_metrics.json:
+        cache: false
