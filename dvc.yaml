@@ -275,6 +275,9 @@ stages:
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     outs:
     - metrics/${all.dataset}/reconstruction_data.csv
+    - visualisation/${all.dataset}/reconstruction_metrics.html:
+        cache: false
+        persist: true
     metrics:
     - metrics/${all.dataset}/reconstruction_metrics.json:
         cache: false
