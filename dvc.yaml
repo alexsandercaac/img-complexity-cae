@@ -29,6 +29,7 @@ stages:
     - data/processed/${all.dataset}/train
     - data/processed/${all.dataset}/val
     - data/processed/${all.dataset}/test
+    - data/raw/general/all
     params:
     - all.dataset
     - all.grayscale

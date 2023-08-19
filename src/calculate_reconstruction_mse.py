@@ -87,7 +87,7 @@ plt.savefig(os.path.join(FIG_DIR, 'caemse_hist.png'))
 
 # Concat reconstruction mse of baseline images
 data_dir = os.path.join(
-    'data', 'raw', 'tiny-imagenet-200', 'test', 'images')
+    'data', 'raw', 'general', 'all')
 
 files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
 

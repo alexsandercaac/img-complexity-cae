@@ -1,5 +1,8 @@
 """
     Stage to extract the complexity for each image in the dataset.
+
+    The complexity of a general purpose dataset is also
+    extracted to be used as a baseline.
 """
 from utils.data.jpegmse import calculate_jpeg_mse
 from utils.data.complexityaux import load_imgs_gen
@@ -53,18 +56,18 @@ for split, label in DATA_SPLITS_AND_LABELS:
 
     img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 
-    mses = []
+    mse_jpeg_complexity = []
     pbar = tqdm(total=len(files))
     for image in img_gen:
-        mses.append(calculate_jpeg_mse(image))
+        mse_jpeg_complexity.append(calculate_jpeg_mse(image))
         pbar.update(1)
     pbar.close()
     if split != 'test':
-        ax.hist(mses, bins=50, label=f'{split} {label}', alpha=0.7,
-                color=colours[(split, label)])
+        ax.hist(mse_jpeg_complexity, bins=50, label=f'{split} {label}',
+                alpha=0.7, color=colours[(split, label)])
 
     with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
-        for file, mse in zip(files, mses):
+        for file, mse in zip(files, mse_jpeg_complexity):
             f.write(f'{file},{mse},{split},{label}\n')
 
 ax.set_xlabel('JPEG MSE')
@@ -75,20 +78,22 @@ ax.legend()
 
 plt.savefig(os.path.join(FIG_DIR, 'complexity_hist.png'))
 
-# Concat complexity of baseline images in the test split of tinyimagenet
+# * Concat complexity of baseline images
+# The baseline dataset comprises various images from open source datasets with
+# no particular semantics. It is a general purpose dataset
 data_dir = os.path.join(
-    'data', 'raw', 'tiny-imagenet-200', 'test', 'images')
+    'data', 'raw', 'general', 'all')
 
 files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
 
 img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 
-mses = []
+mse_jpeg_complexity = []
 pbar = tqdm(total=len(files))
 for image in img_gen:
-    mses.append(calculate_jpeg_mse(image))
+    mse_jpeg_complexity.append(calculate_jpeg_mse(image))
     pbar.update(1)
 pbar.close()
 with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
-    for file, mse in zip(files, mses):
+    for file, mse in zip(files, mse_jpeg_complexity):
         f.write(f'{file},{mse},baseline,\n')
