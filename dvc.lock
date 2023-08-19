@@ -487,17 +487,14 @@ stages:
       hash: md5
       md5: 466b1689700d537d4f45e40300d942c2
       size: 61280
-    - path: models/streets/params/corrected_mse_threshold.txt
-      hash: md5
-      md5: 8bacbe9fc50577d738bb6105a6860fab
-      size: 17
     - path: models/streets/params/mse_threshold.txt
       hash: md5
       md5: db29a11a5be88f4a66879dd6b135af1e
       size: 21
     - path: src/evaluate.py
-      md5: 4ba3c9794aeb8ef456f3ba5ef0ca2883
-      size: 4297
+      hash: md5
+      md5: 59379fadaaed668dd997518742a34443
+      size: 2556
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -509,9 +506,6 @@ stages:
       hash: md5
       md5: 112b7a79f6e7235ecc3a3686ecd5772a
       size: 361
-    - path: metrics/streets/corrected_cae_metrics.json
-      md5: d83759b2b2333a5709de30419d702dfd
-      size: 249
   corrected_model:
     cmd: python3 src/corrected_model.py
     deps:
