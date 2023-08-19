@@ -64,7 +64,3 @@ cae_mse_model:
   n_iter: 25
   score_func: f1
   balanced: false
-corrected_model:
-  n_iter: 25
-  score_func: f1
-  balanced: false

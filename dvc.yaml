@@ -227,28 +227,6 @@ stages:
 
 # *** ---------------------------------------------
 
-  corrected_model:
-    cmd: python3 src/corrected_model.py
-    deps:
-    - src/corrected_model.py
-    - src/utils/dvc/params.py
-    - src/utils/misc.py
-    - src/utils/models/threshold_search.py
-    - data/processed/${all.dataset}/tabular/complexity.csv
-    - data/processed/${all.dataset}/tabular/cae_mse.csv
-    params:
-    - all.dataset
-    - corrected_model.score_func
-    - corrected_model.n_iter
-    - corrected_model.balanced
-    outs:
-    - models/${all.dataset}/params/corrected_mse_threshold.txt
-    - visualisation/${all.dataset}/corrected_mse.html:
-        cache: false
-        persist: true
-
-# *** ---------------------------------------------
-
   evaluate:
     cmd: python3 src/evaluate.py
     deps:
@@ -257,12 +235,8 @@ stages:
     - src/utils/evaluation/classification_metrics.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     - models/${all.dataset}/params/mse_threshold.txt
-    - models/${all.dataset}/params/corrected_mse_threshold.txt
     metrics:
     - metrics/${all.dataset}/cae_metrics.json:
-        cache: false
-        persist: true
-    - metrics/${all.dataset}/corrected_cae_metrics.json:
         cache: false
         persist: true
 
