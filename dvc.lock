@@ -656,3 +656,41 @@ stages:
       hash: md5
       md5: e05e9081819d8b365e389a8f63ef3db9
       size: 3583938
+  jpeg_model:
+    cmd: python3 src/jpeg_model.py
+    deps:
+    - path: data/processed/streets/tabular/complexity.csv
+      hash: md5
+      md5: 9d5a10c8c66c2e6a9eb75b8ed9c0f615
+      size: 61746
+    - path: src/jpeg_model.py
+      hash: md5
+      md5: db96ae9d04a57780ebf8dd82af5a07a2
+      size: 2286
+    - path: src/utils/dvc/params.py
+      hash: md5
+      md5: c57ff0542069d8b6236b09e7aee32be8
+      size: 1268
+    - path: src/utils/misc.py
+      hash: md5
+      md5: e29c4af95c5e5d4228701c6303e83b86
+      size: 3503
+    - path: src/utils/models/threshold_search.py
+      hash: md5
+      md5: b7a0f3bd52e1b1a40c97f328e9f2dbff
+      size: 3572
+    params:
+      params.yaml:
+        all.dataset: streets
+        jpeg_model.balanced: false
+        jpeg_model.n_iter: 25
+        jpeg_model.score_func: f1
+    outs:
+    - path: models/streets/params/jpeg_threshold.txt
+      hash: md5
+      md5: dab0457de9d3ac7bb810b49bfc4592ad
+      size: 21
+    - path: visualisation/streets/jpeg.html
+      hash: md5
+      md5: aca77355f173c97d46cf2fc13958cf8b
+      size: 3585340

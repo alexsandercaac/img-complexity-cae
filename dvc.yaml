@@ -227,6 +227,27 @@ stages:
 
 # *** ---------------------------------------------
 
+  jpeg_model:
+    cmd: python3 src/jpeg_model.py
+    deps:
+    - src/jpeg_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
+    - src/utils/models/threshold_search.py
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    params:
+    - all.dataset
+    - jpeg_model.score_func
+    - jpeg_model.n_iter
+    - jpeg_model.balanced
+    outs:
+    - models/${all.dataset}/params/jpeg_threshold.txt
+    - visualisation/${all.dataset}/jpeg.html:
+        cache: false
+        persist: true
+
+# *** ---------------------------------------------
+
   evaluate:
     cmd: python3 src/evaluate.py
     deps:

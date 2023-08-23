@@ -11,7 +11,8 @@ flowchart TD
 	node9["dataset_split"]
 	node10["evaluate"]
 	node11["extract_complexity"]
-	node12["metrify_reconstruction"]
+	node12["jpeg_model"]
+	node13["metrify_reconstruction"]
 	node1-->node3
 	node2-->node10
 	node3-->node4
@@ -19,7 +20,7 @@ flowchart TD
 	node5-->node2
 	node5-->node6
 	node5-->node10
-	node5-->node12
+	node5-->node13
 	node7-->node9
 	node8-->node3
 	node9-->node1
@@ -27,5 +28,6 @@ flowchart TD
 	node9-->node5
 	node9-->node11
 	node11-->node6
-	node13["data/raw/casting.dvc"]
+	node11-->node12
+	node14["data/raw/casting.dvc"]
 ```
