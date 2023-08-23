@@ -110,7 +110,13 @@ val_acc = val_metrics['accuracy']
 val_prec = val_metrics['precision']
 val_rec = val_metrics['recall']
 
-# Write metrics on json file
+test_metrics = get_classification_metrics(
+    test_df['label'], test_predictions)
+test_f1 = test_metrics['f1']
+test_acc = test_metrics['accuracy']
+test_prec = test_metrics['precision']
+test_rec = test_metrics['recall']
+
 metrics = {
     'train_f1': train_f1,
     'train_acc': train_acc,
@@ -119,7 +125,11 @@ metrics = {
     'val_f1': val_f1,
     'val_acc': val_acc,
     'val_prec': val_prec,
-    'val_rec': val_rec
+    'val_rec': val_rec,
+    'test_f1': test_f1,
+    'test_acc': test_acc,
+    'test_prec': test_prec,
+    'test_rec': test_rec
 }
 
 with open(
