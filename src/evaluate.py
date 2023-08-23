@@ -95,6 +95,7 @@ th = float(
 
 train_predictions = train_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
 val_predictions = val_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
+test_predictions = test_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
 
 train_metrics = get_classification_metrics(
     train_df['label'], train_predictions)

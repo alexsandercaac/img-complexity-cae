@@ -501,8 +501,8 @@ stages:
       size: 21
     - path: src/evaluate.py
       hash: md5
-      md5: 4c5ffa1e1fa021fc20dea8faeaf11b8d
-      size: 3919
+      md5: 71d19d65c702d3f82ec24f19a195bd1b
+      size: 3994
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -516,8 +516,8 @@ stages:
       size: 361
     - path: metrics/streets/jpeg_metrics.json
       hash: md5
-      md5: c060b61ddbb63bcd426cf503adbe13b3
-      size: 282
+      md5: d83759b2b2333a5709de30419d702dfd
+      size: 249
   corrected_model:
     cmd: python3 src/corrected_model.py
     deps:
