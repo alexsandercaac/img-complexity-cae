@@ -487,14 +487,22 @@ stages:
       hash: md5
       md5: 466b1689700d537d4f45e40300d942c2
       size: 61280
+    - path: data/processed/streets/tabular/complexity.csv
+      hash: md5
+      md5: 9d5a10c8c66c2e6a9eb75b8ed9c0f615
+      size: 61746
+    - path: models/streets/params/jpeg_threshold.txt
+      hash: md5
+      md5: dab0457de9d3ac7bb810b49bfc4592ad
+      size: 21
     - path: models/streets/params/mse_threshold.txt
       hash: md5
       md5: db29a11a5be88f4a66879dd6b135af1e
       size: 21
     - path: src/evaluate.py
       hash: md5
-      md5: 59379fadaaed668dd997518742a34443
-      size: 2556
+      md5: 49d41a1eba52dda165ff91a0a53c8ded
+      size: 3623
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -506,6 +514,10 @@ stages:
       hash: md5
       md5: 112b7a79f6e7235ecc3a3686ecd5772a
       size: 361
+    - path: metrics/streets/jpeg_metrics.json
+      hash: md5
+      md5: b6ace72561d1060864f2f4413ffba4de
+      size: 166
   corrected_model:
     cmd: python3 src/corrected_model.py
     deps:

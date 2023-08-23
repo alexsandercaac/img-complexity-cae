@@ -255,9 +255,14 @@ stages:
     - src/utils/dvc/params.py
     - src/utils/evaluation/classification_metrics.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
+    - data/processed/${all.dataset}/tabular/complexity.csv
     - models/${all.dataset}/params/mse_threshold.txt
+    - models/${all.dataset}/params/jpeg_threshold.txt
     metrics:
     - metrics/${all.dataset}/cae_metrics.json:
+        cache: false
+        persist: true
+    - metrics/${all.dataset}/jpeg_metrics.json:
         cache: false
         persist: true
 

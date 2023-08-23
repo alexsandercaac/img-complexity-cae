@@ -87,3 +87,41 @@ metrics = {
 with open(
         os.path.join(METRICS_DIR, 'cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
+
+# *** Evaluate JPEG MSE model
+th = float(
+    open(
+        os.path.join(TH_DIR, 'jpeg_threshold.txt'), 'r').read())
+
+train_predictions = train_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
+val_predictions = val_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
+
+train_metrics = get_classification_metrics(
+    train_df['label'], train_predictions)
+train_f1 = train_metrics['f1']
+train_acc = train_metrics['accuracy']
+train_prec = train_metrics['precision']
+train_rec = train_metrics['recall']
+
+val_metrics = get_classification_metrics(
+    val_df['label'], val_predictions)
+val_f1 = val_metrics['f1']
+val_acc = val_metrics['accuracy']
+val_prec = val_metrics['precision']
+val_rec = val_metrics['recall']
+
+# Write metrics on json file
+metrics = {
+    'train_f1': train_f1,
+    'train_acc': train_acc,
+    'train_prec': train_prec,
+    'train_rec': train_rec,
+    'val_f1': val_f1,
+    'val_acc': val_acc,
+    'val_prec': val_prec,
+    'val_rec': val_rec
+}
+
+with open(
+        os.path.join(METRICS_DIR, 'jpeg_metrics.json'), 'w') as f:
+    json.dump(metrics, f)
