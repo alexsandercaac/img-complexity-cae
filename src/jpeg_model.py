@@ -15,16 +15,16 @@ from utils.dvc.params import get_params
 
 pd.options.plotting.backend = "plotly"
 
-params = get_params()
+params = get_params('all')
 
 DATASET = params['dataset']
 TH_DIR = os.path.join('models', DATASET, 'params')
 create_dir(TH_DIR)
 
 # Algorithm parameters
-SCORE_FUNC = params['score_func']
-N_ITER = params['n_iter']
-BALANCED = params['balanced']
+SCORE_FUNC = params['models_score_func']
+N_ITER = params['models_n_iter']
+BALANCED = params['models_balanced']
 
 cae_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),

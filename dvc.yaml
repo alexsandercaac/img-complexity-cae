@@ -216,9 +216,9 @@ stages:
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
     - all.dataset
-    - cae_mse_model.score_func
-    - cae_mse_model.n_iter
-    - cae_mse_model.balanced
+    - all.models_score_func
+    - all.models_n_iter
+    - all.models_balanced
     outs:
     - models/${all.dataset}/params/mse_threshold.txt
     - visualisation/${all.dataset}/mse.html:
@@ -237,9 +237,9 @@ stages:
     - data/processed/${all.dataset}/tabular/complexity.csv
     params:
     - all.dataset
-    - jpeg_model.score_func
-    - jpeg_model.n_iter
-    - jpeg_model.balanced
+    - all.models_score_func
+    - all.models_n_iter
+    - all.models_balanced
     outs:
     - models/${all.dataset}/params/jpeg_threshold.txt
     - visualisation/${all.dataset}/jpeg.html:

@@ -454,8 +454,9 @@ stages:
       md5: 466b1689700d537d4f45e40300d942c2
       size: 61280
     - path: src/cae_mse_model.py
-      md5: 8aeb8ee3b69f08e786707ba7167b36f0
-      size: 2263
+      hash: md5
+      md5: b92f0b4e3f9a0b152eb4bf8f54a9da3e
+      size: 2289
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -468,18 +469,18 @@ stages:
     params:
       params.yaml:
         all.dataset: streets
-        cae_mse_model.balanced: false
-        cae_mse_model.n_iter: 25
-        cae_mse_model.score_func: f1
+        all.models_balanced: false
+        all.models_n_iter: 25
+        all.models_score_func: f1
     outs:
     - path: models/streets/params/mse_threshold.txt
       hash: md5
-      md5: db29a11a5be88f4a66879dd6b135af1e
-      size: 21
+      md5: c531790ceeeb9efdeb62705921b7f255
+      size: 20
     - path: visualisation/streets/mse.html
       hash: md5
-      md5: 730b56535918c99d1437e56cfe3896c4
-      size: 3585343
+      md5: ca633c6216643ab5cd2e6de1613e1da8
+      size: 3585341
   evaluate:
     cmd: python3 src/evaluate.py
     deps:
@@ -493,12 +494,12 @@ stages:
       size: 61746
     - path: models/streets/params/jpeg_threshold.txt
       hash: md5
-      md5: dab0457de9d3ac7bb810b49bfc4592ad
-      size: 21
+      md5: 49a15ee5124e20ee0a331336228ee6fb
+      size: 22
     - path: models/streets/params/mse_threshold.txt
       hash: md5
-      md5: db29a11a5be88f4a66879dd6b135af1e
-      size: 21
+      md5: c531790ceeeb9efdeb62705921b7f255
+      size: 20
     - path: src/evaluate.py
       hash: md5
       md5: 71d19d65c702d3f82ec24f19a195bd1b
@@ -512,8 +513,8 @@ stages:
     outs:
     - path: metrics/streets/cae_metrics.json
       hash: md5
-      md5: 112b7a79f6e7235ecc3a3686ecd5772a
-      size: 361
+      md5: a611fad3b3f253fad63c78b577d06075
+      size: 373
     - path: metrics/streets/jpeg_metrics.json
       hash: md5
       md5: d83759b2b2333a5709de30419d702dfd
@@ -677,8 +678,8 @@ stages:
       size: 61746
     - path: src/jpeg_model.py
       hash: md5
-      md5: db96ae9d04a57780ebf8dd82af5a07a2
-      size: 2286
+      md5: e950832763171fa8f914e51c9df95ecc
+      size: 2312
     - path: src/utils/dvc/params.py
       hash: md5
       md5: c57ff0542069d8b6236b09e7aee32be8
@@ -694,15 +695,15 @@ stages:
     params:
       params.yaml:
         all.dataset: streets
-        jpeg_model.balanced: false
-        jpeg_model.n_iter: 25
-        jpeg_model.score_func: f1
+        all.models_balanced: false
+        all.models_n_iter: 25
+        all.models_score_func: f1
     outs:
     - path: models/streets/params/jpeg_threshold.txt
       hash: md5
-      md5: dab0457de9d3ac7bb810b49bfc4592ad
-      size: 21
+      md5: 49a15ee5124e20ee0a331336228ee6fb
+      size: 22
     - path: visualisation/streets/jpeg.html
       hash: md5
-      md5: aca77355f173c97d46cf2fc13958cf8b
-      size: 3585340
+      md5: 76070ae29b0a497c3c1e646e21d4f6b4
+      size: 3585342
