@@ -1,7 +1,6 @@
 """
-    In this stage, the reconstruction error of the CAE is used as am outlier
-    score and prediction is made based on a threshold defined with the
-    validation data.
+    In this stage, the CAE reconstruction MSE and JPEG compression MSE are
+    used to train a binary classifier to predict the image label.
 """
 import os
 
@@ -14,7 +13,6 @@ from sklearn.model_selection import RepeatedStratifiedKFold
 
 from utils.misc import create_dir
 from utils.dvc.params import get_params
-
 
 params = get_params('all')
 
@@ -33,6 +31,12 @@ cae_df = pd.read_csv(
     index_col=0
 )
 
+complexity_df = pd.read_csv(
+    os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),
+    index_col=0)
+
+complexity_df = complexity_df[['jpeg_mse']]
+cae_df = cae_df.join(complexity_df)
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'positive' else 0)
 
@@ -93,5 +97,5 @@ model = LogisticRegression(
 model = model.fit(inputs, targets)
 
 # Save model
-model_path = os.path.join(MODEL_DIR, 'logistic_regression_cae.joblib')
+model_path = os.path.join(MODEL_DIR, 'logistic_regression_combined.joblib')
 dump(model, model_path)

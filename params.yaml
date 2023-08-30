@@ -24,8 +24,8 @@ all:   # Parameters used in multiple stages
   grayscale: false
   scale: 255
   models_n_iter: 25
+  models_n_splits: 10
   models_score_func: f1
-  models_balanced: false
 dataset_split:
   split_ratio:
   - 0.8

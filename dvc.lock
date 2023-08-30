@@ -455,32 +455,25 @@ stages:
       size: 61280
     - path: src/cae_mse_model.py
       hash: md5
-      md5: b92f0b4e3f9a0b152eb4bf8f54a9da3e
-      size: 2289
+      md5: 981bc59c72f907221d2cd67d5cf66089
+      size: 2612
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
     - path: src/utils/misc.py
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
-    - path: src/utils/models/threshold_search.py
-      md5: b7a0f3bd52e1b1a40c97f328e9f2dbff
-      size: 3572
     params:
       params.yaml:
         all.dataset: streets
-        all.models_balanced: false
         all.models_n_iter: 25
+        all.models_n_splits: 10
         all.models_score_func: f1
     outs:
-    - path: models/streets/params/mse_threshold.txt
+    - path: models/streets/bin/logistic_regression_cae.joblib
       hash: md5
-      md5: c531790ceeeb9efdeb62705921b7f255
-      size: 20
-    - path: visualisation/streets/mse.html
-      hash: md5
-      md5: ca633c6216643ab5cd2e6de1613e1da8
-      size: 3585341
+      md5: 6aa715b8636d35bcc60267c626c3b470
+      size: 1275
   evaluate:
     cmd: python3 src/evaluate.py
     deps:
@@ -492,18 +485,22 @@ stages:
       hash: md5
       md5: 9d5a10c8c66c2e6a9eb75b8ed9c0f615
       size: 61746
-    - path: models/streets/params/jpeg_threshold.txt
+    - path: models/streets/bin/logistic_regression_cae.joblib
       hash: md5
-      md5: 49a15ee5124e20ee0a331336228ee6fb
-      size: 22
-    - path: models/streets/params/mse_threshold.txt
+      md5: 6aa715b8636d35bcc60267c626c3b470
+      size: 1275
+    - path: models/streets/bin/logistic_regression_combined.joblib
       hash: md5
-      md5: c531790ceeeb9efdeb62705921b7f255
-      size: 20
+      md5: 743b32dc5e1c46b05d07a0373a8e167c
+      size: 1275
+    - path: models/streets/bin/logistic_regression_jpeg.joblib
+      hash: md5
+      md5: 86d9b7207f34349921fda787d2db6465
+      size: 1275
     - path: src/evaluate.py
       hash: md5
-      md5: 71d19d65c702d3f82ec24f19a195bd1b
-      size: 3994
+      md5: ef57ee11b0375528000de68960be4419
+      size: 2617
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
@@ -513,12 +510,16 @@ stages:
     outs:
     - path: metrics/streets/cae_metrics.json
       hash: md5
-      md5: a611fad3b3f253fad63c78b577d06075
-      size: 373
+      md5: e4ad87349b9dda6d2bb93c4209494ce0
+      size: 131
+    - path: metrics/streets/combined_metrics.json
+      hash: md5
+      md5: e4ad87349b9dda6d2bb93c4209494ce0
+      size: 131
     - path: metrics/streets/jpeg_metrics.json
       hash: md5
-      md5: d83759b2b2333a5709de30419d702dfd
-      size: 249
+      md5: c9ff2a9abe41c19d77b14b34af5babb9
+      size: 131
   corrected_model:
     cmd: python3 src/corrected_model.py
     deps:
@@ -678,8 +679,8 @@ stages:
       size: 61746
     - path: src/jpeg_model.py
       hash: md5
-      md5: e950832763171fa8f914e51c9df95ecc
-      size: 2312
+      md5: f89c7956088227b9c4849218c8e884dd
+      size: 2677
     - path: src/utils/dvc/params.py
       hash: md5
       md5: c57ff0542069d8b6236b09e7aee32be8
@@ -688,22 +689,48 @@ stages:
       hash: md5
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
-    - path: src/utils/models/threshold_search.py
-      hash: md5
-      md5: b7a0f3bd52e1b1a40c97f328e9f2dbff
-      size: 3572
     params:
       params.yaml:
         all.dataset: streets
-        all.models_balanced: false
         all.models_n_iter: 25
+        all.models_n_splits: 10
         all.models_score_func: f1
     outs:
-    - path: models/streets/params/jpeg_threshold.txt
+    - path: models/streets/bin/logistic_regression_jpeg.joblib
       hash: md5
-      md5: 49a15ee5124e20ee0a331336228ee6fb
-      size: 22
-    - path: visualisation/streets/jpeg.html
+      md5: 86d9b7207f34349921fda787d2db6465
+      size: 1275
+  combined_model:
+    cmd: python3 src/combined_model.py
+    deps:
+    - path: data/processed/streets/tabular/cae_mse.csv
       hash: md5
-      md5: 76070ae29b0a497c3c1e646e21d4f6b4
-      size: 3585342
+      md5: 466b1689700d537d4f45e40300d942c2
+      size: 61280
+    - path: data/processed/streets/tabular/complexity.csv
+      hash: md5
+      md5: 9d5a10c8c66c2e6a9eb75b8ed9c0f615
+      size: 61746
+    - path: src/combined_model.py
+      hash: md5
+      md5: da353d9515435b4136215745699499b3
+      size: 2792
+    - path: src/utils/dvc/params.py
+      hash: md5
+      md5: c57ff0542069d8b6236b09e7aee32be8
+      size: 1268
+    - path: src/utils/misc.py
+      hash: md5
+      md5: e29c4af95c5e5d4228701c6303e83b86
+      size: 3503
+    params:
+      params.yaml:
+        all.dataset: streets
+        all.models_n_iter: 25
+        all.models_n_splits: 10
+        all.models_score_func: f1
+    outs:
+    - path: models/streets/bin/logistic_regression_combined.joblib
+      hash: md5
+      md5: 743b32dc5e1c46b05d07a0373a8e167c
+      size: 1275

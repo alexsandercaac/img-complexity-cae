@@ -212,18 +212,14 @@ stages:
     - src/cae_mse_model.py
     - src/utils/dvc/params.py
     - src/utils/misc.py
-    - src/utils/models/threshold_search.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     params:
     - all.dataset
     - all.models_score_func
     - all.models_n_iter
-    - all.models_balanced
+    - all.models_n_splits
     outs:
-    - models/${all.dataset}/params/mse_threshold.txt
-    - visualisation/${all.dataset}/mse.html:
-        cache: false
-        persist: true
+    - models/${all.dataset}/bin/logistic_regression_cae.joblib
 
 # *** ---------------------------------------------
 
@@ -233,18 +229,32 @@ stages:
     - src/jpeg_model.py
     - src/utils/dvc/params.py
     - src/utils/misc.py
-    - src/utils/models/threshold_search.py
     - data/processed/${all.dataset}/tabular/complexity.csv
     params:
     - all.dataset
     - all.models_score_func
     - all.models_n_iter
-    - all.models_balanced
+    - all.models_n_splits
     outs:
-    - models/${all.dataset}/params/jpeg_threshold.txt
-    - visualisation/${all.dataset}/jpeg.html:
-        cache: false
-        persist: true
+    - models/${all.dataset}/bin/logistic_regression_jpeg.joblib
+
+# *** ---------------------------------------------
+
+  combined_model:
+    cmd: python3 src/combined_model.py
+    deps:
+    - src/combined_model.py
+    - src/utils/dvc/params.py
+    - src/utils/misc.py
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    params:
+    - all.dataset
+    - all.models_score_func
+    - all.models_n_iter
+    - all.models_n_splits
+    outs:
+    - models/${all.dataset}/bin/logistic_regression_combined.joblib
 
 # *** ---------------------------------------------
 
@@ -256,13 +266,17 @@ stages:
     - src/utils/evaluation/classification_metrics.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     - data/processed/${all.dataset}/tabular/complexity.csv
-    - models/${all.dataset}/params/mse_threshold.txt
-    - models/${all.dataset}/params/jpeg_threshold.txt
+    - models/${all.dataset}/bin/logistic_regression_jpeg.joblib
+    - models/${all.dataset}/bin/logistic_regression_cae.joblib
+    - models/${all.dataset}/bin/logistic_regression_combined.joblib
     metrics:
     - metrics/${all.dataset}/cae_metrics.json:
         cache: false
         persist: true
     - metrics/${all.dataset}/jpeg_metrics.json:
+        cache: false
+        persist: true
+    - metrics/${all.dataset}/combined_metrics.json:
         cache: false
         persist: true
 

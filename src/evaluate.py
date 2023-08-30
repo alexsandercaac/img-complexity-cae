@@ -5,21 +5,22 @@ import os
 
 import pandas as pd
 import json
+import joblib
 
 from utils.evaluation.classification_metrics import get_classification_metrics
 from utils.dvc.params import get_params
 from utils.misc import create_dir
 
-
 params = get_params('all')
 
 DATASET = params['dataset']
-TH_DIR = os.path.join('models', DATASET, 'params')
+MODEL_DIR = os.path.join('models', DATASET, 'bin')
 METRICS_DIR = os.path.join('metrics', DATASET)
 create_dir(METRICS_DIR)
 
 cae_df = pd.read_csv(
-    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv')
+    os.path.join('data', 'processed', DATASET, 'tabular', 'cae_mse.csv'),
+    index_col=0
 )
 
 complexity_df = pd.read_csv(
@@ -29,110 +30,60 @@ complexity_df = pd.read_csv(
 complexity_df = complexity_df[['jpeg_mse']]
 cae_df = cae_df.join(complexity_df)
 
-th = float(
-    open(
-        os.path.join(TH_DIR, 'mse_threshold.txt'), 'r').read())
-
 cae_df['label'] = cae_df['label'].apply(
     lambda x: 1 if x == 'positive' else 0)
 
-mask = cae_df['data_split'] == 'train'
-train_df = cae_df[mask].drop(columns=['data_split'])
-mask = cae_df['data_split'] == 'val'
-val_df = cae_df[mask].drop(columns=['data_split'])
 mask = cae_df['data_split'] == 'test'
 test_df = cae_df[mask].drop(columns=['data_split'])
 
-train_predictions = train_df['cae_mse'].apply(lambda x: 1 if x > th else 0)
-val_predictions = val_df['cae_mse'].apply(lambda x: 1 if x > th else 0)
-test_predictions = test_df['cae_mse'].apply(lambda x: 1 if x > th else 0)
+# Load models
+cae_model = joblib.load(
+    os.path.join(MODEL_DIR, 'logistic_regression_cae.joblib'))
+jpeg_model = joblib.load(
+    os.path.join(MODEL_DIR, 'logistic_regression_jpeg.joblib'))
+combined_model = joblib.load(
+    os.path.join(MODEL_DIR, 'logistic_regression_combined.joblib'))
 
-train_metrics = get_classification_metrics(
-    train_df['label'], train_predictions)
-train_f1 = train_metrics['f1']
-train_acc = train_metrics['accuracy']
-train_prec = train_metrics['precision']
-train_rec = train_metrics['recall']
 
-val_metrics = get_classification_metrics(
-    val_df['label'], val_predictions)
-val_f1 = val_metrics['f1']
-val_acc = val_metrics['accuracy']
-val_prec = val_metrics['precision']
-val_rec = val_metrics['recall']
-
-test_metrics = get_classification_metrics(
-    test_df['label'], test_predictions)
-test_f1 = test_metrics['f1']
-test_acc = test_metrics['accuracy']
-test_prec = test_metrics['precision']
-test_rec = test_metrics['recall']
+cae_test_metrics = get_classification_metrics(
+    test_df['label'],
+    cae_model.predict(test_df.drop(columns=['label', 'jpeg_mse'])))
 
 # Write metrics on json file
 metrics = {
-    'train_f1': train_f1,
-    'train_acc': train_acc,
-    'train_prec': train_prec,
-    'train_rec': train_rec,
-    'val_f1': val_f1,
-    'val_acc': val_acc,
-    'val_prec': val_prec,
-    'val_rec': val_rec,
-    'test_f1': test_f1,
-    'test_acc': test_acc,
-    'test_prec': test_prec,
-    'test_rec': test_rec
+    'test_f1': cae_test_metrics['f1'],
+    'test_acc': cae_test_metrics['accuracy'],
+    'test_prec': cae_test_metrics['precision'],
+    'test_rec': cae_test_metrics['recall']
 }
 
 with open(
         os.path.join(METRICS_DIR, 'cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
 
-# *** Evaluate JPEG MSE model
-th = float(
-    open(
-        os.path.join(TH_DIR, 'jpeg_threshold.txt'), 'r').read())
-
-train_predictions = train_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
-val_predictions = val_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
-test_predictions = test_df['jpeg_mse'].apply(lambda x: 1 if x > th else 0)
-
-train_metrics = get_classification_metrics(
-    train_df['label'], train_predictions)
-train_f1 = train_metrics['f1']
-train_acc = train_metrics['accuracy']
-train_prec = train_metrics['precision']
-train_rec = train_metrics['recall']
-
-val_metrics = get_classification_metrics(
-    val_df['label'], val_predictions)
-val_f1 = val_metrics['f1']
-val_acc = val_metrics['accuracy']
-val_prec = val_metrics['precision']
-val_rec = val_metrics['recall']
-
-test_metrics = get_classification_metrics(
-    test_df['label'], test_predictions)
-test_f1 = test_metrics['f1']
-test_acc = test_metrics['accuracy']
-test_prec = test_metrics['precision']
-test_rec = test_metrics['recall']
-
+jpeg_test_metrics = get_classification_metrics(
+    test_df['label'],
+    jpeg_model.predict(test_df.drop(columns=['label', 'cae_mse'])))
 metrics = {
-    'train_f1': train_f1,
-    'train_acc': train_acc,
-    'train_prec': train_prec,
-    'train_rec': train_rec,
-    'val_f1': val_f1,
-    'val_acc': val_acc,
-    'val_prec': val_prec,
-    'val_rec': val_rec,
-    'test_f1': test_f1,
-    'test_acc': test_acc,
-    'test_prec': test_prec,
-    'test_rec': test_rec
+    'test_f1': jpeg_test_metrics['f1'],
+    'test_acc': jpeg_test_metrics['accuracy'],
+    'test_prec': jpeg_test_metrics['precision'],
+    'test_rec': jpeg_test_metrics['recall']
 }
 
 with open(
         os.path.join(METRICS_DIR, 'jpeg_metrics.json'), 'w') as f:
+    json.dump(metrics, f)
+
+combined_test_metrics = get_classification_metrics(
+    test_df['label'], combined_model.predict(test_df.drop(columns=['label'])))
+metrics = {
+    'test_f1': combined_test_metrics['f1'],
+    'test_acc': combined_test_metrics['accuracy'],
+    'test_prec': combined_test_metrics['precision'],
+    'test_rec': combined_test_metrics['recall']
+}
+
+with open(
+        os.path.join(METRICS_DIR, 'combined_metrics.json'), 'w') as f:
     json.dump(metrics, f)

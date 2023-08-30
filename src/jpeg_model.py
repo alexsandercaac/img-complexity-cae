@@ -6,81 +6,90 @@
 import os
 
 import pandas as pd
-from sklearn.metrics import f1_score
-import plotly.graph_objects as go
 
-from utils.models.threshold_search import bayesian_search_th
+from joblib import dump
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RepeatedStratifiedKFold
+
 from utils.misc import create_dir
 from utils.dvc.params import get_params
 
-pd.options.plotting.backend = "plotly"
 
 params = get_params('all')
 
+SEED = params['seed']
 DATASET = params['dataset']
-TH_DIR = os.path.join('models', DATASET, 'params')
-create_dir(TH_DIR)
+MODEL_DIR = os.path.join('models', DATASET, 'bin')
+create_dir(MODEL_DIR)
 
 # Algorithm parameters
 SCORE_FUNC = params['models_score_func']
 N_ITER = params['models_n_iter']
-BALANCED = params['models_balanced']
+N_SPLITS = params['models_n_splits']
 
-cae_df = pd.read_csv(
+complexity_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),
-    index_col=0
-)
-
-cae_df['label'] = cae_df['label'].apply(
+    index_col=0)
+complexity_df['label'] = complexity_df['label'].apply(
     lambda x: 1 if x == 'positive' else 0)
 
-mask = cae_df['data_split'] == 'val'
-val_df = cae_df[mask].drop(columns=['data_split'])
+# We will be using cross validation, so we can merge the train and validation
+mask = ((complexity_df['data_split'] == 'val') |
+        (complexity_df['data_split'] == 'train'))
+train_df = complexity_df[mask].drop(columns=['data_split'])
+class_weights = {
+    0: len(train_df) / (2 * train_df['label'].value_counts()[0]),
+    1: len(train_df) / (2 * train_df['label'].value_counts()[1])
+}
 
-if SCORE_FUNC == 'accuracy':
-    score_func = None
-elif SCORE_FUNC == 'f1':
-    score_func = f1_score
-else:
-    raise ValueError(
-        f"Invalid score function {SCORE_FUNC} specified.")
+grid = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+    'penalty': ['l1', 'l2'],
+    'solver': ['liblinear']
+}
+cv = RepeatedStratifiedKFold(
+    n_splits=N_SPLITS, n_repeats=N_ITER, random_state=SEED)
 
-search_results = bayesian_search_th(
-    val_df['jpeg_mse'].values, val_df['label'].values,
-    val_df['jpeg_mse'].min(), val_df['jpeg_mse'].max(),
-    n_iter=N_ITER, score_func=score_func,
-    balanced=BALANCED
+grid_search = GridSearchCV(
+    estimator=LogisticRegression(
+        class_weight=class_weights,
+        random_state=SEED),
+    param_grid=grid,
+    scoring=SCORE_FUNC,
+    cv=cv,
+    n_jobs=-1,
+    verbose=1
 )
 
-# Write best threshold to file in models/params
-with open(os.path.join(TH_DIR, 'jpeg_threshold.txt'), 'w') as f:
-    f.write(str(search_results['threshold']))
+inputs = train_df.drop(columns=['label'])
+targets = train_df['label']
 
-fig = val_df['jpeg_mse'].hist(
-    by=val_df['label'], color=val_df['label'].apply(
-        lambda x: 'positive' if x == 1 else 'negative'), opacity=0.6)
+search_results = grid_search.fit(inputs, targets)
 
-fig.add_trace(
-    go.Scatter(
-        x=[search_results['threshold'], search_results['threshold']],
-        y=[0, 20],
-        mode="lines",
-        name="Threshold",
-        line=dict(color='red', width=3, dash='dash'),
-    )
+means = search_results.cv_results_['mean_test_score']
+stds = search_results.cv_results_['std_test_score']
+params = search_results.cv_results_['params']
+
+print("Grid scores:")
+for mean, stdev, param in zip(means, stds, params):
+    print(f"\nScore: {mean:.3f} ({stdev:.3f}),\nWith params: {param}")
+
+print("\n==========================\n")
+print(
+    f"Found best score of {search_results.best_score_}" +
+    f" with params: {search_results.best_params_}")
+
+# Train model with best params
+
+model = LogisticRegression(
+    **search_results.best_params_,
+    class_weight=class_weights,
+    random_state=SEED
 )
 
-fig.update_layout(
-    title_text="Histogram of JPEG-MSE",
-    xaxis_title_text="JPEG-MSE",
-    yaxis_title_text="Count",
-    legend_title_text="Legend",
-    font=dict(
-        family="Courier New, monospace",
-        size=18,
-        color="RebeccaPurple"
-    )
-)
+model = model.fit(inputs, targets)
 
-fig.write_html(
-    os.path.join('visualisation', DATASET, 'jpeg.html'))
+# Save model
+model_path = os.path.join(MODEL_DIR, 'logistic_regression_jpeg.joblib')
+dump(model, model_path)
