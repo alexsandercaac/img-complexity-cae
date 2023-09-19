@@ -183,19 +183,19 @@ class CAE(HyperModel):
     def _init_hyperparameters(self, hp):
         # First convolutional block
         self.filters_1 = hp.Int(
-            "filters1", min_value=32, max_value=96, step=32)
+            "filters1", min_value=8, max_value=96, step=8)
         self.kernel_size_1 = hp.Int(
             "kernel_size1", min_value=2, max_value=4, step=1)
 
         # Second convolutional block
         self.filters_2 = hp.Int(
-            "filters2", min_value=64, max_value=128, step=32)
+            "filters2", min_value=16, max_value=128, step=16)
         self.kernel_size_2 = hp.Int(
             "kernel_size2", min_value=2, max_value=5, step=1)
 
         # Third convolutional block
         self.filters_3 = hp.Int(
-            "filters3", min_value=128, max_value=256, step=32)
+            "filters3", min_value=32, max_value=256, step=32)
         self.kernel_size_3 = hp.Int(
             "kernel_size3", min_value=2, max_value=5, step=1)
         # Fourth convolutional block
@@ -205,7 +205,7 @@ class CAE(HyperModel):
 
         # Optimization
         self.learning_rate = hp.Choice(
-            "learning_rate", values=[5e-4, 7.5e-4, 1e-3])
+            "learning_rate", values=[2.5e-4, 5e-4, 7.5e-4, 1e-3, 1.5e-3])
 
         # Depth
         self.double_1 = hp.Choice('double1', values=[True, False])
