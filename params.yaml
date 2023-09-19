@@ -2,8 +2,8 @@ all:   # Parameters used in multiple stages
   random_crop:
   - 224
   - 224
-  random_flip: horizontal
-  random_rotation: 0
+  random_flip: horizontal_and_vertical
+  random_rotation: 0.2
   random_zoom:
   - -0.1
   - 0.1
@@ -20,8 +20,8 @@ all:   # Parameters used in multiple stages
   - 256
   - 3
   seed: 13
-  dataset: streets
-  grayscale: false
+  dataset: casting
+  grayscale: true
   scale: 255
   models_n_iter: 25
   models_n_splits: 10
