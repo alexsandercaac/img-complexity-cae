@@ -279,6 +279,7 @@ stages:
     - metrics/${all.dataset}/combined_metrics.json:
         cache: false
         persist: true
+    outs:
     - visualisation/${all.dataset}/cae_confusion_matrix.png:
         cache: false
         persist: true
