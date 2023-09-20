@@ -515,14 +515,15 @@ stages:
       size: 1275
     - path: src/evaluate.py
       hash: md5
-      md5: ef57ee11b0375528000de68960be4419
-      size: 2617
+      md5: d082b9366cfb7c31b794663a7faddc20
+      size: 3420
     - path: src/utils/dvc/params.py
       md5: c57ff0542069d8b6236b09e7aee32be8
       size: 1268
     - path: src/utils/evaluation/classification_metrics.py
-      md5: b91b008cdb407c438b390291881baea4
-      size: 893
+      hash: md5
+      md5: a4318ebc075cdf541686809b43b0232f
+      size: 1014
     outs:
     - path: metrics/casting/cae_metrics.json
       hash: md5
@@ -536,6 +537,18 @@ stages:
       hash: md5
       md5: 3a3a3d17165e3d0478c25f359d0e207f
       size: 114
+    - path: visualisation/casting/cae_confusion_matrix.png
+      hash: md5
+      md5: d2fe3a5d3fd3a0e96b288330f2b8be42
+      size: 20037
+    - path: visualisation/casting/combined_confusion_matrix.png
+      hash: md5
+      md5: 11526b480111713f132f8fa1d35fd6d1
+      size: 17244
+    - path: visualisation/casting/jpeg_confusion_matrix.png
+      hash: md5
+      md5: 11526b480111713f132f8fa1d35fd6d1
+      size: 17244
   corrected_model:
     cmd: python3 src/corrected_model.py
     deps:
