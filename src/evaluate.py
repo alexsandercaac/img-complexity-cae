@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import json
 import joblib
+import sklearn
 
 from utils.evaluation.classification_metrics import get_classification_metrics
 from utils.dvc.params import get_params
@@ -16,6 +17,7 @@ params = get_params('all')
 DATASET = params['dataset']
 MODEL_DIR = os.path.join('models', DATASET, 'bin')
 METRICS_DIR = os.path.join('metrics', DATASET)
+VIS_DIR = os.path.join('visualisation', DATASET)
 create_dir(METRICS_DIR)
 
 cae_df = pd.read_csv(
@@ -61,6 +63,13 @@ with open(
         os.path.join(METRICS_DIR, 'cae_metrics.json'), 'w') as f:
     json.dump(metrics, f)
 
+cm_display = sklearn.metrics.ConfusionMatrixDisplay(
+    confusion_matrix=cae_test_metrics['conf_matrix'],
+    display_labels=['Normal', 'Anomalous'])
+
+cm_display.plot().figure_.savefig(
+    os.path.join(VIS_DIR, 'cae_confusion_matrix.png'))
+
 jpeg_test_metrics = get_classification_metrics(
     test_df['label'],
     jpeg_model.predict(test_df.drop(columns=['label', 'cae_mse'])))
@@ -75,6 +84,12 @@ with open(
         os.path.join(METRICS_DIR, 'jpeg_metrics.json'), 'w') as f:
     json.dump(metrics, f)
 
+cm_display = sklearn.metrics.ConfusionMatrixDisplay(
+    confusion_matrix=jpeg_test_metrics['conf_matrix'],
+    display_labels=['Normal', 'Anomalous'])
+cm_display.plot().figure_.savefig(
+    os.path.join(VIS_DIR, 'jpeg_confusion_matrix.png'))
+
 combined_test_metrics = get_classification_metrics(
     test_df['label'], combined_model.predict(test_df.drop(columns=['label'])))
 metrics = {
@@ -87,3 +102,9 @@ metrics = {
 with open(
         os.path.join(METRICS_DIR, 'combined_metrics.json'), 'w') as f:
     json.dump(metrics, f)
+
+cm_display = sklearn.metrics.ConfusionMatrixDisplay(
+    confusion_matrix=combined_test_metrics['conf_matrix'],
+    display_labels=['Normal', 'Anomalous'])
+cm_display.plot().figure_.savefig(
+    os.path.join(VIS_DIR, 'combined_confusion_matrix.png'))
