@@ -25,7 +25,7 @@ def image_mse(image1: Union[np.ndarray, tf.Tensor],
     return np.mean(tf.keras.metrics.mean_squared_error(image1, image2))
 
 
-def image_rgb_to_gray_to_numpy(
+def image_rgb_to_grayscale(
         image: Union[np.ndarray, tf.Tensor]) -> np.ndarray:
     '''
     Converts a tensor image to grayscale and then to numpy array.
@@ -38,6 +38,9 @@ def image_rgb_to_gray_to_numpy(
     '''
     if isinstance(image, tf.Tensor):
         image = image.numpy()
+    # Check if pixels in image are scaled or not. If the maximum value is
+    # greater than 1, then the pixels are not scaled. Otherwise, the pixels
+    # are assumed to be scaled in the range [0, 1].
     if np.max(image) > 1:
         img_gs = image.astype('uint8') @ RGB2GRAY
     else:
@@ -85,19 +88,3 @@ def load_imgs_gen(imgs_path: list,
             yield Image.fromarray(img)
         else:
             yield np.expand_dims(img, axis=0)
-
-
-def save_img_as_jpg(path: str, quality: int = 75) -> None:
-    '''
-    Saves an image with JPEG using a given quality factor.
-
-    Args:
-        path (str): Path to the image.
-        quality (int): Quality factor to be used when saving the image.
-            Defaults to 75.
-
-    Returns:
-        None
-    '''
-    img = Image.open(path)
-    img.save(path, quality=quality)
