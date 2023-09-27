@@ -2,13 +2,20 @@
     Module that implements the JPEG MSE image complexity measure.
 """
 import numpy as np
+import PIL
+import tempfile
 import cv2
 import utils.data.complexityaux as caux
 
 
-def calculate_jpeg_mse(
+def jpeg_mse(
         image: np.ndarray, quality: int = 75) -> float:
-    """Calculates the JPEG MSE image complexity measure.
+    """
+    Calculates the MSE  between an image and its JPEG compressed version.
+
+    This function uses cv2.imencode and cv2.imdecode to compress and
+    decompress the image, respectively, without writing the compressed image
+    to disk.
 
     Args:
         image (numpy.ndarray): Image to be processed.
@@ -51,3 +58,53 @@ def calculate_jpeg_mse(
             image.astype(np.float16), jpeg_image.astype(np.float16)
         )
     return mse
+
+
+def jpeg_mse_complexity(
+        image: np.ndarray, quality: int = 75) -> float:
+    """
+    Calculates the JPEG RMSE image complexity measure. This measure is obtained
+    by dividing the MSE between the image and its compressed version by the
+    compression ratio, which is the size of the image before compression
+    divided by its size after compression.
+
+    Args:
+        image (numpy.ndarray): Image to be processed.
+        quality (int, optional): JPEG quality. Defaults to 75.
+
+    Returns:
+        float: JPEG MSE image complexity measure.
+    """
+    # Check if image is not in PIL format
+    if not isinstance(image, PIL.Image.Image):
+        # If greyscale, remove the channel dimension
+        image = np.squeeze(image)
+        # Check if image is scaled
+        if np.max(image) > 1:
+            image = image.astype(np.uint8)
+        else:
+            image = (image * 255).astype(np.uint8)
+        image = PIL.Image.fromarray(image)
+
+    # Save image to a temporary jpeg file
+    with tempfile.NamedTemporaryFile(suffix='.jpg') as tmp_file:
+        image.save(tmp_file.name, quality=quality)
+        # Get the size of the file
+        tmp_file.seek(0, 2)
+        jpeg_size = tmp_file.tell()
+        # Reload the compressed image
+        jpeg_image = PIL.Image.open(tmp_file.name)
+
+    # Save image to a temporary png file
+    with tempfile.NamedTemporaryFile(suffix='.png') as tmp_file:
+        image.save(tmp_file.name)
+        # Get the size of the file
+        tmp_file.seek(0, 2)
+        png_size = tmp_file.tell()
+
+    compression_ratio = png_size / jpeg_size
+
+    # Calculate the MSE between the original image and the compressed image
+    mse = caux.image_mse(image, jpeg_image)
+
+    return mse / compression_ratio

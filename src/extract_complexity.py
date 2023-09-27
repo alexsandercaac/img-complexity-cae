@@ -4,7 +4,7 @@
     The complexity of a general purpose dataset is also
     extracted to be used as a baseline.
 """
-from utils.data.jpegmse import calculate_jpeg_mse
+from utils.data.jpegmse import jpeg_mse_complexity
 from utils.data.complexityaux import load_imgs_gen
 from utils.dvc.params import get_params
 from utils.misc import create_dir
@@ -59,7 +59,7 @@ for split, label in DATA_SPLITS_AND_LABELS:
     mse_jpeg_complexity = []
     pbar = tqdm(total=len(files))
     for image in img_gen:
-        mse_jpeg_complexity.append(calculate_jpeg_mse(image))
+        mse_jpeg_complexity.append(jpeg_mse_complexity(image))
         pbar.update(1)
     pbar.close()
     if split != 'test':
