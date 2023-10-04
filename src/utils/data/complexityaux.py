@@ -4,6 +4,7 @@
 """
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 from typing import Union
 from PIL import Image
@@ -118,7 +119,11 @@ def image_gradients(image: Union[np.ndarray, tf.Tensor]
     if isinstance(image, tf.Tensor):
         image = image.numpy()
     image = np.squeeze(image)
-
+    # Check if image is grayscale and convert to grayscale if not
+    if len(image.shape) == 3:
+        image = image_rgb_to_grayscale(image)
+    if np.max(image) <= 1:
+        image = image * 255
     # Calculate gradients
     g_x = np.array([[1, 0, -1],
                    [2, 0, -2],
@@ -136,3 +141,47 @@ def image_gradients(image: Union[np.ndarray, tf.Tensor]
     y_gradient = signal.convolve2d(image, g_y, mode='same')
 
     return x_gradient, y_gradient
+
+
+def deldensity(x_gradient: np.ndarray,
+               y_gradient: np.ndarray,
+               visualise: bool = False) -> np.ndarray:
+    '''
+
+    Calculates the deldensity of an image, as presented in:
+
+    Reflections on Shannon Information: In search of a natural
+    information-entropy for images, https://arxiv.org/pdf/1609.01117.pdf
+
+    Args:
+        x_gradient (ndarray): X gradient of the image.
+        y_gradient (ndarray): Y gradient of the image.
+        visualise (bool): If True, the deldensity is visualised. Defaults to
+            False.
+
+    Returns:
+        ndarray: Deldensity of the image.
+
+    '''
+
+    deldensity, xedges, yedges = np.histogram2d(
+        x_gradient.flatten(), y_gradient.flatten(), bins=256,
+        density=True, range=[[-255, 255], [-255, 255]])
+    deldensity = deldensity.T
+    if visualise:
+        # gamma enhancements and inversion for better viewing pleasure
+        deldensity = np.max(deldensity) - deldensity
+        gamma = 1.8
+        deldensity = (
+            deldensity / np.max(deldensity))**gamma * np.max(deldensity)
+        fig = plt.figure(figsize=(14, 7))
+        ax = fig.add_subplot(132, title='Image delentropy',
+                             aspect='equal')
+        x, y = np.meshgrid(xedges, yedges)
+        # Set cmap to black and white
+        cmap = plt.get_cmap('binary')
+        ax.pcolormesh(x, y, deldensity, cmap=cmap)
+        ax.set_xlabel('X gradient')
+        ax.set_ylabel('Y gradient')
+
+    return deldensity
