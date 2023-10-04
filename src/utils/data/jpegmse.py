@@ -103,7 +103,9 @@ def jpeg_mse_complexity(
         png_size = tmp_file.tell()
 
     compression_ratio = png_size / jpeg_size
-
+    # Convert image and jpeg_image back to numpy arrays
+    image = np.asarray(image, dtype=np.float32)
+    jpeg_image = np.asarray(jpeg_image, dtype=np.float32)
     # Calculate the MSE between the original image and the compressed image
     mse = caux.image_mse(image, jpeg_image)
 

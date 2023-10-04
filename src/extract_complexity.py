@@ -91,7 +91,7 @@ img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 mse_jpeg_complexity = []
 pbar = tqdm(total=len(files))
 for image in img_gen:
-    mse_jpeg_complexity.append(calculate_jpeg_mse(image))
+    mse_jpeg_complexity.append(jpeg_mse_complexity(image))
     pbar.update(1)
 pbar.close()
 with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
