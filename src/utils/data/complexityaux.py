@@ -4,8 +4,10 @@
 """
 import numpy as np
 import tensorflow as tf
+
 from typing import Union
 from PIL import Image
+from scipy import signal
 
 RGB2GRAY = np.array([0.2989, 0.5870, 0.1140], dtype=np.float32)
 
@@ -88,3 +90,49 @@ def load_imgs_gen(imgs_path: list,
             yield Image.fromarray(img)
         else:
             yield np.expand_dims(img, axis=0)
+
+
+def image_gradients(image: Union[np.ndarray, tf.Tensor]
+                    ) -> tuple[np.ndarray, np.ndarray]:
+    '''
+    Calculates the x and y gradients of an image.
+
+    The sobel filter is used to calculate the gradients, with the following
+    kernels:
+
+        g_x = [[1, 0, -1],
+                [2, 0, -2],
+                [1, 0, -1]]
+
+        g_y = [[+1, +2, +1],
+                [0,  0,  0],
+                [-1,  -2,  -1]]
+
+    Args:
+        x_gradient, y_gradient
+
+    Returns:
+        ndarray: Gradients of the image.
+    '''
+
+    if isinstance(image, tf.Tensor):
+        image = image.numpy()
+    image = np.squeeze(image)
+
+    # Calculate gradients
+    g_x = np.array([[1, 0, -1],
+                   [2, 0, -2],
+                   [1, 0, -1]])
+    g_y = np.array([[1, 2, 1],
+                   [0,  0,  0],
+                   [-1,  -2,  -1]])
+
+    # Calculate gradients. Remember that the convolution operation is
+    # commutative, so the order of the kernels does not matter. We keep the
+    # image first to use the 'same' mode and get an output of the same shape as
+    # the input image.
+    x_gradient = signal.convolve2d(image, g_x, mode='same')
+
+    y_gradient = signal.convolve2d(image, g_y, mode='same')
+
+    return x_gradient, y_gradient
