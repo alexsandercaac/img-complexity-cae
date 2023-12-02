@@ -4,20 +4,18 @@
     The complexity of a general purpose dataset is also
     extracted to be used as a baseline.
 """
+import os
+
+from matplotlib import ticker, pyplot as plt
+from tqdm.rich import tqdm
+
 from utils.data.jpegmse import jpeg_mse_complexity
 from utils.data.complexityaux import load_imgs_gen
 from utils.dvc.params import get_params
 from utils.misc import create_dir
 
-from tqdm.rich import tqdm
-from matplotlib import pyplot as plt
-
-import os
-
-import matplotlib.ticker as ticker
 
 # * Parameters
-
 
 params = get_params('all')
 

@@ -2,15 +2,16 @@
     Module with simple functions that are used by all different image
     complexity measures.
 """
+from typing import Union
+
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
-from typing import Union
 from PIL import Image
 from scipy import signal
 
 RGB2GRAY = np.array([0.2989, 0.5870, 0.1140], dtype=np.float32)
+rng = np.random.default_rng(2403)
 
 
 def image_mse(image1: Union[np.ndarray, tf.Tensor],
@@ -77,7 +78,7 @@ def load_imgs_gen(imgs_path: list,
     if not isinstance(imgs_path, list):
         imgs_path = [imgs_path]
     if shuffle:
-        np.random.shuffle(imgs_path)
+        rng.shuffle(imgs_path)
     if grayscale:
         mode = 'L'
     else:
@@ -164,24 +165,43 @@ def deldensity(x_gradient: np.ndarray,
 
     '''
 
-    deldensity, xedges, yedges = np.histogram2d(
+    deldensity_value, xedges, yedges = np.histogram2d(
         x_gradient.flatten(), y_gradient.flatten(), bins=256,
         density=True, range=[[-255, 255], [-255, 255]])
-    deldensity = deldensity.T
+    deldensity_value = deldensity_value.T
+
     if visualise:
         # gamma enhancements and inversion for better viewing pleasure
-        deldensity = np.max(deldensity) - deldensity
+        deldensity_value = np.max(deldensity_value) - deldensity_value
         gamma = 1.8
-        deldensity = (
-            deldensity / np.max(deldensity))**gamma * np.max(deldensity)
+        deldensity_value = (
+            deldensity_value / np.max(deldensity_value)
+        )**gamma * np.max(deldensity_value)
         fig = plt.figure(figsize=(14, 7))
         ax = fig.add_subplot(132, title='Image delentropy',
                              aspect='equal')
         x, y = np.meshgrid(xedges, yedges)
         # Set cmap to black and white
         cmap = plt.get_cmap('binary')
-        ax.pcolormesh(x, y, deldensity, cmap=cmap)
+        ax.pcolormesh(x, y, deldensity_value, cmap=cmap)
         ax.set_xlabel('X gradient')
         ax.set_ylabel('Y gradient')
 
-    return deldensity
+    return deldensity_value
+
+
+def deldensity_entropy(deldensity_value: np.ndarray) -> float:
+    '''
+    Calculates the entropy of the deldensity of an image.
+
+    Args:
+        deldensity (ndarray): Deldensity of an image.
+
+    Returns:
+        float: Entropy of the deldensity of an image.
+    '''
+    nonzero_deldesnity = deldensity_value[deldensity_value.nonzero()]
+
+    entropy = -0.5*np.sum(nonzero_deldesnity * np.log2(nonzero_deldesnity))
+
+    return entropy

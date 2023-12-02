@@ -1,9 +1,10 @@
 """
 Functions needed to load parameters from params.yaml tracked with DVC
 """
-import yaml
 import sys
 import os
+
+import yaml
 
 
 def get_params(stage_fn: str = None):
@@ -26,10 +27,10 @@ def get_params(stage_fn: str = None):
 
     try:
         params = yaml.safe_load(open("params.yaml"))[stage_fn]
-    except KeyError:
+    except KeyError as exc:
         print(f'ERROR: Key "{stage_fn}" not in parameters.yaml.')
         raise KeyError(f"Is the stage file name ({sys.argv[0]}) " +
-                       "the same as the stage name in params.yaml?")
+                       "the same as the stage name in params.yaml?") from exc
     try:
         all_params = yaml.safe_load(open("params.yaml"))['all']
         params = {**params, **all_params}
