@@ -99,11 +99,15 @@ files = [os.path.join(data_dir, f) for f in os.listdir(data_dir)]
 img_gen = load_imgs_gen(files, grayscale=GRAYSCALE, scale=SCALE)
 
 mse_jpeg_complexity = []
+delentropy_complexity_list = []
 pbar = tqdm(total=len(files))
 for image in img_gen:
     mse_jpeg_complexity.append(jpeg_mse_complexity(image))
+    delentropy_complexity_list.append(delentropy_complexity(image))
     pbar.update(1)
 pbar.close()
 with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
-    for file, mse in zip(files, mse_jpeg_complexity):
-        f.write(f'{file},{mse},baseline,\n')
+    files_mses_entropies = zip(files, mse_jpeg_complexity,
+                                    delentropy_complexity_list)
+    for file, mse, delentropy in files_mses_entropies:
+        f.write(f'{file},{mse},{delentropy},baseline,\n')
