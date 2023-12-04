@@ -3,13 +3,13 @@
     sets. As such, this script will split the dataset, saving the outputs in
     the data/processed/$DATASET folders. Class balance will be kept.
 """
+import os
+import random
+
 from rich import print, pretty
 
 from utils.misc import list_split, create_dir, copy_files
 from utils.dvc.params import get_params
-
-import os
-import random
 
 pretty.install()
 

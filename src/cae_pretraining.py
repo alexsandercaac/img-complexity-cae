@@ -27,6 +27,7 @@ logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 params = get_params()
 
+PRETRAIN = params['pretrain']
 # Data parameters
 DATASET = params['dataset']
 INPUT_SIZE = tuple(params['input_size'])
@@ -60,88 +61,96 @@ DATA_DIR = os.path.join('data', 'raw', 'tiny-imagenet-200')
 MODEL_DIR = os.path.join('models', DATASET, 'bin')
 TRAIN_DIR = os.path.join(DATA_DIR, 'train')
 
-
-augmentation = augmentation_model(
-    random_crop=RANDOM_CROP,
-    random_flip=RANDOM_FLIP,
-    random_rotation=RANDOM_ROTATION,
-    random_zoom=RANDOM_ZOOM,
-    random_brightness=RANDOM_BRIGHTNESS,
-    random_contrast=RANDOM_CONTRAST,
-    random_translation_height=RANDOM_TRANSLATION_HEIGHT,
-    random_translation_width=RANDOM_TRANSLATION_WIDTH
-)
-
-train_dataset = load_tf_img_dataset(
-    dir='train',
-    dir_path=DATA_DIR,
-    input_size=INPUT_SIZE[:2],
-    mode='autoencoder',
-    scale=SCALE,
-    shuffle=True,
-    augmentation=augmentation,
-    batch_size=BATCH_SIZE,
-    color_mode='grayscale' if GRAYSCALE else 'rgb'
-)
-
-val_dataset = load_tf_img_dataset(
-    dir='val',
-    dir_path=DATA_DIR,
-    input_size=RANDOM_CROP,
-    mode='autoencoder',
-    scale=SCALE,
-    shuffle=False,
-    batch_size=BATCH_SIZE,
-    color_mode='grayscale' if GRAYSCALE else 'rgb'
-)
-
-
 model = tf.keras.models.load_model(
     filepath=os.path.join(MODEL_DIR, 'hp_search_best.hdf5')
 )
 
 randomize_model_weigths(model)
 
-model.compile(loss=['mse'],
-              optimizer=tf.keras.optimizers.Adam(
-    learning_rate=LEARNING_RATE),
-    metrics=['mae', 'mse']
-)
+if PRETRAIN:
+    print('Pretraining the model...')
 
-lr_schedule = CustomLearningRateScheduler(
-    metric='val_mse',
-    secondary_metric='val_mae',
-    alpha=ALPHA,
-    beta=BETA,
-    verbose=2,
-    patience=PATIENCE,
-    early_stopping=EARLY_STOPPING,
-    revive_best=REVIVE_BEST,
-    min_lr=MIN_LR
-)
+    augmentation = augmentation_model(
+        random_crop=RANDOM_CROP,
+        random_flip=RANDOM_FLIP,
+        random_rotation=RANDOM_ROTATION,
+        random_zoom=RANDOM_ZOOM,
+        random_brightness=RANDOM_BRIGHTNESS,
+        random_contrast=RANDOM_CONTRAST,
+        random_translation_height=RANDOM_TRANSLATION_HEIGHT,
+        random_translation_width=RANDOM_TRANSLATION_WIDTH
+    )
 
-train_size = sum(
-    [len(files) for _, _, files in os.walk(TRAIN_DIR)])
+    train_dataset = load_tf_img_dataset(
+        dir='train',
+        dir_path=DATA_DIR,
+        input_size=INPUT_SIZE[:2],
+        mode='autoencoder',
+        scale=SCALE,
+        shuffle=True,
+        augmentation=augmentation,
+        batch_size=BATCH_SIZE,
+        color_mode='grayscale' if GRAYSCALE else 'rgb'
+    )
 
-print(f'Training samples: {train_size}')
+    val_dataset = load_tf_img_dataset(
+        dir='val',
+        dir_path=DATA_DIR,
+        input_size=RANDOM_CROP,
+        mode='autoencoder',
+        scale=SCALE,
+        shuffle=False,
+        batch_size=BATCH_SIZE,
+        color_mode='grayscale' if GRAYSCALE else 'rgb'
+    )
 
 
-history = model.fit(
-    train_dataset,
-    epochs=EPOCHS,
-    validation_data=val_dataset,
-    callbacks=[lr_schedule,
-               TqdmCallback(verbose=2,
-                            data_size=train_size,
-                            batch_size=BATCH_SIZE,
-                            epochs=EPOCHS)],
-    verbose=0
-)
+    model.compile(loss=['mse'],
+                optimizer=tf.keras.optimizers.Adam(
+        learning_rate=LEARNING_RATE),
+        metrics=['mae', 'mse']
+    )
+
+    lr_schedule = CustomLearningRateScheduler(
+        metric='val_mse',
+        secondary_metric='val_mae',
+        alpha=ALPHA,
+        beta=BETA,
+        verbose=2,
+        patience=PATIENCE,
+        early_stopping=EARLY_STOPPING,
+        revive_best=REVIVE_BEST,
+        min_lr=MIN_LR
+    )
+
+    train_size = sum(len(files) for (_, _, files) in os.walk(TRAIN_DIR))
+
+    print(f'Training samples: {train_size}')
 
 
-print('Saving model...')
-model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
-history_df = pd.DataFrame(history.history)
-history_df.to_csv(
-    os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
-    index=False)
+    history = model.fit(
+        train_dataset,
+        epochs=EPOCHS,
+        validation_data=val_dataset,
+        callbacks=[lr_schedule,
+                TqdmCallback(verbose=2,
+                                data_size=train_size,
+                                batch_size=BATCH_SIZE,
+                                epochs=EPOCHS)],
+        verbose=0
+    )
+
+
+    print('Saving model...')
+    model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
+    history_df = pd.DataFrame(history.history)
+    history_df.to_csv(
+        os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
+        index=False)
+else:
+    print('Skipping pretraining...')
+    model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
+    with open(
+        os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
+          'w') as f:
+        f.write('epoch,loss,mae,mse,val_loss,val_mae,val_mse\n')

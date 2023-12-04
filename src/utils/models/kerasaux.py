@@ -4,10 +4,10 @@
     as control of the learning rate schedule.
 
 """
-from numpy.core.numeric import Inf
-from tqdm import tqdm
 from typing import Union
 
+from numpy.core.numeric import Inf
+from tqdm import tqdm
 import tensorflow as tf
 
 
@@ -23,10 +23,8 @@ def randomize_model_weigths(model: tf.keras.Model) -> None:
         [tf.random.normal(shape=weight.shape) for weight in model.weights]
     )
 
-
 class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
     """
-
     Learning rate scheduler with additional functionalities.
 
     The learning rate is controlled by two constants: alpha and beta. These

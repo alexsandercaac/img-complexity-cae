@@ -2,10 +2,8 @@
     HyperModel definition for keras hyper-parameter tuning.
 
 '''
-# Dependencies ---------------------------------------------------------------
 from keras_tuner import HyperModel
 import tensorflow as tf
-# ----------------------------------------------------------------------------
 
 
 class CAE(HyperModel):

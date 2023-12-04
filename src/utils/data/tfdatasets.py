@@ -1,12 +1,13 @@
 """
     Set of functions that use tensorflow to load and manipulate image datasets.
 """
-import tensorflow as tf
 import os
 from typing import Tuple
 
+import tensorflow as tf
 
-def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
+
+def load_tf_img_dataset(dir_name: str, dir_path: str = '', batch_size: int = 1,
                         input_size: Tuple[int, int] = (224, 224),
                         mode: str = 'autoencoder', labels: list = None,
                         augmentation:  tf.keras.Sequential = None,
@@ -18,7 +19,7 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
     Loads image dataset using tensorflow and returns a tf.data.Dataset object.
 
     Args:
-        dir (str): Directory containing the images.
+        dir_name (str): Directory containing the images.
         dir_path (str): Path to the directory containing the images.
             Defaults to ''.
         batch_size (int): Batch size set on the tf.data.Dataset object.
@@ -45,9 +46,9 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
         tf.data.Dataset: Dataset object containing the images.
     '''
     AUTOTUNE = tf.data.AUTOTUNE
-    if mode == 'autoencoder' or mode == 'image_only':
+    if mode in ('autoencoder', 'image_only'):
         dataset = tf.keras.utils.image_dataset_from_directory(
-            os.path.join(dir_path, dir),
+            os.path.join(dir_path, dir_name),
             labels=None,
             batch_size=batch_size,
             image_size=input_size,
@@ -55,7 +56,7 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
             color_mode=color_mode)
     elif mode == 'classifier':
         dataset = tf.keras.utils.image_dataset_from_directory(
-            os.path.join(dir_path, dir),
+            os.path.join(dir_path, dir_name),
             labels=labels if labels else 'inferred',
             batch_size=batch_size,
             image_size=input_size,
@@ -79,8 +80,7 @@ def load_tf_img_dataset(dir: str, dir_path: str = '', batch_size: int = 1,
                 rescale(x), y),
                 num_parallel_calls=AUTOTUNE)
         elif mode == 'image_only':
-            dataset = dataset.map(lambda x: rescale(x),
-                                  num_parallel_calls=AUTOTUNE)
+            dataset = dataset.map(rescale(x), num_parallel_calls=AUTOTUNE)
     else:
         if mode == 'autoencoder':
             dataset = dataset.map(lambda x: (x, x),

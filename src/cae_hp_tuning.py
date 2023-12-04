@@ -133,15 +133,15 @@ tuner = kt.BayesianOptimization(
 )
 tuner.search_space_summary()
 
-history = tuner.search(train_dataset,
-                       validation_data=val_dataset,
-                       callbacks=[lr_schedule,
-                                  tbcallback],
-                       epochs=EPOCHS,
-                       shuffle=True,
-                       batch_size=BATCH_SIZE,
-                       verbose=1
-                       )
+tuner.search(train_dataset,
+             validation_data=val_dataset,
+             callbacks=[lr_schedule,
+                        tbcallback],
+             epochs=EPOCHS,
+             shuffle=True,
+             batch_size=BATCH_SIZE,
+             verbose=1
+             )
 
 results_summary = catch_stdout(tuner.results_summary)
 results = results_summary()

@@ -2,9 +2,9 @@
     In this stage, various classification metrics are extracted from the model.
 """
 import os
+import json
 
 import pandas as pd
-import json
 import joblib
 import sklearn
 

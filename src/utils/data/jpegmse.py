@@ -1,10 +1,12 @@
 """
     Module that implements the JPEG MSE image complexity measure.
 """
+import tempfile
+
 import numpy as np
 import PIL
-import tempfile
 import cv2
+
 import utils.data.complexityaux as caux
 
 
