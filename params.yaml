@@ -44,6 +44,7 @@ cae_hp_tuning:
   min_lr: 0.000001
   max_trials: 75
 cae_pretraining:
+  pretrain: false
   batch_size: 8
   alpha: 0.98
   beta: 0.93

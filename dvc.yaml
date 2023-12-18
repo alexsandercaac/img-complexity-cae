@@ -206,6 +206,21 @@ stages:
 
 # *** ---------------------------------------------
 
+  merge_complexity_caemse:
+    cmd: python3 src/merge_complexity_caemse.py
+    deps:
+    - src/merge_complexity_caemse.py
+    - src/utils/dvc/params.py
+    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/cae_mse.csv
+    params:
+    - all.dataset
+    outs:
+    - data/processed/${all.dataset}/tabular/complexity_caemse.csv
+
+
+# *** ---------------------------------------------
+
   cae_mse_model:
     cmd: python3 src/cae_mse_model.py
     deps:

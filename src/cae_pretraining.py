@@ -65,11 +65,9 @@ model = tf.keras.models.load_model(
     filepath=os.path.join(MODEL_DIR, 'hp_search_best.hdf5')
 )
 
-randomize_model_weigths(model)
-
 if PRETRAIN:
     print('Pretraining the model...')
-
+    randomize_model_weigths(model)
     augmentation = augmentation_model(
         random_crop=RANDOM_CROP,
         random_flip=RANDOM_FLIP,
@@ -82,7 +80,7 @@ if PRETRAIN:
     )
 
     train_dataset = load_tf_img_dataset(
-        dir='train',
+        dir_name='train',
         dir_path=DATA_DIR,
         input_size=INPUT_SIZE[:2],
         mode='autoencoder',
@@ -94,7 +92,7 @@ if PRETRAIN:
     )
 
     val_dataset = load_tf_img_dataset(
-        dir='val',
+        dir_name='val',
         dir_path=DATA_DIR,
         input_size=RANDOM_CROP,
         mode='autoencoder',

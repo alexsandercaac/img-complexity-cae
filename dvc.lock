@@ -91,19 +91,20 @@ stages:
       nfiles: 50
     - path: src/extract_complexity.py
       hash: md5
-      md5: 891288e84061cad482d2f634e3524ea7
-      size: 3162
+      md5: 39dc13d3439e52b81fad203d3d0db858
+      size: 3993
     - path: src/utils/data/complexityaux.py
       hash: md5
-      md5: 2e242f5ca763aed82b71a7660d4ab662
-      size: 2908
+      md5: 00a8cf627941ec76b0633d67646990f7
+      size: 6469
     - path: src/utils/data/jpegmse.py
       hash: md5
-      md5: 8013b33d670ed2cca56cba446a436c03
-      size: 3844
+      md5: c1481f3b211686758e89359e08f6a684
+      size: 3846
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     - path: src/utils/misc.py
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
@@ -115,12 +116,12 @@ stages:
     outs:
     - path: data/processed/casting/tabular/complexity.csv
       hash: md5
-      md5: 699fdb3cec3121651eb8c8b9b1360b32
-      size: 122697
+      md5: b587bc86b1b24f30e1fcb548fcdb1057
+      size: 148039
     - path: visualisation/casting/complexity_hist.png
       hash: md5
-      md5: 8917051aad40c9737acbfe580a13f147
-      size: 20361
+      md5: 7444e96d53f0dcf4407704d841468b87
+      size: 27121
   dataset_split:
     cmd: python3 src/dataset_split.py
     deps:
@@ -130,11 +131,13 @@ stages:
       size: 32402383
       nfiles: 1300
     - path: src/dataset_split.py
-      md5: fd43a20218ff832aedd35d7e7dd988bb
+      hash: md5
+      md5: fd014d88baab2e5545b402d3fad2fa9b
       size: 2502
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     - path: src/utils/misc.py
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
@@ -177,24 +180,28 @@ stages:
       size: 3238282
       nfiles: 129
     - path: src/cae_hp_tuning.py
-      md5: 948c38992d703fa2b4e89cc6a4cbcfaa
-      size: 4380
+      hash: md5
+      md5: 692d356f88a116cf24bdbb1fd2fb89e1
+      size: 4300
     - path: src/utils/data/tfdatasets.py
-      md5: 6d886d24705a0b39ce24c4f9f1076529
-      size: 6588
+      hash: md5
+      md5: c7d7d9a5829e73694eb2e4c3a2a0adaa
+      size: 6557
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     - path: src/utils/misc.py
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
     - path: src/utils/models/kerasaux.py
-      md5: 254eadd4c77e4afca36f020eb569d754
-      size: 11749
+      hash: md5
+      md5: b505bbc88bdc0d5b68197a2468e34a7e
+      size: 11747
     - path: src/utils/models/ktmodels.py
       hash: md5
-      md5: d6b0485941cb50edd8c194d8673e650f
-      size: 10559
+      md5: 528c351e8b26654370dbb3697fbdaae7
+      size: 10401
     params:
       params.yaml:
         all.dataset: casting
@@ -234,21 +241,21 @@ stages:
     outs:
     - path: models/casting/bin/hp_search_best.hdf5
       hash: md5
-      md5: 25950133d1f26d9097272ccf5ce525be
+      md5: 699f0078b76fe6153605b5d2b4951515
       size: 10522744
     - path: models/casting/logs/hp_search/CAE
       hash: md5
-      md5: 49734141bd1bea596fb7eca0a5e0ef63.dir
-      size: 1668686227
+      md5: 7cbaa9594e3833752df2efd572ae8d63.dir
+      size: 1618427125
       nfiles: 302
     - path: models/casting/logs/hp_search/hp_search_results.txt
       hash: md5
-      md5: 00f573fcda73335a297836fa05e5cbf1
-      size: 2344
+      md5: dac7992320dff6f7c791e0d2c6a6f636
+      size: 2341
     - path: models/casting/logs/hp_search/tb
       hash: md5
-      md5: a53ff4fa2bd746cfd15100e16a3dc03d.dir
-      size: 39362802
+      md5: b20b3e579b947edd09a510ae39348988.dir
+      size: 38823308
       nfiles: 225
   visualisation:
     cmd: python3 src/visualisation.py
@@ -309,20 +316,24 @@ stages:
       nfiles: 129
     - path: models/casting/bin/pretrained_cae.hdf5
       hash: md5
-      md5: 6f22df717676f2cea11d92c3a1698f25
-      size: 31386672
+      md5: c30eb833948193c66fc77a3bc7d1f73c
+      size: 31385640
     - path: src/cae_training.py
-      md5: 491ddf5b491f193c66f00eaac20f0326
-      size: 4249
+      hash: md5
+      md5: 24444cec3d1cd225ab60be598644075c
+      size: 4259
     - path: src/utils/data/tfdatasets.py
-      md5: 6d886d24705a0b39ce24c4f9f1076529
-      size: 6588
+      hash: md5
+      md5: c7d7d9a5829e73694eb2e4c3a2a0adaa
+      size: 6557
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     - path: src/utils/models/kerasaux.py
-      md5: 254eadd4c77e4afca36f020eb569d754
-      size: 11749
+      hash: md5
+      md5: b505bbc88bdc0d5b68197a2468e34a7e
+      size: 11747
     params:
       params.yaml:
         all.dataset: casting
@@ -361,12 +372,12 @@ stages:
     outs:
     - path: models/casting/bin/trained_cae.hdf5
       hash: md5
-      md5: 9034032dd6e687cdcfd78b6ae3630ba2
+      md5: 642af98ebc762fbfee2ef90cc0e01ec5
       size: 31386672
     - path: models/casting/logs/training_history.csv
       hash: md5
-      md5: b1f39bb1b3df7bdc8414112908e8e417
-      size: 12799
+      md5: 1e0975f418d4262bb8f204cc1ee5b962
+      size: 6174
   calculate_reconstruction_mse:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
@@ -449,22 +460,24 @@ stages:
       size: 124384
     - path: data/processed/casting/tabular/complexity.csv
       hash: md5
-      md5: 699fdb3cec3121651eb8c8b9b1360b32
-      size: 122697
+      md5: b587bc86b1b24f30e1fcb548fcdb1057
+      size: 148039
     - path: src/complexity_vs_caemse.py
-      md5: b24e7f6cf9661963f48002a73b9b4f93
-      size: 2863
+      hash: md5
+      md5: 9b9cdb3578be10b0949aff06b5c37aef
+      size: 4098
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     params:
       params.yaml:
         all.dataset: casting
     outs:
     - path: visualisation/casting/complexity_vs_caemse.html
       hash: md5
-      md5: 0304f35cbb0815aa91b661941369d87a
-      size: 3629327
+      md5: 5726beeb4166ce8c50b28ee39dcb3cb6
+      size: 108162
   cae_mse_model:
     cmd: python3 src/cae_mse_model.py
     deps:
@@ -599,23 +612,27 @@ stages:
       nfiles: 120003
     - path: models/casting/bin/hp_search_best.hdf5
       hash: md5
-      md5: 25950133d1f26d9097272ccf5ce525be
+      md5: 699f0078b76fe6153605b5d2b4951515
       size: 10522744
     - path: src/cae_pretraining.py
-      md5: 23ce2b41b813f5cc19d47b81fd3afd8e
-      size: 4060
+      hash: md5
+      md5: e71a30f9e121c5fb5f84f3cca3ce274c
+      size: 4699
     - path: src/utils/data/tfdatasets.py
-      md5: 6d886d24705a0b39ce24c4f9f1076529
-      size: 6588
+      hash: md5
+      md5: c7d7d9a5829e73694eb2e4c3a2a0adaa
+      size: 6557
     - path: src/utils/dvc/params.py
-      md5: c57ff0542069d8b6236b09e7aee32be8
-      size: 1268
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
     - path: src/utils/misc.py
       md5: e29c4af95c5e5d4228701c6303e83b86
       size: 3503
     - path: src/utils/models/kerasaux.py
-      md5: 254eadd4c77e4afca36f020eb569d754
-      size: 11749
+      hash: md5
+      md5: b505bbc88bdc0d5b68197a2468e34a7e
+      size: 11747
     params:
       params.yaml:
         all.dataset: casting
@@ -654,12 +671,12 @@ stages:
     outs:
     - path: models/casting/bin/pretrained_cae.hdf5
       hash: md5
-      md5: 6f22df717676f2cea11d92c3a1698f25
-      size: 31386672
+      md5: 5eb85decc57c645d216ddc9a705deddb
+      size: 31385640
     - path: models/casting/logs/pretraining_history.csv
       hash: md5
-      md5: 4773429591f07bd55146295c16637a6b
-      size: 284
+      md5: bfbd0cff5c59c921e8ff964e432b46f5
+      size: 44
   metrify:
     cmd: python3 src/metrify.py
     deps:
@@ -766,3 +783,30 @@ stages:
       hash: md5
       md5: 936fda43d8f4388b0a2517cfa36c7036
       size: 1291
+  merge_complexity_caemse:
+    cmd: python3 src/merge_complexity_caemse.py
+    deps:
+    - path: data/processed/casting/tabular/cae_mse.csv
+      hash: md5
+      md5: b9d9c8bd3ea8ca88a6569753a09eb1a3
+      size: 124384
+    - path: data/processed/casting/tabular/complexity.csv
+      hash: md5
+      md5: b587bc86b1b24f30e1fcb548fcdb1057
+      size: 148039
+    - path: src/merge_complexity_caemse.py
+      hash: md5
+      md5: 245eaf0051e6ab27a241c401dd484dd8
+      size: 992
+    - path: src/utils/dvc/params.py
+      hash: md5
+      md5: d87b352ff952b8466547c02182996e48
+      size: 1285
+    params:
+      params.yaml:
+        all.dataset: casting
+    outs:
+    - path: data/processed/casting/tabular/complexity_caemse.csv
+      hash: md5
+      md5: 8acbc03b37a792525b36d4f35b60ea48
+      size: 164200

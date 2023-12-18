@@ -80,7 +80,7 @@ augmentation = augmentation_model(
 )
 
 train_dataset = load_tf_img_dataset(
-    dir='train/negative',
+    dir_name='train/negative',
     dir_path=DATA_DIR,
     input_size=INPUT_SIZE[:2],
     mode='autoencoder',
@@ -92,7 +92,7 @@ train_dataset = load_tf_img_dataset(
 )
 
 val_dataset = load_tf_img_dataset(
-    dir='val/negative',
+    dir_name='val/negative',
     dir_path=DATA_DIR,
     input_size=RANDOM_CROP,
     mode='autoencoder',

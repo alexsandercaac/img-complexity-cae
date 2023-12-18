@@ -5,29 +5,35 @@ flowchart TD
 	node3["cae_pretraining"]
 	node4["cae_training"]
 	node5["calculate_reconstruction_mse"]
-	node6["complexity_vs_caemse"]
-	node7["data/raw/streets.dvc"]
-	node8["data/raw/tiny-imagenet-200.dvc"]
-	node9["dataset_split"]
-	node10["evaluate"]
-	node11["extract_complexity"]
-	node12["jpeg_model"]
-	node13["metrify_reconstruction"]
+	node6["combined_model"]
+	node7["complexity_vs_caemse"]
+	node8["data/raw/casting.dvc"]
+	node9["data/raw/tiny-imagenet-200.dvc"]
+	node10["dataset_split"]
+	node11["evaluate"]
+	node12["extract_complexity"]
+	node13["jpeg_model"]
+	node14["metrify_reconstruction"]
 	node1-->node3
-	node2-->node10
+	node2-->node11
 	node3-->node4
 	node4-->node5
 	node5-->node2
 	node5-->node6
-	node5-->node10
-	node5-->node13
-	node7-->node9
-	node8-->node3
-	node9-->node1
-	node9-->node4
-	node9-->node5
-	node9-->node11
-	node11-->node6
-	node11-->node12
-	node14["data/raw/casting.dvc"]
+	node5-->node7
+	node5-->node11
+	node5-->node14
+	node6-->node11
+	node8-->node10
+	node9-->node3
+	node10-->node1
+	node10-->node4
+	node10-->node5
+	node10-->node12
+	node12-->node6
+	node12-->node7
+	node12-->node11
+	node12-->node13
+	node13-->node11
+	node15["data/raw/streets.dvc"]
 ```
