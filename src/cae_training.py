@@ -8,7 +8,7 @@
 """
 import os
 import logging
-os.chdir('..')
+
 import tensorflow as tf
 from tqdm.keras import TqdmCallback
 import pandas as pd
