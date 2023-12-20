@@ -190,22 +190,6 @@ stages:
 
 # *** ---------------------------------------------
 
-  complexity_vs_caemse:
-    cmd: python3 src/complexity_vs_caemse.py
-    deps:
-    - src/complexity_vs_caemse.py
-    - src/utils/dvc/params.py
-    - data/processed/${all.dataset}/tabular/complexity.csv
-    - data/processed/${all.dataset}/tabular/cae_mse.csv
-    params:
-    - all.dataset
-    plots:
-    - visualisation/${all.dataset}/complexity_vs_caemse.html:
-        cache: false
-        persist: true
-
-# *** ---------------------------------------------
-
   merge_complexity_caemse:
     cmd: python3 src/merge_complexity_caemse.py
     deps:
@@ -217,59 +201,29 @@ stages:
     - all.dataset
     outs:
     - data/processed/${all.dataset}/tabular/complexity_caemse.csv
-
-
-# *** ---------------------------------------------
-
-  cae_mse_model:
-    cmd: python3 src/cae_mse_model.py
-    deps:
-    - src/cae_mse_model.py
-    - src/utils/dvc/params.py
-    - src/utils/misc.py
-    - data/processed/${all.dataset}/tabular/cae_mse.csv
-    params:
-    - all.dataset
-    - all.models_score_func
-    - all.models_n_iter
-    - all.models_n_splits
-    outs:
-    - models/${all.dataset}/bin/logistic_regression_cae.joblib
+    plots:
+    - visualisation/${all.dataset}/complexity_vs_caemse.html:
+        cache: false
+        persist: true
 
 # *** ---------------------------------------------
 
-  jpeg_model:
-    cmd: python3 src/jpeg_model.py
+  train_classifier_models:
+    cmd: python3 src/train_classifier_models.py
     deps:
-    - src/jpeg_model.py
+    - src/train_classifier_models.py
     - src/utils/dvc/params.py
     - src/utils/misc.py
-    - data/processed/${all.dataset}/tabular/complexity.csv
+    - data/processed/${all.dataset}/tabular/complexity_caemse.csv
     params:
     - all.dataset
-    - all.models_score_func
-    - all.models_n_iter
-    - all.models_n_splits
-    outs:
-    - models/${all.dataset}/bin/logistic_regression_jpeg.joblib
-
-# *** ---------------------------------------------
-
-  combined_model:
-    cmd: python3 src/combined_model.py
-    deps:
-    - src/combined_model.py
-    - src/utils/dvc/params.py
-    - src/utils/misc.py
-    - data/processed/${all.dataset}/tabular/complexity.csv
-    - data/processed/${all.dataset}/tabular/cae_mse.csv
-    params:
-    - all.dataset
-    - all.models_score_func
-    - all.models_n_iter
-    - all.models_n_splits
+    - train_classifier_models.models_score_func
+    - train_classifier_models.models_n_iter
+    - train_classifier_models.models_n_splits
     outs:
     - models/${all.dataset}/bin/logistic_regression_combined.joblib
+    - models/${all.dataset}/bin/logistic_regression_autoencoder.joblib
+    - models/${all.dataset}/bin/logistic_regression_complexity.joblib
 
 # *** ---------------------------------------------
 
@@ -281,24 +235,24 @@ stages:
     - src/utils/evaluation/classification_metrics.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     - data/processed/${all.dataset}/tabular/complexity.csv
-    - models/${all.dataset}/bin/logistic_regression_jpeg.joblib
-    - models/${all.dataset}/bin/logistic_regression_cae.joblib
     - models/${all.dataset}/bin/logistic_regression_combined.joblib
+    - models/${all.dataset}/bin/logistic_regression_autoencoder.joblib
+    - models/${all.dataset}/bin/logistic_regression_complexity.joblib
     metrics:
-    - metrics/${all.dataset}/cae_metrics.json:
+    - metrics/${all.dataset}/autoencoder_metrics.json:
         cache: false
         persist: true
-    - metrics/${all.dataset}/jpeg_metrics.json:
+    - metrics/${all.dataset}/complexity_metrics.json:
         cache: false
         persist: true
     - metrics/${all.dataset}/combined_metrics.json:
         cache: false
         persist: true
     outs:
-    - visualisation/${all.dataset}/cae_confusion_matrix.png:
+    - visualisation/${all.dataset}/autoencoder_confusion_matrix.png:
         cache: false
         persist: true
-    - visualisation/${all.dataset}/jpeg_confusion_matrix.png:
+    - visualisation/${all.dataset}/complexity_confusion_matrix.png:
         cache: false
         persist: true
     - visualisation/${all.dataset}/combined_confusion_matrix.png:

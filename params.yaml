@@ -23,9 +23,6 @@ all:   # Parameters used in multiple stages
   dataset: casting
   grayscale: true
   scale: 255
-  models_n_iter: 25
-  models_n_splits: 10
-  models_score_func: f1
 dataset_split:
   split_ratio:
   - 0.8
@@ -64,3 +61,8 @@ cae_training:
   epochs: 100
   min_lr: 0.00001
   learning_rate: 0.0005
+
+train_classifier_models:
+  models_n_iter: 25
+  models_n_splits: 10
+  models_score_func: f1

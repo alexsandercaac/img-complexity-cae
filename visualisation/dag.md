@@ -13,7 +13,8 @@ flowchart TD
 	node11["evaluate"]
 	node12["extract_complexity"]
 	node13["jpeg_model"]
-	node14["metrify_reconstruction"]
+	node14["merge_complexity_caemse"]
+	node15["metrify_reconstruction"]
 	node1-->node3
 	node2-->node11
 	node3-->node4
@@ -23,6 +24,7 @@ flowchart TD
 	node5-->node7
 	node5-->node11
 	node5-->node14
+	node5-->node15
 	node6-->node11
 	node8-->node10
 	node9-->node3
@@ -34,6 +36,7 @@ flowchart TD
 	node12-->node7
 	node12-->node11
 	node12-->node13
+	node12-->node14
 	node13-->node11
-	node15["data/raw/streets.dvc"]
+	node16["data/raw/streets.dvc"]
 ```
