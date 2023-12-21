@@ -11,6 +11,7 @@
 """
 import os
 import logging
+import json
 
 import keras_tuner as kt
 import tensorflow as tf
@@ -142,12 +143,16 @@ tuner.search(train_dataset,
              batch_size=BATCH_SIZE,
              verbose=1
              )
+# Get the optimal hyperparameters
+best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
 
 results_summary = catch_stdout(tuner.results_summary)
-results = results_summary()
 
-with open(os.path.join(LOG_PATH, 'hp_search_results.txt'), 'w') as file:
-    file.write(results)
+results = {'results_summary': results_summary(),
+           'learning_rate': best_hps.get('learning_rate')}
+
+with open(os.path.join(LOG_PATH, 'hp_search_results.json'), 'w') as file:
+    json.dump(results, file)
 
 best_model = tuner.get_best_models()[0]
 best_model.save(os.path.join(MODELS_BIN_DIR, 'hp_search_best.hdf5'))

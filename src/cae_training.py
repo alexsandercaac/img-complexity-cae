@@ -8,6 +8,7 @@
 """
 import os
 import logging
+import json
 
 import tensorflow as tf
 from tqdm.keras import TqdmCallback
@@ -43,7 +44,6 @@ RANDOM_TRANSLATION_WIDTH = tuple(params['random_translation_width'])
 
 # Model parameters
 BATCH_SIZE = params['batch_size']
-LEARNING_RATE = params['learning_rate']
 ALPHA = params['alpha']
 BETA = params['beta']
 PATIENCE = params['patience']
@@ -56,7 +56,11 @@ EPOCHS = params['epochs']
 # * Directories
 DATA_DIR = os.path.join('data', 'processed', DATASET)
 MODEL_DIR = os.path.join('models', DATASET, 'bin')
+LOG_PATH = os.path.join('models', DATASET, 'logs', 'hp_search')
 
+with open(os.path.join(LOG_PATH, 'hp_search_results.json')) as f:
+    hp_search_results = json.load(f)
+    LEARNING_RATE = hp_search_results['learning_rate']
 
 augmentation = augmentation_model(
     random_crop=RANDOM_CROP,

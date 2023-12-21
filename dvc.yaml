@@ -82,7 +82,7 @@ stages:
     - models/${all.dataset}/logs/hp_search/CAE
     - models/${all.dataset}/logs/hp_search/tb
     - models/${all.dataset}/bin/hp_search_best.hdf5
-    - models/${all.dataset}/logs/hp_search/hp_search_results.txt
+    - models/${all.dataset}/logs/hp_search/hp_search_results.json
     
 # *** ---------------------------------------------
 
@@ -159,7 +159,6 @@ stages:
     - cae_training.early_stopping
     - cae_training.epochs
     - cae_training.min_lr
-    - cae_training.learning_rate
     outs:
     - models/${all.dataset}/bin/trained_cae.hdf5
     - models/${all.dataset}/logs/training_history.csv:
