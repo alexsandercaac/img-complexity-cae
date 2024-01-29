@@ -1,0 +1,44 @@
+name: CML
+on: [push]
+jobs:
+  train-and-report:
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - name: Evaluate Models
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create CML report
+
+
+          # Reconstruction metrics
+          echo '## Reconstruction Metrics' > report.md
+          cat metrics/casting/reconstruction_metrics.json >> report.md
+
+
+          # Confusion matrices
+
+          echo '## Confusion Matrices' >> report.md
+
+          echo '### CAE' >> report.md
+          echo '![](visualisation/casting/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
+
+          echo '### Complexity' >> report.md
+          echo '![](visualisation/casting/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
+
+          echo '### Combined' >> report.md
+          echo '![](visualisation/casting/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
+
+          # Histograms
+          echo '## Histograms' >> report.md
+          echo '### CAE' >> report.md
+          echo '![](visualisation/casting/caemse_hist.png "CAE Histogram")' >> report.md
+
+          echo '### Complexity' >> report.md
+          echo '![](visualisation/casting/complexity_hist.png "Complexity Histogram")' >> report.md
+
+
+          # Upload report
+          cml comment create report.md
