@@ -13,9 +13,9 @@ jobs:
           # Create CML report
 
 
-          # Reconstruction metrics
-          echo '## Reconstruction Metrics' > report.md
-          cat 'visualisation/casting/reconstruction_metrics.html' >> report.md
+          # # Reconstruction metrics
+          # echo '## Reconstruction Metrics' > report.md
+          # cat 'visualisation/casting/reconstruction_metrics.html' >> report.md
 
 
           # Confusion matrices
