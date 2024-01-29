@@ -3,7 +3,7 @@ all:   # Parameters used in multiple stages
   - 224
   - 224
   random_flip: horizontal_and_vertical
-  random_rotation: 0.8
+  random_rotation: 1
   random_zoom:
   - -0.05
   - 0.05
@@ -16,9 +16,9 @@ all:   # Parameters used in multiple stages
   - -0.05
   - 0.05
   input_size:
-  - 256
-  - 256
-  - 3
+  - 232
+  - 232
+  - 1
   seed: 13
   dataset: casting
   grayscale: true
@@ -32,16 +32,16 @@ dataset_split:
   shuffle: true
 
 cae_hp_tuning:
-  batch_size: 16
+  batch_size: 8
   bottleneck_filters: 64
   alpha: 0.98
   beta: 0.93
   patience: 5
   revive_best: true
   early_stopping: false
-  epochs: 1
+  epochs: 130
   min_lr: 0.000001
-  max_trials: 1
+  max_trials: 100
 
 cae_pretraining:
   pretrain: false
@@ -56,13 +56,13 @@ cae_pretraining:
   learning_rate: 0.0015
 
 cae_training:
-  batch_size: 16
+  batch_size: 8
   alpha: 0.98
   beta: 0.93
   patience: 5
   revive_best: true
   early_stopping: false
-  epochs: 100
+  epochs: 130
   min_lr: 0.00001
 
 train_classifier_models:
