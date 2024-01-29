@@ -15,7 +15,7 @@ jobs:
 
           # Reconstruction metrics
           echo '## Reconstruction Metrics' > report.md
-          echo '![](visualisation/casting/reconstruction_metrics.html "Reconstruction Metrics")' >> report.md
+          cat 'visualisation/casting/reconstruction_metrics.html' >> report.md
 
 
           # Confusion matrices
