@@ -18,26 +18,26 @@ jobs:
           cat metrics/casting/reconstruction_metrics.json >> report.md
 
 
-          # Confusion matrices
+          # # Confusion matrices
 
-          echo '## Confusion Matrices' >> report.md
+          # echo '## Confusion Matrices' >> report.md
 
-          echo '### CAE' >> report.md
-          echo '![](visualisation/casting/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
+          # echo '### CAE' >> report.md
+          # echo '![](visualisation/casting/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
 
-          echo '### Complexity' >> report.md
-          echo '![](visualisation/casting/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
+          # echo '### Complexity' >> report.md
+          # echo '![](visualisation/casting/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
 
-          echo '### Combined' >> report.md
-          echo '![](visualisation/casting/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
+          # echo '### Combined' >> report.md
+          # echo '![](visualisation/casting/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
 
-          # Histograms
-          echo '## Histograms' >> report.md
-          echo '### CAE' >> report.md
-          echo '![](visualisation/casting/caemse_hist.png "CAE Histogram")' >> report.md
+          # # Histograms
+          # echo '## Histograms' >> report.md
+          # echo '### CAE' >> report.md
+          # echo '![](visualisation/casting/caemse_hist.png "CAE Histogram")' >> report.md
 
-          echo '### Complexity' >> report.md
-          echo '![](visualisation/casting/complexity_hist.png "Complexity Histogram")' >> report.md
+          # echo '### Complexity' >> report.md
+          # echo '![](visualisation/casting/complexity_hist.png "Complexity Histogram")' >> report.md
 
 
           # Upload report
