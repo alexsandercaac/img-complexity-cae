@@ -16,7 +16,7 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install dependencies
-          pip install yaml
+          pip install pyyaml
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
           }
