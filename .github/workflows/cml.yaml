@@ -23,8 +23,8 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          echo '## Reconstruction Metrics' > report.md
-          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
+          echo '## Reconstruction Metrics' >> report.md
+          dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
