@@ -3,22 +3,17 @@ on: [push]
 jobs:
   report-metrics:
     runs-on: ubuntu-latest
-    # container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - uses: iterative/setup-cml@v1
-      - uses: iterative/setup-dvc@v1
-      - name: Install shyaml
-        run: |
-          pip install shyaml
-      - name: Create CML report
+      - name: Evaluate Models
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           
+          # Install dependencies
+          pip install shyaml
+
           DATASET="$(cat params.yaml | shyaml get-value all.dataset)"
 
           # Create CML report
@@ -29,7 +24,7 @@ jobs:
 
           # # Reconstruction metrics
           echo '## Reconstruction Metrics' > report.md
-          dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
+          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
