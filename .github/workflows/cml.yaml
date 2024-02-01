@@ -12,7 +12,8 @@ jobs:
       - uses: iterative/setup-cml@v1
       - name: Install dependencies
         run: |
-          pip install pyyaml dvc
+          pip install pyyaml 
+          # pip install dvc
       - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,8 +32,8 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          echo '## Reconstruction Metrics' >> report.md
-          dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
+          # echo '## Reconstruction Metrics' >> report.md
+          # dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
