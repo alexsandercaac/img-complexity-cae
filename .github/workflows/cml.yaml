@@ -3,21 +3,25 @@ on: [push]
 jobs:
   report-metrics:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    # container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
-      - name: Evaluate Models
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-dvc@v1
+      - name: Get dataset name
         run: |
-          
           # Install dependencies
           pip install shyaml
 
           DATASET="$(cat params.yaml | shyaml get-value all.dataset)"
-
+      - name: Create CML report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           # Create CML report
-
           # Print dataset
           echo "## Dataset" > report.md
           echo "Dataset: $DATASET" >> report.md
