@@ -12,10 +12,14 @@ jobs:
         run: |
           
           # Install dependencies
-          pip install pyyaml dvc
+          pip install pyyaml pandas Jinja2
 
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
+          }
+
+          to_latex() {
+            python3 -c "import pandas as pd;print(pd.read_csv('$1').style.to_latex())"
           }
 
           DATASET="$(yaml params.yaml "['all']['dataset']")"
@@ -27,9 +31,8 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          # echo '## Reconstruction Metrics' > report.md
-          dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
-
+          echo '## Reconstruction Metrics' > report.md
+          to_latex metrics/$DATASET/reconstruction_data.csv >> report.md
 
           # Confusion matrices
 
