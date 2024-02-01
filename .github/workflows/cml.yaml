@@ -12,7 +12,7 @@ jobs:
         run: |
           
           # Install dependencies
-          pip install pyyaml
+          pip install pyyaml dvc
 
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
@@ -28,7 +28,7 @@ jobs:
 
           # # Reconstruction metrics
           # echo '## Reconstruction Metrics' > report.md
-          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
+          dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
