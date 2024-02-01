@@ -6,6 +6,8 @@ import shutil
 import sys
 import io
 
+import pandas as pd
+
 
 def list_split(lst: list, ratio: list):
     """
@@ -134,3 +136,28 @@ def list_files(directory):
         files.extend([os.path.join(dirpath, filename)
                       for filename in filenames])
     return files
+
+
+def transform_multilevel_header(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Function to transform a dataframe with a multilevel header into a dataframe
+    with a single level header.
+
+    Args:
+        dataframe (pd.DataFrame): Dataframe with a multilevel header.
+
+    Returns:
+        pd.DataFrame: Dataframe with a single level header.
+    """
+    new_columns = []
+    dataframe_copy = dataframe.copy()
+    for col in dataframe_copy.columns:
+        valid_levels = [level for level in col if 'Unnamed' not in level]
+        valid_levels = [level for level in valid_levels if level != '']
+        if len(valid_levels) == 0:
+            new_columns.append(col[-1])
+        else:
+            new_columns.append('_'.join(valid_levels))
+    dataframe_copy.columns = new_columns
+
+    return dataframe_copy

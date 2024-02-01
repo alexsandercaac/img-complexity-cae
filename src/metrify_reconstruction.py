@@ -11,6 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from utils.dvc.params import get_params
+from utils.misc import transform_multilevel_header
 
 
 # * Parameters
@@ -41,9 +42,12 @@ cae_df = cae_df.groupby(['data_split', 'label']).agg(['mean', 'std'])
 # Transform cae_df index to columns
 cae_df = cae_df.reset_index()
 
+cae_df_single_level_header = transform_multilevel_header(cae_df)
+
 # Write to csv in the metrics folder
-cae_df.to_csv(
-    os.path.join('metrics', DATASET, 'reconstruction_data.csv')
+cae_df_single_level_header.to_csv(
+    os.path.join('metrics', DATASET, 'reconstruction_data.csv'),
+    index=False
 )
 
 # DVC requires metrics to be stored in a json file, so we create a dict
