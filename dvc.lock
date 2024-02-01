@@ -369,21 +369,21 @@ stages:
       md5: 5e12ace6ac268a48212c43ad41e922b0
       size: 125146
     - path: src/metrify_reconstruction.py
-      md5: eddbca91c34ec528edfbc104f5c2f1f1
-      size: 2826
+      md5: 7b09df4a0691b11ac3d7d240e853127e
+      size: 3351
     - path: src/utils/dvc/params.py
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     outs:
     - path: metrics/casting/reconstruction_data.csv
-      md5: 1a04dd6929a0e589b21985cecfd22ad4
-      size: 350
+      md5: 1da89d2a6f2228278d65db7dec4a2be3
+      size: 489
     - path: metrics/casting/reconstruction_metrics.json
-      md5: 5376336726b174a4147f07ba0078b822
-      size: 472
+      md5: 302fc43eb3235cf080985b5c8227fa45
+      size: 679
     - path: visualisation/casting/reconstruction_metrics.html
-      md5: 28ff113b49bc973d1eaae50d2baa8b40
-      size: 3583910
+      md5: 6ad09a210c4a3fc5ea0455a24b559cf8
+      size: 3584174
   train_classifier_models:
     cmd: python3 src/train_classifier_models.py
     deps:

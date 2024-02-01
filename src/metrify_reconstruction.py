@@ -27,7 +27,7 @@ complexity_df = pd.read_csv(
     os.path.join('data', 'processed', DATASET, 'tabular', 'complexity.csv'),
     index_col=0)
 
-complexity_df = complexity_df[['jpeg_mse']]
+complexity_df = complexity_df[['jpeg_mse', 'delentropy']]
 cae_df = cae_df.join(complexity_df)
 
 # Selecting validation and baseline datasets
@@ -58,11 +58,16 @@ for _, row in cae_df.iterrows():
         'jpeg_mse': {
             'mean': row['jpeg_mse']['mean'],
             'std': row['jpeg_mse']['std']
+        },
+        'delentropy': {
+            'mean': row['delentropy']['mean'],
+            'std': row['delentropy']['std']
         }
     }
 
 with open(os.path.join(
-        'metrics', DATASET, 'reconstruction_metrics.json'), 'w') as f:
+        'metrics', DATASET, 'reconstruction_metrics.json'), 'w', 
+        encoding='utf-8') as f:
     json.dump(cae_dict, f)
 
 # * Plotting
@@ -97,8 +102,22 @@ fig.add_trace(
     )
 )
 
+# Add delentropy data with bars parallel to cae_mse bars
+fig.add_trace(
+    go.Bar(
+        x=cae_df['data_split'] + ': ' + cae_df['label'],
+        y=cae_df['delentropy']['mean'],
+        error_y=dict(
+            type='data',
+            array=cae_df['delentropy']['std'],
+            visible=True
+        ),
+        name='Delentropy'
+    )
+)
+
 fig.update_layout(
-    title='CAE and JPEG MSE by dataset',
+    title='CAE, JPEG MSE and Delentropy by dataset',
     xaxis_title='Dataset',
     yaxis_title='MSE',
     barmode='group',
