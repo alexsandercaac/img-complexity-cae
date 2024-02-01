@@ -27,7 +27,6 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          git fetch --depth=1 origin master:master
           echo '## Reconstruction Metrics' > report.md
           dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
