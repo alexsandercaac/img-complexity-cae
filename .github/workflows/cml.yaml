@@ -12,10 +12,9 @@ jobs:
         run: |
           # Create CML report
 
-
           # # Reconstruction metrics
           # echo '## Reconstruction Metrics' > report.md
-          # cat 'visualisation/casting/reconstruction_metrics.html' >> report.md
+          # dvc metrics show --md metrics/casting/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
