@@ -31,7 +31,7 @@ jobs:
 
           # # Reconstruction metrics
           echo '## Reconstruction Metrics' > report.md
-          to_latex metrics/$DATASET/reconstruction_data.csv >> report.md
+          to_md metrics/$DATASET/reconstruction_data.csv >> report.md
 
           # Confusion matrices
 
