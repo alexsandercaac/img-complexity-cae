@@ -1,24 +1,19 @@
-name: CML Report
+name: CML
 on: [push]
 jobs:
   report-metrics:
     runs-on: ubuntu-latest
-    # container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - uses: iterative/setup-cml@v1
-      - name: Install dependencies
-        run: |
-          pip install pyyaml 
-          # pip install dvc
-      - name: Create CML report
+      - name: Evaluate Models
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          
           # Install dependencies
+          pip install pyyaml
+
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
           }
@@ -32,8 +27,8 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          # echo '## Reconstruction Metrics' >> report.md
-          # dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
+          # echo '## Reconstruction Metrics' > report.md
+          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
