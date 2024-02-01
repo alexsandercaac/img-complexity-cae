@@ -12,7 +12,7 @@ jobs:
       - uses: iterative/setup-cml@v1
       - name: Install dependencies
         run: |
-          pip install pyyaml
+          pip install pyyaml dvc
       - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
