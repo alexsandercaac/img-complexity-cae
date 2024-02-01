@@ -11,7 +11,7 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install dependencies
-          pip install pyyaml pandas Jinja2
+          pip install pyyaml pandas tabulate
 
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
