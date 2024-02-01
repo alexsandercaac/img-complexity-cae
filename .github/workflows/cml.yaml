@@ -10,7 +10,6 @@ jobs:
         with:
           python-version: '3.x'
       - uses: iterative/setup-cml@v1
-      - uses: iterative/setup-dvc@v1
       - name: Install dependencies
         run: |
           pip install pyyaml
