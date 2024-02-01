@@ -267,7 +267,8 @@ stages:
     - src/utils/dvc/params.py
     - data/processed/${all.dataset}/tabular/cae_mse.csv
     outs:
-    - metrics/${all.dataset}/reconstruction_data.csv
+    - metrics/${all.dataset}/reconstruction_data.csv:
+        cache: false
     - visualisation/${all.dataset}/reconstruction_metrics.html:
         cache: false
         persist: true
