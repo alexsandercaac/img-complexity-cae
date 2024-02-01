@@ -10,11 +10,21 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          
+          # Install dependencies
+          pip install shyaml
+
+          DATASET="$(cat params.yaml | shyaml get-value all.dataset)"
+
           # Create CML report
+
+          # Print dataset
+          echo "## Dataset" > report.md
+          echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
           # echo '## Reconstruction Metrics' > report.md
-          # dvc metrics show --md metrics/casting/reconstruction_metrics.json >> report.md
+          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
@@ -22,21 +32,21 @@ jobs:
           echo '## Confusion Matrices' >> report.md
 
           echo '### CAE' >> report.md
-          echo '![](visualisation/casting/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
+          echo '![](visualisation/$DATASET/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
 
           echo '### Complexity' >> report.md
-          echo '![](visualisation/casting/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
+          echo '![](visualisation/$DATASET/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
 
           echo '### Combined' >> report.md
-          echo '![](visualisation/casting/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
+          echo '![](visualisation/$DATASET/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
 
           # Histograms
           echo '## Histograms' >> report.md
           echo '### CAE' >> report.md
-          echo '![](visualisation/casting/caemse_hist.png "CAE Histogram")' >> report.md
+          echo '![](visualisation/$DATASET/caemse_hist.png "CAE Histogram")' >> report.md
 
           echo '### Complexity' >> report.md
-          echo '![](visualisation/casting/complexity_hist.png "Complexity Histogram")' >> report.md
+          echo '![](visualisation/$DATASET/complexity_hist.png "Complexity Histogram")' >> report.md
 
 
           # Upload report
