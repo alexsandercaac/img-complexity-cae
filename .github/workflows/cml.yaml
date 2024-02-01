@@ -1,7 +1,7 @@
 name: CML
 on: [push]
 jobs:
-  train-and-report:
+  report-metrics:
     runs-on: ubuntu-latest
     container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
@@ -23,8 +23,8 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           # # Reconstruction metrics
-          # echo '## Reconstruction Metrics' > report.md
-          # dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
+          echo '## Reconstruction Metrics' > report.md
+          dvc metrics show --md metrics/$DATASET/reconstruction_metrics.json >> report.md
 
 
           # Confusion matrices
@@ -32,21 +32,21 @@ jobs:
           echo '## Confusion Matrices' >> report.md
 
           echo '### CAE' >> report.md
-          echo '![](visualisation/$DATASET/autoencoder_confusion_matrix.png "CAE Confusion Matrix")' >> report.md
+          echo '!'"[](visualisation/${DATASET}/autoencoder_confusion_matrix.png "'"CAE Confusion Matrix")' >> report.md
 
           echo '### Complexity' >> report.md
-          echo '![](visualisation/$DATASET/complexity_confusion_matrix.png "Complexity Confusion Matrix")' >> report.md
+          echo '!'"[](visualisation/$DATASET/complexity_confusion_matrix.png "'"Complexity Confusion Matrix")' >> report.md
 
           echo '### Combined' >> report.md
-          echo '![](visualisation/$DATASET/combined_confusion_matrix.png "Combined Confusion Matrix")' >> report.md
+          echo '!'"[](visualisation/$DATASET/combined_confusion_matrix.png "'"Combined Confusion Matrix")' >> report.md
 
           # Histograms
           echo '## Histograms' >> report.md
           echo '### CAE' >> report.md
-          echo '![](visualisation/$DATASET/caemse_hist.png "CAE Histogram")' >> report.md
+          echo '!'"[](visualisation/$DATASET/caemse_hist.png "'"CAE HIstogram")' >> report.md
 
           echo '### Complexity' >> report.md
-          echo '![](visualisation/$DATASET/complexity_hist.png "Complexity Histogram")' >> report.md
+          echo '!'"[](visualisation/$DATASET/complexity_hist.png "'"Complexity HIstogram")' >> report.md
 
 
           # Upload report
