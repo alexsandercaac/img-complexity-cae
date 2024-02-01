@@ -28,7 +28,6 @@ jobs:
 
           # # Reconstruction metrics
           echo '## Reconstruction Metrics' >> report.md
-          git config --global --add safe.directory *
           dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
 
 
