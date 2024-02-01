@@ -16,9 +16,11 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install dependencies
-          pip install shyaml
+          yaml() {
+            python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
+          }
 
-          DATASET="$(cat params.yaml | shyaml get-value all.dataset)"
+          DATASET="$(yaml params.yaml "['all']['dataset']")"
 
           # Create CML report
 
