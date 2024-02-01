@@ -16,13 +16,14 @@ jobs:
           # Install dependencies
           pip install shyaml
 
-          DATASET="$(cat params.yaml | shyaml get-value all.dataset)"
+          "$(cat params.yaml | shyaml get-value all.dataset)" > dataset_name.aux
       - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Create CML report
           # Print dataset
+          DATASET=$(cat dataset_name.aux)
           echo "## Dataset" > report.md
           echo "Dataset: $DATASET" >> report.md
 
