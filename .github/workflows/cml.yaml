@@ -10,7 +10,6 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          
           # Install dependencies
           pip install pyyaml pandas Jinja2
 
@@ -18,8 +17,8 @@ jobs:
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
           }
 
-          to_latex() {
-            python3 -c "import pandas as pd;print(pd.read_csv('$1').style.to_latex())"
+          to_md() {
+            python3 -c "import pandas as pd;print(pd.read_csv('$1').to_markdown())"
           }
 
           DATASET="$(yaml params.yaml "['all']['dataset']")"
