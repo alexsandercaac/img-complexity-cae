@@ -18,18 +18,18 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install dependencies
-          pip install pyyaml pandas tabulate dvc
+          # pip install pyyaml pandas tabulate dvc
 
-          yaml() {
-            python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
-          }
+          # yaml() {
+          #   python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
+          # }
 
-          to_md() {
-            python3 -c "import pandas as pd;print(pd.read_csv('$1').to_markdown())"
-          }
+          # to_md() {
+          #   python3 -c "import pandas as pd;print(pd.read_csv('$1').to_markdown())"
+          # }
 
-          DATASET="$(yaml params.yaml "['all']['dataset']")"
-
+          # DATASET="$(yaml params.yaml "['all']['dataset']")"
+          DATASET="casting"
           # Create CML report
 
           # Print dataset
@@ -37,9 +37,9 @@ jobs:
           echo "Dataset: $DATASET" >> report.md
 
           dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
-          # # Reconstruction metrics
-          echo '## Reconstruction Metrics' > report.md
-          to_md metrics/$DATASET/reconstruction_data.csv >> report.md
+          # # # Reconstruction metrics
+          # echo '## Reconstruction Metrics' > report.md
+          # to_md metrics/$DATASET/reconstruction_data.csv >> report.md
 
           # Confusion matrices
 
