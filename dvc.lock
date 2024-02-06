@@ -14,8 +14,8 @@ stages:
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     - path: src/utils/misc.py
-      md5: e29c4af95c5e5d4228701c6303e83b86
-      size: 3503
+      md5: ab4362add47aec072540aab167654b6c
+      size: 4339
     params:
       params.yaml:
         all.dataset: casting
@@ -70,8 +70,8 @@ stages:
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     - path: src/utils/misc.py
-      md5: e29c4af95c5e5d4228701c6303e83b86
-      size: 3503
+      md5: ab4362add47aec072540aab167654b6c
+      size: 4339
     params:
       params.yaml:
         all.dataset: casting
@@ -105,8 +105,8 @@ stages:
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     - path: src/utils/misc.py
-      md5: e29c4af95c5e5d4228701c6303e83b86
-      size: 3503
+      md5: ab4362add47aec072540aab167654b6c
+      size: 4339
     - path: src/utils/models/kerasaux.py
       md5: b505bbc88bdc0d5b68197a2468e34a7e
       size: 11747
@@ -142,7 +142,7 @@ stages:
         cae_hp_tuning.alpha: 0.98
         cae_hp_tuning.batch_size: 8
         cae_hp_tuning.beta: 0.93
-        cae_hp_tuning.bottleneck_filters: 64
+        cae_hp_tuning.bottleneck_filters: 32
         cae_hp_tuning.early_stopping: false
         cae_hp_tuning.epochs: 130
         cae_hp_tuning.max_trials: 100
@@ -151,19 +151,19 @@ stages:
         cae_hp_tuning.revive_best: true
     outs:
     - path: models/casting/bin/hp_search_best.hdf5
-      md5: 83b61b3ee3fae47976411fce54e4a41e
-      size: 5773808
+      md5: f2725b3b2445bf2d6928acd8b0e180c7
+      size: 6864888
     - path: models/casting/logs/hp_search/CAE
-      md5: fb949a8d53319683eb38395d94d620df.dir
-      size: 1271068434
-      nfiles: 402
+      md5: 0ee39c531dfbf762f8106285ccc56a04.dir
+      size: 1547869444
+      nfiles: 396
     - path: models/casting/logs/hp_search/hp_search_results.json
-      md5: 0054cad9c864e1acb46982ca2a23c289
-      size: 2532
+      md5: 2c8033b5c980971d3639deb81a3c29bb
+      size: 2536
     - path: models/casting/logs/hp_search/tb
-      md5: d9a3a5c8099f33efeeccf40c8c03fdff.dir
-      size: 58609071
-      nfiles: 300
+      md5: 7f80ecca4da9ea52ff84f6dd620000c7.dir
+      size: 60954261
+      nfiles: 298
   cae_pretraining:
     cmd: python3 src/cae_pretraining.py
     deps:
@@ -172,8 +172,8 @@ stages:
       size: 236686390
       nfiles: 120003
     - path: models/casting/bin/hp_search_best.hdf5
-      md5: 83b61b3ee3fae47976411fce54e4a41e
-      size: 5773808
+      md5: f2725b3b2445bf2d6928acd8b0e180c7
+      size: 6864888
     - path: src/cae_pretraining.py
       md5: e71a30f9e121c5fb5f84f3cca3ce274c
       size: 4699
@@ -184,8 +184,8 @@ stages:
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     - path: src/utils/misc.py
-      md5: e29c4af95c5e5d4228701c6303e83b86
-      size: 3503
+      md5: ab4362add47aec072540aab167654b6c
+      size: 4339
     - path: src/utils/models/kerasaux.py
       md5: b505bbc88bdc0d5b68197a2468e34a7e
       size: 11747
@@ -226,8 +226,8 @@ stages:
         cae_pretraining.revive_best: false
     outs:
     - path: models/casting/bin/pretrained_cae.hdf5
-      md5: 65761976f244af9bcbbc735c2f2093e0
-      size: 17122152
+      md5: 79ddfed4c83f6a759884f5abf106915e
+      size: 20357072
     - path: models/casting/logs/pretraining_history.csv
       md5: bfbd0cff5c59c921e8ff964e432b46f5
       size: 44
@@ -243,8 +243,8 @@ stages:
       size: 3207251
       nfiles: 129
     - path: models/casting/bin/pretrained_cae.hdf5
-      md5: 65761976f244af9bcbbc735c2f2093e0
-      size: 17122152
+      md5: 79ddfed4c83f6a759884f5abf106915e
+      size: 20357072
     - path: src/cae_training.py
       md5: 675ab5e23dec6e50d5c35619c691cf49
       size: 4467
@@ -293,11 +293,11 @@ stages:
         cae_training.revive_best: true
     outs:
     - path: models/casting/bin/trained_cae.hdf5
-      md5: 2da717ce6c3916c621c7d8abe8d2bab0
-      size: 17123184
+      md5: 4ce1ce4f0a849ca22f9be078df9eac83
+      size: 20358104
     - path: models/casting/logs/training_history.csv
-      md5: 1ecd4c06c77a30a35967f1ef72d073cc
-      size: 16617
+      md5: baebecf9aaece7ec46235496279ab679
+      size: 16533
   calculate_reconstruction_mse:
     cmd: python3 src/calculate_reconstruction_mse.py
     deps:
@@ -314,8 +314,8 @@ stages:
       size: 3207251
       nfiles: 129
     - path: models/casting/bin/trained_cae.hdf5
-      md5: 2da717ce6c3916c621c7d8abe8d2bab0
-      size: 17123184
+      md5: 4ce1ce4f0a849ca22f9be078df9eac83
+      size: 20358104
     - path: src/calculate_reconstruction_mse.py
       md5: d5635fdf04b657417b6a60b14114deeb
       size: 3254
@@ -332,17 +332,17 @@ stages:
         all.scale: 255
     outs:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 5e12ace6ac268a48212c43ad41e922b0
-      size: 125146
+      md5: 239f9f2b61b64d8e6405c08c3406369f
+      size: 125131
     - path: visualisation/casting/caemse_hist.png
-      md5: 1ce46dfac77134b97ae885f2c860858a
-      size: 20951
+      md5: dec0c13be60a22917188be5ae4b3ffb8
+      size: 20981
   merge_complexity_caemse:
     cmd: python3 src/merge_complexity_caemse.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 5e12ace6ac268a48212c43ad41e922b0
-      size: 125146
+      md5: 239f9f2b61b64d8e6405c08c3406369f
+      size: 125131
     - path: data/processed/casting/tabular/complexity.csv
       md5: 022eb21cb936a10753c6702ed6ced1b7
       size: 148809
@@ -357,17 +357,17 @@ stages:
         all.dataset: casting
     outs:
     - path: data/processed/casting/tabular/complexity_caemse.csv
-      md5: b2fdd620a2170a2f5bc5cc0cc5564e92
-      size: 165010
+      md5: a3deac7b2022b845716493c936d59727
+      size: 164996
     - path: visualisation/casting/complexity_vs_caemse.html
-      md5: 722b817da1bf07604dd4574a1d368417
-      size: 108296
+      md5: 52dab7458e19c8ea0e2192ba257f0056
+      size: 108283
   metrify_reconstruction:
     cmd: python3 src/metrify_reconstruction.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 5e12ace6ac268a48212c43ad41e922b0
-      size: 125146
+      md5: 239f9f2b61b64d8e6405c08c3406369f
+      size: 125131
     - path: src/metrify_reconstruction.py
       md5: b120430d020f19da4fc4e026cb73c77f
       size: 3505
@@ -376,20 +376,20 @@ stages:
       size: 1285
     outs:
     - path: metrics/casting/reconstruction_data.csv
-      md5: e7d845e96eb4a5cda73a6644a9e5db19
+      md5: 191e5b92d3b62c4763dbb3171a266da2
       size: 479
     - path: metrics/casting/reconstruction_metrics.json
-      md5: 302fc43eb3235cf080985b5c8227fa45
+      md5: 7a09fd94c710299605cae023fd59c887
       size: 679
     - path: visualisation/casting/reconstruction_metrics.html
-      md5: 21bb4f7d92ff749e1b43fb3ecaed6a34
+      md5: 6b0d6649c6f9375835aab607c4ba391b
       size: 3584174
   train_classifier_models:
     cmd: python3 src/train_classifier_models.py
     deps:
     - path: data/processed/casting/tabular/complexity_caemse.csv
-      md5: b2fdd620a2170a2f5bc5cc0cc5564e92
-      size: 165010
+      md5: a3deac7b2022b845716493c936d59727
+      size: 164996
     - path: src/train_classifier_models.py
       md5: abee4fc383d8b75ac0627a85415f567c
       size: 2980
@@ -397,8 +397,8 @@ stages:
       md5: d87b352ff952b8466547c02182996e48
       size: 1285
     - path: src/utils/misc.py
-      md5: e29c4af95c5e5d4228701c6303e83b86
-      size: 3503
+      md5: ab4362add47aec072540aab167654b6c
+      size: 4339
     params:
       params.yaml:
         all.dataset: casting
@@ -407,10 +407,10 @@ stages:
         train_classifier_models.models_score_func: f1
     outs:
     - path: models/casting/bin/logistic_regression_autoencoder.joblib
-      md5: 4d13989e859d7447fbe912b11c9aa263
+      md5: 3393e49286dfd1452959d30a5799714d
       size: 1259
     - path: models/casting/bin/logistic_regression_combined.joblib
-      md5: e425db1e742292d2754e645a3d285101
+      md5: e4bc59049338798caaee5784e83fea03
       size: 1323
     - path: models/casting/bin/logistic_regression_complexity.joblib
       md5: 8eae3a096fa77d3c7d5470ecceea88c1
@@ -419,16 +419,16 @@ stages:
     cmd: python3 src/evaluate.py
     deps:
     - path: data/processed/casting/tabular/cae_mse.csv
-      md5: 5e12ace6ac268a48212c43ad41e922b0
-      size: 125146
+      md5: 239f9f2b61b64d8e6405c08c3406369f
+      size: 125131
     - path: data/processed/casting/tabular/complexity.csv
       md5: 022eb21cb936a10753c6702ed6ced1b7
       size: 148809
     - path: models/casting/bin/logistic_regression_autoencoder.joblib
-      md5: 4d13989e859d7447fbe912b11c9aa263
+      md5: 3393e49286dfd1452959d30a5799714d
       size: 1259
     - path: models/casting/bin/logistic_regression_combined.joblib
-      md5: e425db1e742292d2754e645a3d285101
+      md5: e4bc59049338798caaee5784e83fea03
       size: 1323
     - path: models/casting/bin/logistic_regression_complexity.joblib
       md5: 8eae3a096fa77d3c7d5470ecceea88c1
