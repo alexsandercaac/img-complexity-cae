@@ -1,17 +1,24 @@
 name: CML
 on: [push]
 jobs:
-  report-metrics:
+  report:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    # optionally use a convenient Ubuntu LTS + DVC + CML container
+    # container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
+      - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v3
-      - name: Evaluate Models
+      # - name: Train model
+      #   run: |
+      #     # Your ML workflow goes here
+      #     pip install -r requirements.txt
+      #     python train.py  # generate plot.png
+      - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install dependencies
-          pip install pyyaml pandas tabulate
+          pip install pyyaml pandas tabulate dvc
 
           yaml() {
             python3 -c "import yaml;print(yaml.safe_load(open('$1'))$2)"
@@ -29,6 +36,7 @@ jobs:
           echo "## Dataset" > report.md
           echo "Dataset: $DATASET" >> report.md
 
+          dvc metrics show --md metrics/"$DATASET"/reconstruction_metrics.json >> report.md
           # # Reconstruction metrics
           echo '## Reconstruction Metrics' > report.md
           to_md metrics/$DATASET/reconstruction_data.csv >> report.md
