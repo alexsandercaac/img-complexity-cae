@@ -23,6 +23,7 @@ def randomize_model_weigths(model: tf.keras.Model) -> None:
         [tf.random.normal(shape=weight.shape) for weight in model.weights]
     )
 
+
 class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
     """
     Learning rate scheduler with additional functionalities.
@@ -154,16 +155,16 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                 self.__metric_value = logs[self.metric]
 
                 if self.maximize:
-                    metric_diff = -1*metric_diff
-                    self.__metric_value = -1*self.__metric_value
+                    metric_diff = -1 * metric_diff
+                    self.__metric_value = -1 * self.__metric_value
 
                 # If there was improvement
                 if metric_diff < 0:
-                    scheduled_lr = lr*self.alpha    # Small decay
+                    scheduled_lr = lr * self.alpha    # Small decay
                     self.best_metric = self.__metric_value
                     self.best_weights = self.model.get_weights()
                 else:
-                    scheduled_lr = lr*self.beta
+                    scheduled_lr = lr * self.beta
                 set_lr(scheduled_lr, epoch, self.model)
 
             else:
@@ -176,7 +177,7 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                 self.best_weights = self.model.get_weights()
                 if self.secondary_metric:
                     self.best_secondary = logs[self.secondary_metric]
-                scheduled_lr = self.alpha*lr
+                scheduled_lr = self.alpha * lr
                 set_lr(scheduled_lr, epoch, self.model)
 
         else:
@@ -186,14 +187,14 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
             self.__metric_value = logs[self.metric]
 
             if self.maximize:
-                metric_diff = -1*metric_diff
-                self.__metric_value = -1*self.__metric_value
+                metric_diff = -1 * metric_diff
+                self.__metric_value = -1 * self.__metric_value
 
             # If there was improvement
             if metric_diff < 0:
-                scheduled_lr = lr*self.alpha    # Small decay
+                scheduled_lr = lr * self.alpha    # Small decay
             else:
-                scheduled_lr = lr*self.beta
+                scheduled_lr = lr * self.beta
 
             # If new metric is the best so far
             if self.__metric_value < self.best_metric:
@@ -237,7 +238,7 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
 def set_lr(lr, epoch, model, verbose=1):
     tf.keras.backend.set_value(model.optimizer.lr, lr)
     if verbose > 1:
-        tqdm.write("\nEpoch %d: Learning rate is %f." % (epoch+2, lr))
+        tqdm.write("\nEpoch %d: Learning rate is %f." % (epoch + 2, lr))
 
 
 class LoggingCallback(tf.keras.callbacks.Callback):

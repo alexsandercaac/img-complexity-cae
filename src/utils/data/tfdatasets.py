@@ -10,7 +10,7 @@ import tensorflow as tf
 def load_tf_img_dataset(dir_name: str, dir_path: str = '', batch_size: int = 1,
                         input_size: Tuple[int, int] = (224, 224),
                         mode: str = 'autoencoder', labels: list = None,
-                        augmentation:  tf.keras.Sequential = None,
+                        augmentation: tf.keras.Sequential = None,
                         shuffle: bool = True, scale: float = None,
                         color_mode: str = 'rgb'
                         ) -> tf.data.Dataset:
@@ -80,7 +80,7 @@ def load_tf_img_dataset(dir_name: str, dir_path: str = '', batch_size: int = 1,
                 rescale(x), y),
                 num_parallel_calls=AUTOTUNE)
         elif mode == 'image_only':
-            dataset = dataset.map(rescale(x), num_parallel_calls=AUTOTUNE)
+            dataset = dataset.map(rescale, num_parallel_calls=AUTOTUNE)
     else:
         if mode == 'autoencoder':
             dataset = dataset.map(lambda x: (x, x),

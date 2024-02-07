@@ -70,7 +70,7 @@ for _, row in cae_df.iterrows():
     }
 
 with open(os.path.join(
-        'metrics', DATASET, 'reconstruction_metrics.json'), 'w', 
+        'metrics', DATASET, 'reconstruction_metrics.json'), 'w',
         encoding='utf-8') as f:
     json.dump(cae_dict, f)
 

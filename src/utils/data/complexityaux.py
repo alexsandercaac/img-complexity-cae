@@ -130,8 +130,8 @@ def image_gradients(image: Union[np.ndarray, tf.Tensor]
                    [2, 0, -2],
                    [1, 0, -1]])
     g_y = np.array([[1, 2, 1],
-                   [0,  0,  0],
-                   [-1,  -2,  -1]])
+                   [0, 0, 0],
+                   [-1, -2, -1]])
 
     # Calculate gradients. Remember that the convolution operation is
     # commutative, so the order of the kernels does not matter. We keep the
@@ -202,6 +202,6 @@ def deldensity_entropy(deldensity_value: np.ndarray) -> float:
     '''
     nonzero_deldesnity = deldensity_value[deldensity_value.nonzero()]
 
-    entropy = -0.5*np.sum(nonzero_deldesnity * np.log2(nonzero_deldesnity))
+    entropy = -0.5 * np.sum(nonzero_deldesnity * np.log2(nonzero_deldesnity))
 
     return entropy

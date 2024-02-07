@@ -66,20 +66,21 @@ for split, label in DATA_SPLITS_AND_LABELS:
     pbar.close()
     if split != 'test':
         ax_jpeg.hist(mse_jpeg_complexity, bins=50, label=f'{split} {label}',
-                alpha=0.7, color=colours[(split, label)])
+                     alpha=0.7, color=colours[(split, label)])
         ax_delentropy.hist(
             delentropy_complexity_list, bins=50, label=f'{split} {label}',
-                alpha=0.7, color=colours[(split, label)])
+            alpha=0.7, color=colours[(split, label)])
 
     with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
         files_mses_entropies = zip(files, mse_jpeg_complexity,
-                                      delentropy_complexity_list)
+                                   delentropy_complexity_list)
         for file, mse, delentropy in files_mses_entropies:
             f.write(f'{file},{mse},{delentropy},{split},{label}\n')
 
 ax_jpeg.set_xlabel('JPEG MSE')
 # Format the x-axis with powers of 10
-ax_jpeg.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{x:.1e}"))
+ax_jpeg.xaxis.set_major_formatter(
+    ticker.FuncFormatter(lambda x, _: f"{x:.1e}"))
 ax_jpeg.set_ylabel('Frequency')
 ax_jpeg.legend()
 
@@ -108,6 +109,6 @@ for image in img_gen:
 pbar.close()
 with open(os.path.join(TABULAR_DATA_DIR, OUTPUT_FILE_NAME), 'a') as f:
     files_mses_entropies = zip(files, mse_jpeg_complexity,
-                                    delentropy_complexity_list)
+                               delentropy_complexity_list)
     for file, mse, delentropy in files_mses_entropies:
         f.write(f'{file},{mse},{delentropy},baseline,\n')

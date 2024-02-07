@@ -102,9 +102,8 @@ if PRETRAIN:
         color_mode='grayscale' if GRAYSCALE else 'rgb'
     )
 
-
     model.compile(loss=['mse'],
-                optimizer=tf.keras.optimizers.Adam(
+                  optimizer=tf.keras.optimizers.Adam(
         learning_rate=LEARNING_RATE),
         metrics=['mae', 'mse']
     )
@@ -125,19 +124,17 @@ if PRETRAIN:
 
     print(f'Training samples: {train_size}')
 
-
     history = model.fit(
         train_dataset,
         epochs=EPOCHS,
         validation_data=val_dataset,
         callbacks=[lr_schedule,
-                TqdmCallback(verbose=2,
+                   TqdmCallback(verbose=2,
                                 data_size=train_size,
                                 batch_size=BATCH_SIZE,
                                 epochs=EPOCHS)],
         verbose=0
     )
-
 
     print('Saving model...')
     model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
@@ -149,6 +146,6 @@ else:
     print('Skipping pretraining...')
     model.save(filepath=os.path.join(MODEL_DIR, 'pretrained_cae.hdf5'))
     with open(
-        os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'),
-          'w') as f:
+        os.path.join('models', DATASET, 'logs', 'pretraining_history.csv'), 'w'
+    ) as f:
         f.write('epoch,loss,mae,mse,val_loss,val_mae,val_mse\n')
