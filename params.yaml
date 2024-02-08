@@ -33,7 +33,7 @@ dataset_split:
 
 cae_hp_tuning:
   batch_size: 8
-  bottleneck_filters: 32
+  bottleneck_filters: 16
   alpha: 0.98
   beta: 0.93
   patience: 5
