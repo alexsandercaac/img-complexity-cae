@@ -172,7 +172,7 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                 if self.bin_checkpoint:
                     self.model.save(self.bin_path)
                 if self.verbose > 0:
-                    tqdm.write(f"Epoch: {epoch+1} - New best model!! :)")
+                    tqdm.write(f"Epoch: {epoch + 1} - New best model!! :)")
                 self.best_metric = self.__metric_value
                 self.best_weights = self.model.get_weights()
                 if self.secondary_metric:
@@ -202,7 +202,7 @@ class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
                 if self.bin_checkpoint:
                     self.model.save(self.bin_path)
                 if self.verbose > 0:
-                    tqdm.write(f"\nEpoch: {epoch+1} - New best model!! :)")
+                    tqdm.write(f"\nEpoch: {epoch + 1} - New best model!! :)")
                 self.best_metric = self.__metric_value
                 self.best_weights = self.model.get_weights()
                 if self.secondary_metric:
