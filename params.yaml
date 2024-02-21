@@ -2,26 +2,26 @@ all:   # Parameters used in multiple stages
   random_crop:
   - 224
   - 224
-  random_flip: horizontal_and_vertical
-  random_rotation: 1
+  random_flip: horizontal
+  random_rotation: 0.05
   random_zoom:
-  - -0.05
-  - 0.05
-  random_brightness: 0.05
-  random_contrast: 0.05
+  - -0.1
+  - 0.1
+  random_brightness: 0.15
+  random_contrast: 0.15
   random_translation_height:
-  - -0.05
-  - 0.05
+  - -0.15
+  - 0.15
   random_translation_width:
-  - -0.05
-  - 0.05
+  - -0.15
+  - 0.15
   input_size:
   - 232
   - 232
   - 1
   seed: 13
-  dataset: casting
-  grayscale: true
+  dataset: streets
+  grayscale: false
   scale: 255
 
 dataset_split:
@@ -33,7 +33,7 @@ dataset_split:
 
 cae_hp_tuning:
   batch_size: 4
-  bottleneck_filters: 128
+  bottleneck_filters: 32
   alpha: 0.98
   beta: 0.93
   patience: 5
